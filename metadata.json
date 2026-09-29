@@ -1,0 +1,6 @@
+{
+  "name": "A to Z Fertility Solutions - IVF & Laboratory Equipment",
+  "description": "Comprehensive turnkey solutions, medical equipment, embryology workstations, and clinic setups for IVF and fertility centers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

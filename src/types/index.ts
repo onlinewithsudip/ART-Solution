@@ -1,0 +1,117 @@
+export type Page = 'home' | 'about' | 'products' | 'product-details' | 'gallery' | 'contact' | 'admin';
+
+export interface ProductSpec {
+  key: string;
+  value: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  category: string;
+  modelNumber: string;
+  shortDesc: string;
+  fullDesc: string;
+  price: string;
+  priceType: 'fixed' | 'range' | 'inquire';
+  inStock: boolean;
+  isFeatured: boolean;
+  image: string;
+  additionalImages?: string[];
+  features: string[];
+  specs: ProductSpec[];
+  brochureAvailable?: boolean;
+}
+
+export interface GalleryItem {
+  id: string;
+  title: string;
+  category: 'IVF Labs' | 'Equipment' | 'Clinic Setup' | 'Trainings & Workshops';
+  image: string;
+  description: string;
+  date?: string;
+}
+
+export interface StatItem {
+  label: string;
+  value: string;
+  detail: string;
+}
+
+export interface CoreValue {
+  title: string;
+  desc: string;
+}
+
+export interface WebsiteContent {
+  hero: {
+    kicker: string;
+    title: string;
+    subtitle: string;
+    primaryCtaText: string;
+    secondaryCtaText: string;
+    highlightBadge: string;
+    stats: StatItem[];
+  };
+  about: {
+    title: string;
+    subtitle: string;
+    storyParagraph1: string;
+    storyParagraph2: string;
+    mission: string;
+    vision: string;
+    values: CoreValue[];
+    certifications: string[];
+  };
+  contact: {
+    companyName: string;
+    address: string;
+    phone1: string;
+    phone2: string;
+    email: string;
+    whatsapp: string;
+    workingHours: string;
+    supportEmail: string;
+    googleMapsUrl?: string;
+  };
+  footer: {
+    tagline: string;
+    copyrightText: string;
+    disclaimer: string;
+  };
+}
+
+export interface ThemeSettings {
+  primaryColor: string;
+  ctaColor: string;
+  ctaTextColor: string;
+  logoType: 'text' | 'image' | 'both';
+  logoUrl: string;
+  logoText: string;
+  logoTagline: string;
+  logoHeight: number;
+  leadNotificationEmail: string;
+  ccNotificationEmail?: string;
+  enableEmailAlerts: boolean;
+}
+
+export interface Inquiry {
+  id: string;
+  date: string;
+  timestamp?: string;
+  name: string;
+  clinicName: string;
+  email: string;
+  phone: string;
+  country: string;
+  inquiryType: 'Turnkey Lab Setup' | 'Equipment Purchase' | 'Service & Maintenance' | 'Consumables Supply' | 'General Inquiry';
+  message: string;
+  productId?: string;
+  productName?: string;
+  status: 'new' | 'contacted' | 'closed';
+  emailSentTo?: string;
+  emailSentAt?: string;
+  emailDeliveryStatus?: 'delivered' | 'pending' | 'failed';
+}
+
+export type AdminTab = 'content' | 'products' | 'gallery' | 'settings' | 'inquiries';
