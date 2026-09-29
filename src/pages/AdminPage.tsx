@@ -33,7 +33,22 @@ import {
   Bell,
   Inbox,
   SendHorizontal,
+  Lock,
+  Unlock,
+  KeyRound,
+  LogOut,
+  EyeOff,
+  Shield,
+  Phone,
+  PhoneCall,
+  Link2,
+  Layers,
+  UploadCloud,
+  Layout,
+  Globe,
 } from 'lucide-react';
+import { heroImg, cleanroomImg } from '../data/defaultData';
+import { BrandIcon, AVAILABLE_ICONS } from '../components/BrandIcon';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -56,6 +71,10 @@ export const AdminPage: React.FC = () => {
     deleteInquiry,
     sendLeadNotificationEmail,
     testLeadEmailDispatch,
+    isAdminAuthenticated,
+    adminLogin,
+    adminLogout,
+    updateAdminCredentials,
     resetAllToDefaults,
     exportDataJSON,
     importDataJSON,
@@ -64,6 +83,19 @@ export const AdminPage: React.FC = () => {
     showToast,
     openWhatsApp,
   } = useSite();
+
+  // Authentication form states
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  // Account settings form states
+  const [accountEmail, setAccountEmail] = useState(themeSettings.adminEmail || 'onlinewithsudip@gmail.com');
+  const [accountNewPassword, setAccountNewPassword] = useState('');
+  const [accountConfirmPassword, setAccountConfirmPassword] = useState('');
+  const [syncAllEmails, setSyncAllEmails] = useState(true);
+  const [showAccountPass, setShowAccountPass] = useState(false);
 
   // Local state for Content editing form
   const [contentForm, setContentForm] = useState<WebsiteContent>(websiteContent);
@@ -116,6 +148,47 @@ export const AdminPage: React.FC = () => {
 
   // Local state for Settings tab
   const [settingsForm, setSettingsForm] = useState<ThemeSettings>(themeSettings);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
+
+  const handleSaveAllCMS = () => {
+    updateWebsiteContent('header', contentForm.header);
+    updateWebsiteContent('hero', contentForm.hero);
+    updateWebsiteContent('about', contentForm.about);
+    updateWebsiteContent('contact', contentForm.contact);
+    updateWebsiteContent('footer', contentForm.footer);
+    updateThemeSettings(settingsForm);
+    setHasUnsavedChanges(false);
+    showToast('All CMS changes, texts, links, and icons saved successfully to website!', 'success');
+  };
+
+  const handleSaveHeaderFooter = () => {
+    updateWebsiteContent('header', contentForm.header);
+    updateWebsiteContent('footer', contentForm.footer);
+    updateWebsiteContent('contact', contentForm.contact);
+    updateThemeSettings(settingsForm);
+    setHasUnsavedChanges(false);
+    showToast('Header, Footer, logo, and link numbers saved successfully!', 'success');
+  };
+
+  const handleExportBackup = () => {
+    const data = {
+      themeSettings: settingsForm,
+      websiteContent: contentForm,
+      products,
+      galleryItems,
+      inquiries,
+      exportedAt: new Date().toISOString(),
+    };
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `atoz_fertility_cms_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Website content backup file downloaded!');
+  };
 
   // JSON import input ref
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -282,6 +355,115 @@ export const AdminPage: React.FC = () => {
     reader.readAsText(file);
   };
 
+  // If not authenticated, display login gate
+  if (!isAdminAuthenticated) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-slate-100/70 animate-in fade-in">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 sm:p-10 shadow-xl border border-slate-200 space-y-6">
+          <div className="text-center space-y-2">
+            <div
+              className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-white shadow-md mb-3"
+              style={{ backgroundColor: themeSettings.primaryColor }}
+            >
+              <Lock className="w-7 h-7" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+              Admin Portal Login
+            </h2>
+            <p className="text-xs text-slate-500">
+              Please enter your administrator credentials to access content editing, product management, and customer leads.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setLoginError('');
+              const success = adminLogin(loginEmail, loginPassword);
+              if (!success) {
+                setLoginError('Invalid administrator email or password.');
+              }
+            }}
+            className="space-y-4 text-xs"
+          >
+            <div>
+              <label className="block font-bold uppercase text-slate-700 mb-1">
+                Admin Email ID
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  required
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="admin@example.com"
+                  className="w-full pl-10 pr-3.5 py-3 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-bold uppercase text-slate-700 mb-1">
+                Admin Password
+              </label>
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter administrator password..."
+                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                backgroundColor: themeSettings.ctaColor,
+                color: themeSettings.ctaTextColor,
+              }}
+              className="w-full py-3.5 rounded-xl font-semibold text-xs shadow-md hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2"
+            >
+              <Unlock className="w-4 h-4" />
+              <span>Sign In to Admin Panel</span>
+            </button>
+          </form>
+
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setPage('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-xs text-slate-500 hover:text-slate-800 underline"
+            >
+              Return to Website Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-100/70 pb-28">
       {/* Top Admin Navigation Ribbon */}
@@ -304,38 +486,107 @@ export const AdminPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-slate-400">Admin:</span>
+              <span className="font-mono font-semibold text-white">
+                {themeSettings.adminEmail || 'onlinewithsudip@gmail.com'}
+              </span>
+            </div>
+
             <button
               onClick={() => {
                 setPage('home');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
             >
               <Eye className="w-3.5 h-3.5" />
               <span>Preview Live Site</span>
             </button>
 
+            {/* Save All Changes Button */}
             <button
-              onClick={handleExport}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
-              title="Download full backup"
+              onClick={handleSaveAllCMS}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
+                hasUnsavedChanges
+                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white ring-2 ring-emerald-400 ring-offset-2 ring-offset-slate-900 animate-pulse'
+                  : 'bg-teal-700 hover:bg-teal-600 text-white'
+              }`}
+              title="Save all changes directly to website"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Backup</span>
+              <Save className="w-3.5 h-3.5" />
+              <span>{hasUnsavedChanges ? 'Save Changes *' : 'Save Changes'}</span>
+            </button>
+
+            {/* Save & Download Backup File */}
+            <button
+              onClick={() => {
+                handleSaveAllCMS();
+                handleExportBackup();
+              }}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+              title="Save changes and download JSON file to device"
+            >
+              <Download className="w-3.5 h-3.5 text-teal-400" />
+              <span>Save & Download File</span>
+            </button>
+
+            <button
+              onClick={adminLogout}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 transition-colors"
+              title="Log Out of Admin Portal"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Log Out</span>
             </button>
           </div>
         </div>
       </div>
 
+      {/* Unsaved Changes Banner */}
+      {hasUnsavedChanges && (
+        <div className="bg-amber-500 text-slate-950 px-4 py-2.5 shadow-md border-b border-amber-600 sticky top-20 z-40 animate-in slide-in-from-top">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-bold">
+              <AlertTriangle className="w-4 h-4 text-slate-950 shrink-0" />
+              <span>You have unsaved changes! Changes are strictly saved to the website only when you click Save.</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => {
+                  setContentForm(websiteContent);
+                  setSettingsForm(themeSettings);
+                  setHasUnsavedChanges(false);
+                  showToast('Draft changes discarded.');
+                }}
+                className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold"
+              >
+                Discard Edits
+              </button>
+              <button
+                onClick={handleSaveAllCMS}
+                className="px-4 py-1 rounded-lg bg-slate-950 hover:bg-slate-900 text-white text-xs font-bold shadow-xs flex items-center gap-1.5"
+              >
+                <Save className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Save All Changes Now</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Admin Tabs */}
       <div className="bg-white border-b border-slate-200 sticky top-20 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center gap-1 overflow-x-auto scrollbar-none py-2">
           {[
-            { id: 'content', label: 'Website Content', icon: FileText },
+            { id: 'header-footer', label: 'Header & Footer CMS', icon: Layout },
+            { id: 'content', label: 'Page Content & Contacts', icon: FileText },
+            { id: 'images', label: 'Change Images & Media', icon: ImageIcon },
             { id: 'products', label: 'Products & Pricing', icon: Package, badge: products.length },
-            { id: 'gallery', label: 'Photo Gallery', icon: ImageIcon, badge: galleryItems.length },
-            { id: 'settings', label: 'Theme & Logo Settings', icon: Palette },
+            { id: 'gallery', label: 'Photo Gallery', icon: Layers, badge: galleryItems.length },
+            { id: 'settings', label: 'Theme & Brand Icon', icon: Palette },
             { id: 'inquiries', label: 'Inquiries & Leads', icon: Mail, badge: inquiries.length },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -369,6 +620,761 @@ export const AdminPage: React.FC = () => {
 
       {/* Admin Tab Content Containers */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8">
+        {/* ============================================================== */}
+        {/* TAB 0: HEADER & FOOTER CMS (Requested by User) */}
+        {/* ============================================================== */}
+        {adminTab === 'header-footer' && (
+          <div className="space-y-8 animate-in fade-in">
+            {/* Save notice & Action Bar */}
+            <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Layout className="w-5 h-5 text-teal-600" />
+                  <h3 className="text-base font-bold text-slate-900">
+                    Header & Footer CMS Manager
+                  </h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                    Global Navigation & Branding
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Edit top ribbon announcements, phone numbers, brand logos, icons, CTAs, footer taglines, certifications, and legal notices.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => {
+                    handleSaveHeaderFooter();
+                    handleExportBackup();
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold border border-slate-200 transition-colors"
+                  title="Save changes and download JSON file to device"
+                >
+                  <Download className="w-3.5 h-3.5 text-teal-600" />
+                  <span>Save & Download File</span>
+                </button>
+
+                <button
+                  onClick={handleSaveHeaderFooter}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-700 text-white rounded-xl text-xs font-bold hover:bg-teal-800 shadow-xs transition-colors"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Save Header & Footer</span>
+                </button>
+              </div>
+            </div>
+
+            {/* LIVE HEADER PREVIEW BOX */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Live Header Preview</span>
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  Updates in real-time as you edit below
+                </span>
+              </div>
+
+              <div className="rounded-2xl border border-slate-300 overflow-hidden shadow-sm bg-white">
+                {/* Simulated Top Ribbon */}
+                <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      {contentForm.header?.topRibbonKicker || 'ISO 13485 & CE Mark Certified'}
+                    </span>
+                    <span className="hidden sm:inline text-slate-600">|</span>
+                    <span className="hidden sm:inline text-slate-400">
+                      {contentForm.header?.topRibbonSubtitle || 'Turnkey IVF Labs & Clinical Embryology Solutions'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 text-slate-300 font-mono text-xs">
+                    <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{contentForm.header?.topRibbonPhone || contentForm.contact.phone1}</span>
+                  </div>
+                </div>
+
+                {/* Simulated Main Header */}
+                <div className="px-6 py-4 flex items-center justify-between bg-white border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    {settingsForm.logoUrl ? (
+                      <img
+                        src={settingsForm.logoUrl}
+                        alt="Logo"
+                        style={{ height: `${settingsForm.logoHeight || 38}px` }}
+                        className="w-auto object-contain"
+                      />
+                    ) : (
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-xs"
+                        style={{ backgroundColor: settingsForm.primaryColor }}
+                      >
+                        <BrandIcon
+                          name={settingsForm.logoIcon || 'Activity'}
+                          customIconUrl={settingsForm.customIconUrl}
+                          className="w-5 h-5 stroke-[2.2]"
+                        />
+                      </div>
+                    )}
+                    {settingsForm.logoType !== 'image' && (
+                      <div>
+                        <div className="font-bold text-slate-900 leading-tight">
+                          {settingsForm.logoText || 'A to Z Fertility'}
+                        </div>
+                        <div className="text-[11px] text-slate-500">
+                          {settingsForm.logoTagline || 'Complete Turnkey Solutions'}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="hidden sm:flex items-center gap-4 text-xs font-semibold text-slate-600">
+                    <span>Home</span>
+                    <span>About Us</span>
+                    <span>Products</span>
+                    <span>Gallery</span>
+                    <span>Contact</span>
+                  </div>
+
+                  <div className="px-4 py-2 rounded-lg text-xs font-semibold shadow-xs" style={{ backgroundColor: settingsForm.ctaColor, color: settingsForm.ctaTextColor }}>
+                    {contentForm.header?.ctaButtonText || 'Request Quotation'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* PART 1: HEADER CMS EDITOR */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+              <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <div>
+                  <h4 className="text-base font-bold text-slate-900">
+                    1. Header & Top Ribbon Settings
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    Customize the top ribbon announcement text, quality certifications, and phone number link.
+                  </p>
+                </div>
+                <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+                  Header CMS
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Top Ribbon Announcement / Slogan
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.header?.topRibbonSubtitle || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        header: { ...contentForm.header, topRibbonSubtitle: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="Turnkey IVF Labs & Clinical Embryology Solutions"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-medium"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Displays on the dark top ribbon across the entire website.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Top Ribbon Certification Kicker
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.header?.topRibbonKicker || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        header: { ...contentForm.header, topRibbonKicker: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="ISO 13485:2016 Certified Solutions"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-emerald-700"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Shows with a pulse green indicator on the top ribbon.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Top Ribbon Phone Number (Link Number) *
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.header?.topRibbonPhone || contentForm.contact.phone1}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        header: { ...contentForm.header, topRibbonPhone: e.target.value },
+                        contact: { ...contentForm.contact, phone1: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="+91 98712 34567"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-semibold"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Clickable phone number linked to WhatsApp & phone call.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Header Action Button Text
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.header?.ctaButtonText || 'Request Quotation'}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        header: { ...contentForm.header, ctaButtonText: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="Request Quotation"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    High-contrast action button on the right side of the navbar.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* PART 2: BRAND LOGO & ICON SELECTOR (Option to Change the Icon) */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+              <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <Palette className="w-5 h-5 text-teal-600" />
+                    <span>2. Brand Logo & Icon Management</span>
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    Change the website brand icon, upload an image logo, or edit the business name.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500 font-medium">Display Mode:</span>
+                  <select
+                    value={settingsForm.logoType}
+                    onChange={(e) => {
+                      setSettingsForm({
+                        ...settingsForm,
+                        logoType: e.target.value as 'text' | 'image' | 'both',
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    className="p-1.5 rounded-lg border border-slate-200 text-xs font-semibold"
+                  >
+                    <option value="both">Icon/Image & Brand Text</option>
+                    <option value="image">Image Only</option>
+                    <option value="text">Text Only</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Option to Change the Icon (Requested by User) */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                      <span>Select Brand Icon</span>
+                      <span className="text-[10px] font-normal px-2 py-0.5 rounded bg-teal-100 text-teal-800">
+                        12 Medical & Laboratory Icons
+                      </span>
+                    </h5>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Choose an icon for your fertility clinic brand mark, or upload a custom SVG icon.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white p-2 rounded-xl border border-slate-200 shrink-0">
+                    <span className="text-[11px] font-medium text-slate-500">Active Icon:</span>
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-xs"
+                      style={{ backgroundColor: settingsForm.primaryColor }}
+                    >
+                      <BrandIcon
+                        name={settingsForm.logoIcon || 'Activity'}
+                        customIconUrl={settingsForm.customIconUrl}
+                        className="w-4 h-4 stroke-[2.2]"
+                      />
+                    </div>
+                    <span className="font-bold text-xs text-slate-900">
+                      {settingsForm.customIconUrl ? 'Custom Icon' : settingsForm.logoIcon || 'Activity'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 12 Medical Icons Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {AVAILABLE_ICONS.map((item) => {
+                    const isSelected =
+                      !settingsForm.customIconUrl &&
+                      (settingsForm.logoIcon || 'Activity').toLowerCase() === item.id.toLowerCase();
+                    const IconComp = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          setSettingsForm({
+                            ...settingsForm,
+                            logoIcon: item.id,
+                            customIconUrl: '',
+                          });
+                          setHasUnsavedChanges(true);
+                        }}
+                        className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border text-center transition-all ${
+                          isSelected
+                            ? 'border-teal-600 bg-teal-50 ring-2 ring-teal-500 shadow-xs'
+                            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        <div
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center transition-transform ${
+                            isSelected ? 'bg-teal-700 text-white scale-105' : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          <IconComp className="w-5 h-5 stroke-[2.2]" />
+                        </div>
+                        <span className={`text-[11px] font-semibold leading-tight line-clamp-1 ${
+                          isSelected ? 'text-teal-900 font-bold' : 'text-slate-700'
+                        }`}>
+                          {item.id}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Custom Icon Upload Option */}
+                <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <span className="font-bold text-slate-800 block">Want to use a custom SVG / icon file?</span>
+                    <span className="text-slate-500 text-[11px]">Upload your clinic symbol or icon graphic directly.</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 text-xs">
+                      <UploadCloud className="w-3.5 h-3.5 text-teal-600" />
+                      <span>Upload Custom Icon File</span>
+                      <input
+                        type="file"
+                        accept="image/*,.svg"
+                        onChange={(e) =>
+                          handleFileUpload(e, (base64) => {
+                            setSettingsForm({ ...settingsForm, customIconUrl: base64 });
+                            setHasUnsavedChanges(true);
+                          })
+                        }
+                        className="hidden"
+                      />
+                    </label>
+
+                    {settingsForm.customIconUrl && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettingsForm({ ...settingsForm, customIconUrl: '' });
+                          setHasUnsavedChanges(true);
+                        }}
+                        className="px-2.5 py-1.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold hover:bg-rose-100"
+                      >
+                        Clear Custom Icon
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Brand Name, Tagline & Image Logo */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Company / Brand Name
+                  </label>
+                  <input
+                    type="text"
+                    value={settingsForm.logoText}
+                    onChange={(e) => {
+                      setSettingsForm({ ...settingsForm, logoText: e.target.value });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="A to Z Fertility"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Brand Tagline / Slogan
+                  </label>
+                  <input
+                    type="text"
+                    value={settingsForm.logoTagline}
+                    onChange={(e) => {
+                      setSettingsForm({ ...settingsForm, logoTagline: e.target.value });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="Complete Turnkey Solutions"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-xs"
+                  />
+                </div>
+
+                {/* Upload Image Logo */}
+                <div className="sm:col-span-2 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="font-bold text-slate-800 block text-xs">Optional: Custom Image Logo Graphic</span>
+                      <span className="text-slate-500 text-[11px]">Upload a PNG or WebP logo file to replace the default icon badge.</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-teal-700 text-white font-semibold hover:bg-teal-800 text-xs shadow-xs">
+                        <UploadCloud className="w-3.5 h-3.5" />
+                        <span>Upload Logo Graphic</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) =>
+                            handleFileUpload(e, (base64) => {
+                              setSettingsForm({ ...settingsForm, logoUrl: base64, logoType: 'both' });
+                              setHasUnsavedChanges(true);
+                            })
+                          }
+                          className="hidden"
+                        />
+                      </label>
+
+                      {settingsForm.logoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSettingsForm({ ...settingsForm, logoUrl: '' });
+                            setHasUnsavedChanges(true);
+                          }}
+                          className="px-2.5 py-1.5 rounded-lg bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300 text-xs"
+                        >
+                          Remove Logo Image
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <input
+                      type="url"
+                      value={settingsForm.logoUrl || ''}
+                      onChange={(e) => {
+                        setSettingsForm({ ...settingsForm, logoUrl: e.target.value });
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder="Or enter image logo URL (https://...)"
+                      className="w-full p-2 rounded-lg border border-slate-200 bg-white font-mono text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 mb-1">
+                      <span>Logo Display Height in Header</span>
+                      <span className="font-mono text-teal-700">{settingsForm.logoHeight || 42}px</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={24}
+                      max={64}
+                      value={settingsForm.logoHeight || 42}
+                      onChange={(e) => {
+                        setSettingsForm({ ...settingsForm, logoHeight: Number(e.target.value) });
+                        setHasUnsavedChanges(true);
+                      }}
+                      className="w-full accent-teal-600 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* PART 3: FOOTER CMS EDITOR */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+              <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <div>
+                  <h4 className="text-base font-bold text-slate-900">
+                    3. Footer CMS & Link Numbers
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    Customize footer mission statement, quality badges, phone numbers, addresses, and social links.
+                  </p>
+                </div>
+                <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+                  Footer CMS
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="sm:col-span-2">
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Footer Brand Tagline / Mission Text
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={contentForm.footer?.tagline || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        footer: { ...contentForm.footer, tagline: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="Precision IVF laboratory design, medical devices, and turnkey embryology solutions."
+                    className="w-full p-2.5 rounded-xl border border-slate-200 resize-none font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Quality Certification Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.footer?.certificationBadge || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        footer: { ...contentForm.footer, certificationBadge: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="ISO 13485:2016 & CE Mark Certified"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-emerald-700"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Footer Copyright Notice Text
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.footer?.copyrightText || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        footer: { ...contentForm.footer, copyrightText: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="© 2026 A to Z Fertility Solutions. All rights reserved."
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Regulatory Medical Disclaimer
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={contentForm.footer?.disclaimer || ''}
+                    onChange={(e) => {
+                      setContentForm({
+                        ...contentForm,
+                        footer: { ...contentForm.footer, disclaimer: e.target.value },
+                      });
+                      setHasUnsavedChanges(true);
+                    }}
+                    placeholder="Products displayed are intended for certified clinical reproductive medicine facilities..."
+                    className="w-full p-2.5 rounded-xl border border-slate-200 resize-none text-[11px]"
+                  />
+                </div>
+              </div>
+
+              {/* Footer Phone Numbers & Contact Links */}
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4 text-xs">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-teal-700" />
+                  <span className="font-bold uppercase tracking-wider text-slate-800">
+                    Footer Contact & Phone Numbers
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      Primary Phone Number (Clickable in Footer) *
+                    </label>
+                    <input
+                      type="text"
+                      value={contentForm.contact.phone1}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, phone1: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      Official Contact Email
+                    </label>
+                    <input
+                      type="email"
+                      value={contentForm.contact.email}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, email: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block font-bold text-slate-700 mb-1">
+                      Physical Facility Address
+                    </label>
+                    <input
+                      type="text"
+                      value={contentForm.contact.address}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, address: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="space-y-3 pt-2">
+                <span className="font-bold text-slate-800 text-xs block uppercase tracking-wider">
+                  Social Media Links (Optional)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1">LinkedIn URL</label>
+                    <input
+                      type="url"
+                      value={contentForm.footer?.linkedinUrl || ''}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          footer: { ...contentForm.footer, linkedinUrl: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder="https://linkedin.com/company/..."
+                      className="w-full p-2 rounded-lg border border-slate-200 font-mono text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1">Twitter / X URL</label>
+                    <input
+                      type="url"
+                      value={contentForm.footer?.twitterUrl || ''}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          footer: { ...contentForm.footer, twitterUrl: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder="https://twitter.com/..."
+                      className="w-full p-2 rounded-lg border border-slate-200 font-mono text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1">Facebook URL</label>
+                    <input
+                      type="url"
+                      value={contentForm.footer?.facebookUrl || ''}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          footer: { ...contentForm.footer, facebookUrl: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder="https://facebook.com/..."
+                      className="w-full p-2 rounded-lg border border-slate-200 font-mono text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1">YouTube URL</label>
+                    <input
+                      type="url"
+                      value={contentForm.footer?.youtubeUrl || ''}
+                      onChange={(e) => {
+                        setContentForm({
+                          ...contentForm,
+                          footer: { ...contentForm.footer, youtubeUrl: e.target.value },
+                        });
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder="https://youtube.com/..."
+                      className="w-full p-2 rounded-lg border border-slate-200 font-mono text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Save Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+                <span className="text-xs text-slate-500">
+                  {hasUnsavedChanges ? '⚠️ Changes are pending save.' : '✓ All changes are currently saved.'}
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      handleSaveHeaderFooter();
+                      handleExportBackup();
+                    }}
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5"
+                  >
+                    <Download className="w-3.5 h-3.5 text-teal-600" />
+                    <span>Save & Download Backup</span>
+                  </button>
+
+                  <button
+                    onClick={handleSaveHeaderFooter}
+                    className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-xs flex items-center gap-2"
+                  >
+                    <Save className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Save Header & Footer Now</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ============================================================== */}
         {/* TAB 1: WEBSITE CONTENT EDITOR */}
         {/* ============================================================== */}
@@ -507,6 +1513,72 @@ export const AdminPage: React.FC = () => {
                     }
                     className="w-full p-2.5 rounded-xl border border-slate-200"
                   />
+                </div>
+
+                {/* Hero Showcase Image */}
+                <div className="sm:col-span-2 pt-2 border-t border-slate-100">
+                  <label className="block font-bold uppercase text-slate-700 mb-2">
+                    Hero Section Laboratory Showcase Image
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-4 items-start bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <img
+                      src={contentForm.hero.heroImage || heroImg}
+                      alt="Hero preview"
+                      className="w-40 h-28 object-cover rounded-lg border border-slate-300 shadow-xs shrink-0 bg-slate-900"
+                    />
+                    <div className="flex-1 space-y-2 w-full text-xs">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-semibold hover:bg-teal-800 shadow-xs">
+                          <UploadCloud className="w-3.5 h-3.5" />
+                          <span>Upload Image File</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              handleFileUpload(e, (base64) =>
+                                setContentForm({
+                                  ...contentForm,
+                                  hero: { ...contentForm.hero, heroImage: base64 },
+                                })
+                              )
+                            }
+                            className="hidden"
+                          />
+                        </label>
+                        {contentForm.hero.heroImage && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setContentForm({
+                                ...contentForm,
+                                hero: { ...contentForm.hero, heroImage: '' },
+                              })
+                            }
+                            className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300"
+                          >
+                            Reset to Default
+                          </button>
+                        )}
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          value={contentForm.hero.heroImage || ''}
+                          onChange={(e) =>
+                            setContentForm({
+                              ...contentForm,
+                              hero: { ...contentForm.hero, heroImage: e.target.value },
+                            })
+                          }
+                          placeholder="Or paste external image URL (https://...)"
+                          className="w-full p-2 rounded-lg border border-slate-200 bg-white font-mono text-xs"
+                        />
+                        <span className="text-[11px] text-slate-500 mt-1 block">
+                          Appears on the homepage hero section right side console visual.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -678,6 +1750,72 @@ export const AdminPage: React.FC = () => {
                     className="w-full p-2.5 rounded-xl border border-slate-200 resize-none"
                   />
                 </div>
+
+                {/* About Page Facility Showcase Image */}
+                <div className="sm:col-span-2 pt-2 border-t border-slate-100">
+                  <label className="block font-bold uppercase text-slate-700 mb-2">
+                    About Us Modular Cleanroom Facility Image
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-4 items-start bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <img
+                      src={contentForm.about.aboutImage || cleanroomImg}
+                      alt="About facility preview"
+                      className="w-40 h-28 object-cover rounded-lg border border-slate-300 shadow-xs shrink-0 bg-slate-900"
+                    />
+                    <div className="flex-1 space-y-2 w-full text-xs">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-semibold hover:bg-teal-800 shadow-xs">
+                          <UploadCloud className="w-3.5 h-3.5" />
+                          <span>Upload Facility Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              handleFileUpload(e, (base64) =>
+                                setContentForm({
+                                  ...contentForm,
+                                  about: { ...contentForm.about, aboutImage: base64 },
+                                })
+                              )
+                            }
+                            className="hidden"
+                          />
+                        </label>
+                        {contentForm.about.aboutImage && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setContentForm({
+                                ...contentForm,
+                                about: { ...contentForm.about, aboutImage: '' },
+                              })
+                            }
+                            className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300"
+                          >
+                            Reset to Default
+                          </button>
+                        )}
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          value={contentForm.about.aboutImage || ''}
+                          onChange={(e) =>
+                            setContentForm({
+                              ...contentForm,
+                              about: { ...contentForm.about, aboutImage: e.target.value },
+                            })
+                          }
+                          placeholder="Or paste external image URL (https://...)"
+                          className="w-full p-2 rounded-lg border border-slate-200 bg-white font-mono text-xs"
+                        />
+                        <span className="text-[11px] text-slate-500 mt-1 block">
+                          Appears on the About Us page as the turnkey cleanroom facility showcase photo.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="flex justify-end pt-2">
@@ -690,18 +1828,178 @@ export const AdminPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Contact Information Form */}
+            {/* Contact Information & Phone Numbers */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
-              <div className="border-b border-slate-100 pb-4">
-                <h3 className="text-base font-bold text-slate-900">
-                  3. Contact Information & Direct Channels
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Phone numbers, official email, physical address, and WhatsApp contact.
-                </p>
+              <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <Phone className="w-5 h-5 text-teal-600" />
+                    <span>3. Phone Numbers, WhatsApp & Contact Channels</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Update business phone numbers, direct WhatsApp chat link, email addresses, and location.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    updateWebsiteContent('contact', contentForm.contact);
+                    showToast('Contact details, phone numbers, and WhatsApp settings saved!');
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-xl text-xs font-semibold hover:bg-teal-800 shrink-0"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save Contact Details</span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              {/* Subcard: Phone Numbers Management */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                <div className="flex items-center gap-2">
+                  <PhoneCall className="w-4 h-4 text-teal-700" />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                    Business Phone Numbers
+                  </h4>
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600">
+                    Displayed across Header, Contact page & Footer
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      Primary Phone Number (Header Ribbon & Footer) *
+                    </label>
+                    <input
+                      type="text"
+                      value={contentForm.contact.phone1}
+                      onChange={(e) =>
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, phone1: e.target.value },
+                        })
+                      }
+                      placeholder="+91 98712 34567"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-semibold text-xs focus:ring-2 focus:ring-teal-500"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">
+                      Shown on the top header ribbon and footer contact column.
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      Secondary / Emergency Technical Support Phone
+                    </label>
+                    <input
+                      type="text"
+                      value={contentForm.contact.phone2}
+                      onChange={(e) =>
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, phone2: e.target.value },
+                        })
+                      }
+                      placeholder="+91 11 4567 8900"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono text-xs focus:ring-2 focus:ring-teal-500"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">
+                      Shown on Contact Page for 24/7 biomedical engineering dispatch.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subcard: WhatsApp Link in WhatsApp Button */}
+              <div className="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-200 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-emerald-700" />
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-950">
+                      WhatsApp Button Link & Integration
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openWhatsApp()}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-semibold shadow-xs"
+                    title="Test WhatsApp action in new tab"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Test WhatsApp Link Now</span>
+                  </button>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="block font-bold text-emerald-950 mb-1 flex items-center gap-1.5">
+                      <Link2 className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Custom WhatsApp Direct Chat Link (Recommended)</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={contentForm.contact.whatsappLink || ''}
+                      onChange={(e) =>
+                        setContentForm({
+                          ...contentForm,
+                          contact: { ...contentForm.contact, whatsappLink: e.target.value },
+                        })
+                      }
+                      placeholder="e.g. https://wa.me/919871234567 or https://wa.me/message/XXXX or https://chat.whatsapp.com/..."
+                      className="w-full p-2.5 rounded-xl border border-emerald-300 bg-white font-mono text-xs focus:ring-2 focus:ring-emerald-500"
+                    />
+                    <span className="text-[11px] text-emerald-800/80 mt-1 block">
+                      If set, clicking any WhatsApp button on the site (floating button, header, contact page, product inquiry) will open this link directly.
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">
+                        WhatsApp Phone Number (with Country Code)
+                      </label>
+                      <input
+                        type="text"
+                        value={contentForm.contact.whatsapp}
+                        onChange={(e) =>
+                          setContentForm({
+                            ...contentForm,
+                            contact: { ...contentForm.contact, whatsapp: e.target.value },
+                          })
+                        }
+                        placeholder="+91 98712 34567"
+                        className="w-full p-2 rounded-xl border border-slate-200 bg-white font-mono text-xs"
+                      />
+                      <span className="text-[11px] text-slate-500 mt-1 block">
+                        Used as fallback if no direct link is provided.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">
+                        Default Chat Greeting Message
+                      </label>
+                      <input
+                        type="text"
+                        value={contentForm.contact.whatsappMessage || ''}
+                        onChange={(e) =>
+                          setContentForm({
+                            ...contentForm,
+                            contact: { ...contentForm.contact, whatsappMessage: e.target.value },
+                          })
+                        }
+                        placeholder="Hello, I would like to inquire about IVF equipment..."
+                        className="w-full p-2 rounded-xl border border-slate-200 bg-white text-xs"
+                      />
+                      <span className="text-[11px] text-slate-500 mt-1 block">
+                        Pre-populated message when the chat opens.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* General Contact Details: Company Name, Emails, Address, Hours */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
                 <div>
                   <label className="block font-bold uppercase text-slate-600 mb-1">
                     Company Registered Name
@@ -716,58 +2014,6 @@ export const AdminPage: React.FC = () => {
                       })
                     }
                     className="w-full p-2.5 rounded-xl border border-slate-200"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold uppercase text-slate-600 mb-1">
-                    WhatsApp Number (with Country Code)
-                  </label>
-                  <input
-                    type="text"
-                    value={contentForm.contact.whatsapp}
-                    onChange={(e) =>
-                      setContentForm({
-                        ...contentForm,
-                        contact: { ...contentForm.contact, whatsapp: e.target.value },
-                      })
-                    }
-                    placeholder="e.g. 919871234567"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Primary Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    value={contentForm.contact.phone1}
-                    onChange={(e) =>
-                      setContentForm({
-                        ...contentForm,
-                        contact: { ...contentForm.contact, phone1: e.target.value },
-                      })
-                    }
-                    className="w-full p-2.5 rounded-xl border border-slate-200 font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Secondary Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    value={contentForm.contact.phone2}
-                    onChange={(e) =>
-                      setContentForm({
-                        ...contentForm,
-                        contact: { ...contentForm.contact, phone2: e.target.value },
-                      })
-                    }
-                    className="w-full p-2.5 rounded-xl border border-slate-200 font-mono"
                   />
                 </div>
 
@@ -805,6 +2051,23 @@ export const AdminPage: React.FC = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="block font-bold uppercase text-slate-600 mb-1">
+                    Working Hours
+                  </label>
+                  <input
+                    type="text"
+                    value={contentForm.contact.workingHours}
+                    onChange={(e) =>
+                      setContentForm({
+                        ...contentForm,
+                        contact: { ...contentForm.contact, workingHours: e.target.value },
+                      })
+                    }
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  />
+                </div>
+
                 <div className="sm:col-span-2">
                   <label className="block font-bold uppercase text-slate-600 mb-1">
                     Physical Facility Address
@@ -821,31 +2084,429 @@ export const AdminPage: React.FC = () => {
                     className="w-full p-2.5 rounded-xl border border-slate-200"
                   />
                 </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Working Hours
-                  </label>
-                  <input
-                    type="text"
-                    value={contentForm.contact.workingHours}
-                    onChange={(e) =>
-                      setContentForm({
-                        ...contentForm,
-                        contact: { ...contentForm.contact, workingHours: e.target.value },
-                      })
-                    }
-                    className="w-full p-2.5 rounded-xl border border-slate-200"
-                  />
-                </div>
               </div>
 
               <div className="flex justify-end pt-2">
                 <button
-                  onClick={() => updateWebsiteContent('contact', contentForm.contact)}
-                  className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800"
+                  onClick={() => {
+                    updateWebsiteContent('contact', contentForm.contact);
+                    showToast('Contact details, phone numbers, and WhatsApp settings saved!');
+                  }}
+                  className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 flex items-center gap-2"
                 >
-                  Save Contact Information
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save All Contact Details</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ============================================================== */}
+        {/* TAB: IMAGES & MEDIA MANAGER (Requested by User) */}
+        {/* ============================================================== */}
+        {adminTab === 'images' && (
+          <div className="space-y-8 animate-in fade-in">
+            {/* Header intro */}
+            <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-teal-600" />
+                  <h3 className="text-base font-bold text-slate-900">
+                    Website Images & Visual Media Manager
+                  </h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                    Visual Assets
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Upload custom photos from your device or paste image URLs for the homepage hero, about page, company logo, and all products.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  updateWebsiteContent('hero', contentForm.hero);
+                  updateWebsiteContent('about', contentForm.about);
+                  showToast('All website image changes saved successfully!');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-700 text-white rounded-xl text-xs font-semibold hover:bg-teal-800 shadow-xs shrink-0"
+              >
+                <Save className="w-4 h-4" />
+                <span>Save All Visuals</span>
+              </button>
+            </div>
+
+            {/* 1. Primary Page Showcase Visuals (Hero & About) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Hero Banner Visual */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      1. Homepage Hero Laboratory Image
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      High-impact visual shown on the right side of the main homepage header.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                    Homepage
+                  </span>
+                </div>
+
+                <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 group">
+                  <img
+                    src={contentForm.hero.heroImage || heroImg}
+                    alt="Hero banner"
+                    className="w-full h-52 object-cover transition-transform group-hover:scale-102"
+                  />
+                  <div className="absolute top-2 right-2 px-2 py-1 rounded bg-black/60 backdrop-blur-md text-[10px] text-white font-mono">
+                    Current Live Image
+                  </div>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-700 text-white text-xs font-semibold hover:bg-teal-800 shadow-xs">
+                      <UploadCloud className="w-4 h-4" />
+                      <span>Upload New Image File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleFileUpload(e, (base64) => {
+                            const updated = {
+                              ...contentForm,
+                              hero: { ...contentForm.hero, heroImage: base64 },
+                            };
+                            setContentForm(updated);
+                            updateWebsiteContent('hero', updated.hero);
+                          })
+                        }
+                        className="hidden"
+                      />
+                    </label>
+
+                    {contentForm.hero.heroImage && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = {
+                            ...contentForm,
+                            hero: { ...contentForm.hero, heroImage: '' },
+                          };
+                          setContentForm(updated);
+                          updateWebsiteContent('hero', updated.hero);
+                          showToast('Reset hero image to default medical asset.');
+                        }}
+                        className="px-3 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200"
+                      >
+                        Reset to Default
+                      </button>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                      Or Paste Image Direct URL
+                    </label>
+                    <input
+                      type="url"
+                      value={contentForm.hero.heroImage || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const updated = {
+                          ...contentForm,
+                          hero: { ...contentForm.hero, heroImage: val },
+                        };
+                        setContentForm(updated);
+                        updateWebsiteContent('hero', updated.hero);
+                      }}
+                      placeholder="https://images.unsplash.com/... or cloud URL"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* About Us Facility Visual */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      2. About Us Cleanroom Facility Image
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Modular cleanroom engineering photo displayed on the About Us page.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                    About Us
+                  </span>
+                </div>
+
+                <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 group">
+                  <img
+                    src={contentForm.about.aboutImage || cleanroomImg}
+                    alt="Facility showcase"
+                    className="w-full h-52 object-cover transition-transform group-hover:scale-102"
+                  />
+                  <div className="absolute top-2 right-2 px-2 py-1 rounded bg-black/60 backdrop-blur-md text-[10px] text-white font-mono">
+                    Current Live Image
+                  </div>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-700 text-white text-xs font-semibold hover:bg-teal-800 shadow-xs">
+                      <UploadCloud className="w-4 h-4" />
+                      <span>Upload New Image File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleFileUpload(e, (base64) => {
+                            const updated = {
+                              ...contentForm,
+                              about: { ...contentForm.about, aboutImage: base64 },
+                            };
+                            setContentForm(updated);
+                            updateWebsiteContent('about', updated.about);
+                          })
+                        }
+                        className="hidden"
+                      />
+                    </label>
+
+                    {contentForm.about.aboutImage && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = {
+                            ...contentForm,
+                            about: { ...contentForm.about, aboutImage: '' },
+                          };
+                          setContentForm(updated);
+                          updateWebsiteContent('about', updated.about);
+                          showToast('Reset facility image to default medical asset.');
+                        }}
+                        className="px-3 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200"
+                      >
+                        Reset to Default
+                      </button>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                      Or Paste Image Direct URL
+                    </label>
+                    <input
+                      type="url"
+                      value={contentForm.about.aboutImage || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const updated = {
+                          ...contentForm,
+                          about: { ...contentForm.about, aboutImage: val },
+                        };
+                        setContentForm(updated);
+                        updateWebsiteContent('about', updated.about);
+                      }}
+                      placeholder="https://images.unsplash.com/... or cloud URL"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Company Brand Logo Image */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    3. Brand Logo Image & Header Presentation
+                  </h4>
+                  <p className="text-[11px] text-slate-500">
+                    Your clinic or corporate logo displayed in the top navbar and footer.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500">Logo Type:</span>
+                  <select
+                    value={themeSettings.logoType}
+                    onChange={(e) => {
+                      const val = e.target.value as 'text' | 'image' | 'both';
+                      updateThemeSettings({ logoType: val });
+                    }}
+                    className="p-1.5 rounded-lg border border-slate-200 text-xs font-semibold"
+                  >
+                    <option value="both">Image & Brand Text</option>
+                    <option value="image">Image Only</option>
+                    <option value="text">Text Only</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <div className="w-28 h-20 bg-white rounded-lg border border-slate-200 flex items-center justify-center p-2 shrink-0">
+                  {themeSettings.logoUrl ? (
+                    <img
+                      src={themeSettings.logoUrl}
+                      alt="Current logo"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-[11px] text-slate-400 font-medium text-center">
+                      No custom logo set
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-2.5 w-full text-xs">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-teal-700 text-white font-semibold hover:bg-teal-800 shadow-xs">
+                      <UploadCloud className="w-3.5 h-3.5" />
+                      <span>Upload Logo File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleFileUpload(e, (base64) => {
+                            updateThemeSettings({ logoUrl: base64, logoType: 'both' });
+                          })
+                        }
+                        className="hidden"
+                      />
+                    </label>
+
+                    {themeSettings.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => updateThemeSettings({ logoUrl: '' })}
+                        className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300"
+                      >
+                        Remove Logo
+                      </button>
+                    )}
+                  </div>
+
+                  <div>
+                    <input
+                      type="url"
+                      value={themeSettings.logoUrl || ''}
+                      onChange={(e) => updateThemeSettings({ logoUrl: e.target.value })}
+                      placeholder="Or enter logo image URL (https://...)"
+                      className="w-full p-2 rounded-lg border border-slate-200 bg-white font-mono text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Product Catalog Images Fast Manager */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    4. Product Catalog Images ({products.length} Items)
+                  </h4>
+                  <p className="text-[11px] text-slate-500">
+                    Instantly change product images for any equipment in the catalog.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setAdminTab('products')}
+                  className="text-xs text-teal-700 hover:text-teal-800 font-semibold underline"
+                >
+                  Manage Full Product Details &rarr;
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {products.map((prod) => (
+                  <div
+                    key={prod.id}
+                    className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs"
+                  >
+                    <div className="relative rounded-lg overflow-hidden border border-slate-200 bg-slate-900">
+                      <img
+                        src={prod.image}
+                        alt={prod.name}
+                        className="w-full h-36 object-cover"
+                      />
+                      <span className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] text-white font-mono">
+                        {prod.modelNumber}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="font-bold text-slate-900 line-clamp-1">{prod.name}</div>
+                      <div className="text-[11px] text-slate-500">{prod.category}</div>
+                    </div>
+
+                    <div className="space-y-1.5 pt-1 border-t border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <label className="cursor-pointer flex-1 text-center py-1.5 rounded-lg bg-teal-50 text-teal-800 border border-teal-200 text-[11px] font-semibold hover:bg-teal-100">
+                          <span>Upload Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              handleFileUpload(e, (base64) =>
+                                updateProduct(prod.id, { image: base64 })
+                              )
+                            }
+                            className="hidden"
+                          />
+                        </label>
+
+                        <button
+                          onClick={() => {
+                            const newUrl = window.prompt('Enter new image URL for ' + prod.name, prod.image);
+                            if (newUrl && newUrl.trim()) {
+                              updateProduct(prod.id, { image: newUrl.trim() });
+                            }
+                          }}
+                          className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 text-[11px] font-semibold hover:bg-slate-100"
+                          title="Paste image URL"
+                        >
+                          Paste URL
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 4. Photo Gallery Quick Shortcut */}
+            <div className="bg-gradient-to-r from-teal-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-teal-400" />
+                  <span>Facility & Laboratory Photo Gallery ({galleryItems.length} photos)</span>
+                </h4>
+                <p className="text-xs text-slate-300">
+                  Manage cleanroom setup photos, installation pictures, and clinic architecture.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={openAddGalleryModal}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-xs"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Gallery Photo</span>
+                </button>
+                <button
+                  onClick={() => setAdminTab('gallery')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold border border-white/20"
+                >
+                  <span>View All &rarr;</span>
                 </button>
               </div>
             </div>
@@ -1053,6 +2714,129 @@ export const AdminPage: React.FC = () => {
         {/* ============================================================== */}
         {adminTab === 'settings' && (
           <div className="space-y-8 animate-in fade-in">
+            {/* 0. Administrator Account & Login Credentials (Requested by user) */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+              <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-teal-600" />
+                    <h3 className="text-base font-bold text-slate-900">
+                      Administrator Account & Login Credentials
+                    </h3>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                      Security & Auth
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Update the administrator login email ID and password for accessing this admin portal.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (accountNewPassword && accountNewPassword !== accountConfirmPassword) {
+                      showToast('New passwords do not match.', 'error');
+                      return;
+                    }
+                    updateAdminCredentials(accountEmail, accountNewPassword || undefined);
+                    if (syncAllEmails) {
+                      updateThemeSettings({
+                        adminEmail: accountEmail,
+                        leadNotificationEmail: accountEmail,
+                      });
+                      updateWebsiteContent('contact', {
+                        ...websiteContent.contact,
+                        email: accountEmail,
+                        supportEmail: accountEmail,
+                      });
+                      showToast('Email address synchronized across Admin login, Contact page, and Lead notifications!');
+                    } else {
+                      updateThemeSettings({ adminEmail: accountEmail });
+                    }
+                    setAccountNewPassword('');
+                    setAccountConfirmPassword('');
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-700 text-white hover:bg-teal-800 text-xs font-semibold shadow-xs shrink-0"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save Account Details</span>
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-bold uppercase text-slate-700 mb-1">
+                      Administrator Email ID *
+                    </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="email"
+                        required
+                        value={accountEmail}
+                        onChange={(e) => setAccountEmail(e.target.value)}
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center sm:pt-6">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-700 font-medium">
+                      <input
+                        type="checkbox"
+                        checked={syncAllEmails}
+                        onChange={(e) => setSyncAllEmails(e.target.checked)}
+                        className="w-4 h-4 text-teal-600 rounded"
+                      />
+                      <span>Also update Contact page & Lead notification email to this ID</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="block font-bold uppercase text-slate-700 mb-1">
+                      Change Password (Optional)
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type={showAccountPass ? 'text' : 'password'}
+                        value={accountNewPassword}
+                        onChange={(e) => setAccountNewPassword(e.target.value)}
+                        placeholder="Enter new password to change..."
+                        className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowAccountPass(!showAccountPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      >
+                        {showAccountPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold uppercase text-slate-700 mb-1">
+                      Confirm New Password
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type={showAccountPass ? 'text' : 'password'}
+                        value={accountConfirmPassword}
+                        onChange={(e) => setAccountConfirmPassword(e.target.value)}
+                        placeholder="Confirm new password..."
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* 1. Theme Color Settings */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
               <div className="border-b border-slate-100 pb-4">

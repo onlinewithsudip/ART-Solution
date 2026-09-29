@@ -44,6 +44,12 @@ export interface CoreValue {
 }
 
 export interface WebsiteContent {
+  header: {
+    topRibbonKicker: string;
+    topRibbonSubtitle: string;
+    topRibbonPhone: string;
+    ctaButtonText: string;
+  };
   hero: {
     kicker: string;
     title: string;
@@ -52,6 +58,7 @@ export interface WebsiteContent {
     secondaryCtaText: string;
     highlightBadge: string;
     stats: StatItem[];
+    heroImage?: string;
   };
   about: {
     title: string;
@@ -62,6 +69,7 @@ export interface WebsiteContent {
     vision: string;
     values: CoreValue[];
     certifications: string[];
+    aboutImage?: string;
   };
   contact: {
     companyName: string;
@@ -70,14 +78,21 @@ export interface WebsiteContent {
     phone2: string;
     email: string;
     whatsapp: string;
+    whatsappLink?: string;
+    whatsappMessage?: string;
     workingHours: string;
     supportEmail: string;
     googleMapsUrl?: string;
   };
   footer: {
     tagline: string;
+    certificationBadge: string;
     copyrightText: string;
     disclaimer: string;
+    linkedinUrl?: string;
+    twitterUrl?: string;
+    facebookUrl?: string;
+    youtubeUrl?: string;
   };
 }
 
@@ -87,12 +102,16 @@ export interface ThemeSettings {
   ctaTextColor: string;
   logoType: 'text' | 'image' | 'both';
   logoUrl: string;
+  logoIcon: string;
+  customIconUrl?: string;
   logoText: string;
   logoTagline: string;
   logoHeight: number;
   leadNotificationEmail: string;
   ccNotificationEmail?: string;
   enableEmailAlerts: boolean;
+  adminEmail: string;
+  adminPassword: string;
 }
 
 export interface Inquiry {
@@ -114,4 +133,4 @@ export interface Inquiry {
   emailDeliveryStatus?: 'delivered' | 'pending' | 'failed';
 }
 
-export type AdminTab = 'content' | 'products' | 'gallery' | 'settings' | 'inquiries';
+export type AdminTab = 'content' | 'header-footer' | 'images' | 'products' | 'gallery' | 'settings' | 'inquiries';

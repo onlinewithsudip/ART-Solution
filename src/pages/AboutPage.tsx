@@ -84,7 +84,7 @@ export const AboutPage: React.FC = () => {
           <div className="lg:col-span-5">
             <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200">
               <img
-                src={cleanroomFacilityImg}
+                src={websiteContent.about.aboutImage || cleanroomFacilityImg}
                 alt="IVF Cleanroom Engineering"
                 className="w-full h-80 sm:h-96 object-cover"
               />

@@ -137,7 +137,7 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-5 relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700 bg-slate-800">
                 <img
-                  src={heroLabImg}
+                  src={websiteContent.hero.heroImage || heroLabImg}
                   alt="Modern IVF Laboratory and Embryology Cleanroom"
                   className="w-full h-[380px] sm:h-[440px] object-cover"
                 />

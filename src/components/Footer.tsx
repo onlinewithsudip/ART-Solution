@@ -2,16 +2,16 @@ import React from 'react';
 import { useSite } from '../context/SiteContext';
 import { Page } from '../types';
 import {
-  Activity,
   Phone,
   Mail,
   MapPin,
   Clock,
   MessageCircle,
   ShieldCheck,
-  Sliders,
   ChevronRight,
+  ExternalLink,
 } from 'lucide-react';
+import { BrandIcon } from './BrandIcon';
 
 export const Footer: React.FC = () => {
   const {
@@ -50,10 +50,14 @@ export const Footer: React.FC = () => {
                 />
               ) : (
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-xs"
                   style={{ backgroundColor: themeSettings.primaryColor }}
                 >
-                  <Activity className="w-5 h-5" />
+                  <BrandIcon
+                    name={themeSettings.logoIcon || 'Activity'}
+                    customIconUrl={themeSettings.customIconUrl}
+                    className="w-5 h-5"
+                  />
                 </div>
               )}
               <div>
@@ -72,8 +76,53 @@ export const Footer: React.FC = () => {
 
             <div className="pt-2 flex items-center gap-2 text-xs text-emerald-400">
               <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>ISO 13485:2016 & CE Mark Certified</span>
+              <span>{websiteContent.footer.certificationBadge || 'ISO 13485:2016 & CE Mark Certified'}</span>
             </div>
+
+            {(websiteContent.footer.linkedinUrl || websiteContent.footer.twitterUrl || websiteContent.footer.facebookUrl || websiteContent.footer.youtubeUrl) && (
+              <div className="pt-2 flex items-center gap-3 text-xs">
+                {websiteContent.footer.linkedinUrl && (
+                  <a
+                    href={websiteContent.footer.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {websiteContent.footer.twitterUrl && (
+                  <a
+                    href={websiteContent.footer.twitterUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    Twitter/X
+                  </a>
+                )}
+                {websiteContent.footer.facebookUrl && (
+                  <a
+                    href={websiteContent.footer.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    Facebook
+                  </a>
+                )}
+                {websiteContent.footer.youtubeUrl && (
+                  <a
+                    href={websiteContent.footer.youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    YouTube
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Column 2: Quick Links */}
@@ -120,15 +169,6 @@ export const Footer: React.FC = () => {
                   className="hover:text-white transition-colors"
                 >
                   Contact & Inquiries
-                </button>
-              </li>
-              <li className="pt-1">
-                <button
-                  onClick={() => handleNav('admin')}
-                  className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors font-medium"
-                >
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span>Admin Panel / CMS</span>
                 </button>
               </li>
             </ul>

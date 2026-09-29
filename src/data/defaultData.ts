@@ -14,15 +14,25 @@ export const defaultThemeSettings: ThemeSettings = {
   ctaTextColor: '#ffffff',
   logoType: 'both',
   logoUrl: '',
+  logoIcon: 'Activity',
+  customIconUrl: '',
   logoText: 'A to Z Fertility',
   logoTagline: 'Complete Turnkey Solutions',
   logoHeight: 42,
-  leadNotificationEmail: 'leads@atozfertilitysolutions.com',
-  ccNotificationEmail: 'director@atozfertilitysolutions.com',
+  leadNotificationEmail: 'onlinewithsudip@gmail.com',
+  ccNotificationEmail: '',
   enableEmailAlerts: true,
+  adminEmail: 'onlinewithsudip@gmail.com',
+  adminPassword: 'admin123',
 };
 
 export const defaultWebsiteContent: WebsiteContent = {
+  header: {
+    topRibbonKicker: 'ISO 13485:2016 Certified Solutions',
+    topRibbonSubtitle: 'Turnkey IVF Labs & Clinical Embryology Solutions',
+    topRibbonPhone: '+91 98712 34567',
+    ctaButtonText: 'Request Quotation',
+  },
   hero: {
     kicker: 'Pioneering Assisted Reproductive Technologies',
     title: 'Precision IVF Equipment & Complete Turnkey Fertility Labs',
@@ -35,7 +45,8 @@ export const defaultWebsiteContent: WebsiteContent = {
       { label: 'Equipment Uptime', value: '99.8%', detail: 'Clinical reliability rate' },
       { label: 'Clinical Specialists', value: '35+', detail: 'Embryologists & Bio-Engineers' },
       { label: 'Response Time', value: '< 2 hrs', detail: 'Priority service dispatch' }
-    ]
+    ],
+    heroImage: heroImg,
   },
   about: {
     title: 'Empowering Embryologists, Advancing Life',
@@ -67,23 +78,31 @@ export const defaultWebsiteContent: WebsiteContent = {
       'CE Marking for Clinical Laboratory Systems',
       'ISO 14644 Class 5 (Class 100) Cleanroom Compliance',
       'Good Manufacturing Practice (GMP) Facility Validation'
-    ]
+    ],
+    aboutImage: cleanroomImg,
   },
   contact: {
     companyName: 'A to Z Fertility Solutions Ltd.',
     address: 'Healthcare Innovation Hub, Suite 400, Medical Technology Park, New Delhi, India 110020',
     phone1: '+91 98712 34567',
     phone2: '+91 11 4567 8900',
-    email: 'info@atozfertilitysolutions.com',
-    whatsapp: '919871234567',
+    email: 'onlinewithsudip@gmail.com',
+    whatsapp: '+91 98712 34567',
+    whatsappLink: 'https://wa.me/919871234567',
+    whatsappMessage: 'Hello A to Z Fertility Solutions, I would like to inquire about your IVF laboratory equipment and turnkey solutions.',
     workingHours: 'Monday – Saturday: 9:00 AM – 6:30 PM (IST) | 24/7 Emergency Support',
-    supportEmail: 'service@atozfertilitysolutions.com',
+    supportEmail: 'onlinewithsudip@gmail.com',
     googleMapsUrl: 'https://maps.google.com'
   },
   footer: {
     tagline: 'Precision IVF laboratory design, medical devices, and turnkey embryology solutions.',
+    certificationBadge: 'ISO 13485:2016 & CE Mark Certified',
     copyrightText: '© 2026 A to Z Fertility Solutions. All rights reserved.',
-    disclaimer: 'Products displayed are intended for certified clinical reproductive medicine facilities and accredited embryology professionals.'
+    disclaimer: 'Products displayed are intended for certified clinical reproductive medicine facilities and accredited embryology professionals.',
+    linkedinUrl: 'https://linkedin.com',
+    twitterUrl: 'https://twitter.com',
+    facebookUrl: 'https://facebook.com',
+    youtubeUrl: 'https://youtube.com',
   }
 };
 
@@ -323,7 +342,7 @@ export const defaultInquiries: Inquiry[] = [
     inquiryType: 'Turnkey Lab Setup',
     message: 'We are expanding our center with a new 800 sq ft embryology cleanroom and require quotation for 2 workstations and 3 tri-gas incubators.',
     status: 'new',
-    emailSentTo: 'leads@atozfertilitysolutions.com',
+    emailSentTo: 'onlinewithsudip@gmail.com',
     emailSentAt: '2026-09-28 14:32:05',
     emailDeliveryStatus: 'delivered'
   },
@@ -341,7 +360,7 @@ export const defaultInquiries: Inquiry[] = [
     productId: 'prod-micromanipulator-icsi',
     productName: 'PrecisionICSI Hydraulic Micromanipulator System',
     status: 'contacted',
-    emailSentTo: 'leads@atozfertilitysolutions.com',
+    emailSentTo: 'onlinewithsudip@gmail.com',
     emailSentAt: '2026-09-27 10:15:10',
     emailDeliveryStatus: 'delivered'
   }

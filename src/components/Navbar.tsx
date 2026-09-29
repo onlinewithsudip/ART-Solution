@@ -6,11 +6,10 @@ import {
   ShieldCheck,
   Menu,
   X,
-  Sliders,
   ChevronRight,
-  Activity,
   Layers,
 } from 'lucide-react';
+import { BrandIcon } from './BrandIcon';
 
 export const Navbar: React.FC = () => {
   const {
@@ -45,11 +44,11 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              ISO 13485 & CE Mark Certified
+              {websiteContent.header?.topRibbonKicker || 'ISO 13485 & CE Mark Certified'}
             </span>
             <span className="hidden sm:inline text-slate-500">|</span>
             <span className="hidden sm:inline text-slate-400">
-              Turnkey IVF Labs & Clinical Embryology Solutions
+              {websiteContent.header?.topRibbonSubtitle || 'Turnkey IVF Labs & Clinical Embryology Solutions'}
             </span>
           </div>
 
@@ -59,19 +58,9 @@ export const Navbar: React.FC = () => {
               className="inline-flex items-center gap-1 text-slate-300 hover:text-emerald-400 transition-colors"
             >
               <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="font-mono">{websiteContent.contact.phone1}</span>
-            </button>
-            <span className="text-slate-700">·</span>
-            <button
-              onClick={() => handleNavClick('admin')}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs transition-colors ${
-                page === 'admin'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Sliders className="w-3 h-3 text-amber-400" />
-              <span>Admin Panel</span>
+              <span className="font-mono">
+                {websiteContent.header?.topRibbonPhone || websiteContent.contact.phone1}
+              </span>
             </button>
           </div>
         </div>
@@ -98,7 +87,11 @@ export const Navbar: React.FC = () => {
                   className="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105"
                   style={{ backgroundColor: themeSettings.primaryColor }}
                 >
-                  <Activity className="w-6 h-6 stroke-[2.2]" />
+                  <BrandIcon
+                    name={themeSettings.logoIcon || 'Activity'}
+                    customIconUrl={themeSettings.customIconUrl}
+                    className="w-6 h-6 stroke-[2.2]"
+                  />
                 </div>
               )}
 
@@ -159,21 +152,13 @@ export const Navbar: React.FC = () => {
               }}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all whitespace-nowrap"
             >
-              <span>Request Quotation</span>
+              <span>{websiteContent.header?.ctaButtonText || 'Request Quotation'}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => handleNavClick('admin')}
-              className="p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
-              aria-label="Admin settings"
-              title="Admin Panel"
-            >
-              <Sliders className="w-5 h-5 text-amber-600" />
-            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
@@ -201,18 +186,6 @@ export const Navbar: React.FC = () => {
                   {item.label}
                 </button>
               ))}
-              <button
-                onClick={() => handleNavClick('admin')}
-                className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">
-                  <Sliders className="w-4 h-4" />
-                  Admin Panel (CMS)
-                </span>
-                <span className="text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded">
-                  Edit Site
-                </span>
-              </button>
             </div>
 
             <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">

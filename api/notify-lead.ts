@@ -19,7 +19,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     const { lead, recipientEmail, ccEmail, isTest } = req.body || {};
-    const targetEmail = recipientEmail || 'leads@atozfertilitysolutions.com';
+    const targetEmail = recipientEmail || 'onlinewithsudip@gmail.com';
     const timestamp = new Date().toISOString();
 
     console.log(`========================================`);

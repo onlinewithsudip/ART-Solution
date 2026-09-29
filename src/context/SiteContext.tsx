@@ -57,6 +57,11 @@ interface SiteContextType {
   
   adminTab: AdminTab;
   setAdminTab: (tab: AdminTab) => void;
+
+  isAdminAuthenticated: boolean;
+  adminLogin: (email: string, pass: string) => boolean;
+  adminLogout: () => void;
+  updateAdminCredentials: (email: string, pass?: string) => void;
   
   toasts: ToastMessage[];
   showToast: (message: string, type?: 'success' | 'info' | 'error') => void;
@@ -79,13 +84,51 @@ const STORAGE_KEYS = {
   inquiries: 'atoz_fertility_inquiries_v1',
 };
 
+const getInitialPage = (): Page => {
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname.toLowerCase().replace(/\/$/, '');
+    if (path === '/admin') return 'admin';
+    if (path === '/about') return 'about';
+    if (path === '/products') return 'products';
+    if (path === '/product-details') return 'product-details';
+    if (path === '/gallery') return 'gallery';
+    if (path === '/contact') return 'contact';
+  }
+  return 'home';
+};
+
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [page, setPage] = useState<Page>('home');
+  const [page, setPageState] = useState<Page>(getInitialPage);
+
+  const setPage = (newPage: Page) => {
+    setPageState(newPage);
+    if (typeof window !== 'undefined') {
+      const targetPath = newPage === 'home' ? '/' : `/${newPage}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ page: newPage }, '', targetPath);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setPageState(getInitialPage());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [productCategoryFilter, setProductCategoryFilter] = useState<string>('All');
   const [productSearchQuery, setProductSearchQuery] = useState<string>('');
   const [adminTab, setAdminTab] = useState<AdminTab>('content');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('atoz_admin_auth_v1') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Persistent states
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
@@ -262,7 +305,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Inquiries
   const submitInquiry = (inquiryData: Omit<Inquiry, 'id' | 'date' | 'status'>) => {
-    const targetEmail = themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com';
+    const targetEmail = themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com';
     const now = new Date();
     const timestamp = now.toISOString().replace('T', ' ').slice(0, 19);
 
@@ -308,7 +351,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const sendLeadNotificationEmail = async (inquiry: Inquiry, recipient?: string): Promise<boolean> => {
-    const targetEmail = recipient || themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com';
+    const targetEmail = recipient || themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com';
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
 
     try {
@@ -341,6 +384,47 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showToast(`Failed to dispatch email to ${targetEmail}`, 'error');
       return false;
     }
+  };
+
+  // Admin Authentication
+  const adminLogin = (email: string, pass: string): boolean => {
+    const validEmail = (themeSettings.adminEmail || 'onlinewithsudip@gmail.com').trim().toLowerCase();
+    const validPass = (themeSettings.adminPassword || 'admin123').trim();
+
+    if (email.trim().toLowerCase() === validEmail && pass.trim() === validPass) {
+      setIsAdminAuthenticated(true);
+      try {
+        sessionStorage.setItem('atoz_admin_auth_v1', 'true');
+      } catch {
+        // Safe catch
+      }
+      showToast('Welcome, Administrator!', 'success');
+      return true;
+    }
+
+    showToast('Invalid email or password. Please try again.', 'error');
+    return false;
+  };
+
+  const adminLogout = () => {
+    setIsAdminAuthenticated(false);
+    try {
+      sessionStorage.removeItem('atoz_admin_auth_v1');
+    } catch {
+      // Safe catch
+    }
+    showToast('Logged out of admin panel.', 'info');
+  };
+
+  const updateAdminCredentials = (email: string, pass?: string) => {
+    const updated: Partial<ThemeSettings> = {
+      adminEmail: email.trim(),
+    };
+    if (pass && pass.trim()) {
+      updated.adminPassword = pass.trim();
+    }
+    setThemeSettings((prev) => ({ ...prev, ...updated }));
+    showToast('Admin credentials updated successfully!');
   };
 
   const testLeadEmailDispatch = async (
@@ -439,8 +523,35 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // WhatsApp
   const openWhatsApp = (customMessage?: string) => {
+    const customLink = websiteContent.contact.whatsappLink?.trim();
+
+    // If admin set a custom WhatsApp link (e.g. https://wa.me/..., https://chat.whatsapp.com/..., or wa.me/...)
+    if (customLink) {
+      let finalUrl = customLink;
+      if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = `https://${finalUrl}`;
+      }
+
+      // If it's a wa.me or api.whatsapp link and customMessage is passed, ensure text is present
+      if (customMessage && (finalUrl.includes('wa.me') || finalUrl.includes('api.whatsapp.com'))) {
+        try {
+          const parsed = new URL(finalUrl);
+          parsed.searchParams.set('text', customMessage);
+          finalUrl = parsed.toString();
+        } catch {
+          // If URL parsing fails, append parameter safely
+          finalUrl += (finalUrl.includes('?') ? '&' : '?') + `text=${encodeURIComponent(customMessage)}`;
+        }
+      }
+      window.open(finalUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    // Default: construct from phone number
     const rawNumber = websiteContent.contact.whatsapp.replace(/\D/g, '');
-    const defaultMsg = `Hello ${websiteContent.contact.companyName}, I would like to inquire about your IVF laboratory equipment and turnkey solutions.`;
+    const defaultMsg =
+      websiteContent.contact.whatsappMessage ||
+      `Hello ${websiteContent.contact.companyName}, I would like to inquire about your IVF laboratory equipment and turnkey solutions.`;
     const message = customMessage || defaultMsg;
     const url = `https://wa.me/${rawNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -477,6 +588,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         testLeadEmailDispatch,
         adminTab,
         setAdminTab,
+        isAdminAuthenticated,
+        adminLogin,
+        adminLogout,
+        updateAdminCredentials,
         toasts,
         showToast,
         removeToast,
