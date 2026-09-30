@@ -1,367 +1,322 @@
 import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../types';
+import { artProducts, DEFAULT_EQUIPMENT_CATEGORIES } from './artProducts';
 
 import heroImg from '../assets/images/fertility_hero_lab_1790663824905.jpg';
 import workstationImg from '../assets/images/product_ivf_workstation_1790663839811.jpg';
 import incubatorImg from '../assets/images/product_benchtop_incubator_1790663852918.jpg';
 import micromanipulatorImg from '../assets/images/product_micromanipulator_1790663865258.jpg';
 import cleanroomImg from '../assets/images/gallery_cleanroom_setup_1790663877901.jpg';
+import mediaVialsImg from '../assets/images/art_media_vials_1790759397048.jpg';
+import catheterImg from '../assets/images/art_catheters_cannula_1790759417050.jpg';
+import labwareImg from '../assets/images/art_petri_labware_1790759431806.jpg';
+import cryoImg from '../assets/images/art_cryo_devices_1790759458406.jpg';
+import registerImg from '../assets/images/art_clinic_registers_1790759495328.jpg';
 
-export { heroImg, workstationImg, incubatorImg, micromanipulatorImg, cleanroomImg };
+export {
+  heroImg,
+  workstationImg,
+  incubatorImg,
+  micromanipulatorImg,
+  cleanroomImg,
+  mediaVialsImg,
+  catheterImg,
+  labwareImg,
+  cryoImg,
+  registerImg,
+  DEFAULT_EQUIPMENT_CATEGORIES
+};
 
 export const defaultThemeSettings: ThemeSettings = {
-  primaryColor: '#0d9488', // Medical Teal
-  ctaColor: '#0284c7',     // High-contrast Medical Cobalt / Cyan
+  primaryColor: '#0284c7', // Medical Azure / Cyan
+  ctaColor: '#0d9488',     // High-contrast Clinical Teal
   ctaTextColor: '#ffffff',
-  logoType: 'both',
-  logoUrl: '',
+  logoType: 'image',
+  logoUrl: '/logo.svg',
   logoIcon: 'Activity',
   customIconUrl: '',
-  logoText: 'A to Z Fertility',
-  logoTagline: 'Complete Turnkey Solutions',
-  logoHeight: 42,
+  logoText: 'ART Solution',
+  logoTagline: 'Offering Full Solution',
+  logoHeight: 48,
   leadNotificationEmail: 'onlinewithsudip@gmail.com',
   ccNotificationEmail: '',
   enableEmailAlerts: true,
   adminEmail: 'onlinewithsudip@gmail.com',
   adminPassword: 'admin123',
+  heroBgStyle: 'sapphire-teal'
 };
 
 export const defaultWebsiteContent: WebsiteContent = {
   header: {
-    topRibbonKicker: 'ISO 13485:2016 Certified Solutions',
-    topRibbonSubtitle: 'Turnkey IVF Labs & Clinical Embryology Solutions',
-    topRibbonPhone: '+91 98712 34567',
-    ctaButtonText: 'Request Quotation',
+    topRibbonKicker: 'GSTIN: 19ACLFA5383R1ZF',
+    topRibbonSubtitle: 'Offering Full Solution — IVF Labs, Media & Clinical Disposables',
+    topRibbonPhone: '+91 9330951039',
+    ctaButtonText: 'Request Quotation (₹)',
   },
   hero: {
-    kicker: 'Pioneering Assisted Reproductive Technologies',
-    title: 'Precision IVF Equipment & Complete Turnkey Fertility Labs',
-    subtitle: 'From world-class embryology workstations and benchtop tri-gas incubators to certified cleanroom infrastructure — empowering reproductive specialists with reliable, high-yield technology.',
-    primaryCtaText: 'Explore Product Catalog',
-    secondaryCtaText: 'Consult Turnkey Specialist',
-    highlightBadge: 'ISO 13485:2016 & CE Mark Certified Solutions',
+    kicker: 'Complete Assisted Reproductive Technology Solutions',
+    title: 'Precision IVF Equipment, Clinical Media & Disposables',
+    subtitle: 'From world-class embryology workstations and multi-chamber incubators to genuine culture media, catheters, vitrification kits, and laboratory disposables — offering full end-to-end solutions for reproductive centers.',
+    primaryCtaText: 'Browse Product Catalog',
+    secondaryCtaText: 'Contact Specialist on WhatsApp',
+    highlightBadge: 'Offering Full Solution | GST Registered & Validated',
     stats: [
-      { label: 'Turnkey Labs Built', value: '140+', detail: 'Across 18 countries' },
-      { label: 'Equipment Uptime', value: '99.8%', detail: 'Clinical reliability rate' },
-      { label: 'Clinical Specialists', value: '35+', detail: 'Embryologists & Bio-Engineers' },
-      { label: 'Response Time', value: '< 2 hrs', detail: 'Priority service dispatch' }
+      { label: 'Clinical Products', value: '147 Items', detail: 'Authentic media, kits & devices' },
+      { label: 'Delivery Turnaround', value: 'Within 24h', detail: 'Rapid dispatch protocol' },
+      { label: 'Direct Helpline', value: '9330951039', detail: 'Kolkata & Pan-India support' },
+      { label: 'GST Certified', value: '19ACLFA5383R1ZF', detail: '100% Tax compliant billing' }
     ],
     heroImage: heroImg,
   },
   about: {
-    title: 'Empowering Embryologists, Advancing Life',
-    subtitle: 'A to Z Fertility Solutions delivers state-of-the-art laboratory infrastructure, precision incubation systems, and consumable supply chains engineered for optimum embryo viability.',
-    storyParagraph1: 'Founded by senior clinical embryologists and biomedical engineers, A to Z Fertility Solutions was built with a singular mission: to eliminate technical variability in reproductive medicine. We understand that in IVF, every fraction of a degree, every pascal of cleanroom pressure, and every micromillimeter of manipulator precision directly dictates patient outcomes.',
-    storyParagraph2: 'Today, we partner with leading fertility clinics, private hospitals, and university research institutes across the globe. Our end-to-end turnkey methodology spans cleanroom architecture, gas manifold validation, micro-manipulation workstation delivery, and lifetime equipment calibration.',
-    mission: 'To equip assisted reproductive medicine centers with uncompromised engineering precision, elevating clinical pregnancy success rates through consistent laboratory stability.',
-    vision: 'To be the most trusted global partner in reproductive healthcare infrastructure, pioneering accessible, high-yield laboratory technologies for clinicians worldwide.',
+    title: 'Empowering Reproductive Medicine, Offering Full Solution',
+    subtitle: 'ART Solution is your premier partner for assisted reproduction technologies, high-yield culture media, disposables, precision equipment, and turnkey laboratory installations.',
+    storyParagraph1: 'ART Solution operates with a clear mandate: offering full, dependable solutions for IVF laboratories, clinical embryologists, and reproductive medicine centers. We supply certified culture media, sperm washing formulations, vitrification systems, micropipettes, and laboratory plasticware from globally recognized manufacturers including Fertipro, Origio, Wallace, Allwin Medical, Falcon, Cryotech, and more.',
+    storyParagraph2: 'Headquartered in West Bengal with operational facilities in Kolkata, we provide end-to-end equipment supply, maintenance, clinical registers, and priority delivery within 24 hours of order placement. Every product adheres to rigorous quality control standards, ensuring zero environmental variability and optimal embryology outcomes.',
+    mission: 'To provide comprehensive, reliable, and cost-effective reproductive technology solutions that empower fertility clinics and embryologists to achieve peak clinical pregnancy rates.',
+    vision: 'To be the most trusted distributor and turnkey infrastructure partner in assisted reproductive technology across India, renowned for product authenticity and rapid support.',
     values: [
       {
-        title: 'Zero-Tolerance Precision',
-        desc: 'Sub-decimal thermal regulation, VOC-zero filtration, and vibrational dampening certified in every installed unit.'
+        title: 'Authenticity & Batch Testing',
+        desc: 'All media, catheters, and disposables are sourced from authorized manufacturers with sterility certificates and MEA validation.'
       },
       {
-        title: 'Turnkey Accountability',
-        desc: 'A single point of engineering responsibility from architectural blueprints to embryology mock-trials.'
+        title: 'Rapid 24-Hour Dispatch',
+        desc: 'Immediate dispatch within 24 hours of order placement, with expedited courier handling for temperature-sensitive media.'
       },
       {
-        title: 'Rapid Response Protocol',
-        desc: 'On-call biomedical engineers and immediate loaner units to guarantee zero laboratory downtime.'
+        title: 'Full Turnkey Commitment',
+        desc: 'Complete technical backing from lab equipment specification and registers to consumable replenishment and AMC support.'
       },
       {
-        title: 'Global Compliance',
-        desc: 'Fully aligned with ESHRE, ASRM, ISO 14644 cleanroom classes, and international medical device directives.'
+        title: 'Transparent Commercials',
+        desc: 'Direct customer supply rates in ₹ with transparent GST billing and prompt payment credit incentives.'
       }
     ],
     certifications: [
-      'ISO 13485:2016 Medical Devices Quality Management',
-      'CE Marking for Clinical Laboratory Systems',
-      'ISO 14644 Class 5 (Class 100) Cleanroom Compliance',
-      'Good Manufacturing Practice (GMP) Facility Validation'
+      'GSTIN: 19ACLFA5383R1ZF Registered Commercial Entity',
+      'Authorized Distributor for Leading International & Indian Brands',
+      'MEA Tested & Endotoxin Screened Clinical Formulations',
+      'Temperature-Controlled Cold Chain Logistics Compliance'
     ],
     aboutImage: cleanroomImg,
   },
   contact: {
-    companyName: 'A to Z Fertility Solutions Ltd.',
-    address: 'Healthcare Innovation Hub, Suite 400, Medical Technology Park, New Delhi, India 110020',
-    phone1: '+91 98712 34567',
-    phone2: '+91 11 4567 8900',
-    email: 'onlinewithsudip@gmail.com',
-    whatsapp: '+91 98712 34567',
-    whatsappLink: 'https://wa.me/919871234567',
-    whatsappMessage: 'Hello A to Z Fertility Solutions, I would like to inquire about your IVF laboratory equipment and turnkey solutions.',
-    workingHours: 'Monday – Saturday: 9:00 AM – 6:30 PM (IST) | 24/7 Emergency Support',
-    supportEmail: 'onlinewithsudip@gmail.com',
+    companyName: 'ART Solution',
+    address: 'C/o- Modhumita Singh.Village - Kirtankhola. PO-Bakhrahat. PS- Bisnupur. District-24 Pargarna(S). Pin-743377.',
+    phone1: '+91 9330951039',
+    phone2: '9330951039',
+    email: 'artmedical4560@gmail.com',
+    whatsapp: '+91 9330951039',
+    whatsappLink: 'https://wa.me/919330951039',
+    whatsappMessage: 'Hello ART Solution, I would like to inquire about your IVF laboratory products, media, and quotation estimates.',
+    workingHours: 'Monday – Saturday: 9:00 AM – 7:00 PM (IST) | 24/7 Priority Emergency Support',
+    supportEmail: 'artmedical4560@gmail.com',
     googleMapsUrl: 'https://maps.google.com'
   },
   footer: {
-    tagline: 'Precision IVF laboratory design, medical devices, and turnkey embryology solutions.',
-    certificationBadge: 'ISO 13485:2016 & CE Mark Certified',
-    copyrightText: '© 2026 A to Z Fertility Solutions. All rights reserved.',
-    disclaimer: 'Products displayed are intended for certified clinical reproductive medicine facilities and accredited embryology professionals.',
-    linkedinUrl: 'https://linkedin.com',
-    twitterUrl: 'https://twitter.com',
-    facebookUrl: 'https://facebook.com',
-    youtubeUrl: 'https://youtube.com',
+    tagline: 'Offering Full Solution — High-Precision IVF Equipment, Culture Media, Disposables, and Turnkey Lab Infrastructure.',
+    certificationBadge: 'GSTIN: 19ACLFA5383R1ZF | UCO Bank Verified Partner',
+    copyrightText: '© 2026 ART Solution. All rights reserved. Registered Office: South 24 Parganas, WB - 743377.',
+    disclaimer: 'All prices quoted are in Indian Rupees (₹), exclusive of taxes. Products displayed are intended for clinical assisted reproductive medicine facilities and accredited healthcare practitioners.',
+    linkedinUrl: '',
+    twitterUrl: '',
+    facebookUrl: '',
+    youtubeUrl: '',
   }
 };
 
-export const defaultProducts: Product[] = [
-  {
-    id: 'prod-ivf-workstation-aura',
-    name: 'AuraFlow Prime Laminar IVF Workstation',
-    category: 'IVF Workstations',
-    modelNumber: 'AF-2000-DUO',
-    shortDesc: 'Dual-operator Class II laminar flow workstation with integrated heated glass stages and stereomicroscope ports.',
-    fullDesc: 'The AuraFlow Prime Workstation provides an ultra-clean ISO Class 5 laminar air environment explicitly calibrated for oocyte retrieval, denudation, and embryo handling. Featuring dual independent thermal zones (PID controlled to ±0.1°C), vibration-isolated microscope platforms, and dimmable halogen-free LED illumination.',
-    price: '$12,500 – $18,200',
-    priceType: 'range',
-    inStock: true,
-    isFeatured: true,
-    image: workstationImg,
-    features: [
-      'Dual independent temperature-regulated work zones with heated glass inserts',
-      'Built-in anti-vibration table mechanism for high-magnification stereomicroscopy',
-      'Ultra-quiet DC ECM motor with HEPA/ULPA filtration (>99.999% efficiency at 0.12 μm)',
-      'Multi-stage VOC carbon gas filtration safeguarding sensitive gametes',
-      'Stainless steel 316 grade seamless worktable with rounded antimicrobial corners'
-    ],
-    specs: [
-      { key: 'Airflow Velocity', value: '0.35 m/s to 0.45 m/s uniform vertical flow' },
-      { key: 'Temperature Stability', value: '±0.1°C across heated stage surface' },
-      { key: 'Noise Level', value: '< 51 dBA at operator position' },
-      { key: 'Filtration', value: 'ULPA U15 filter + Pre-filter + VOC activated carbon' },
-      { key: 'Dimensions (W x D x H)', value: '1800 x 780 x 1400 mm' },
-      { key: 'Electrical Input', value: '220-240V, 50/60Hz, 450W' }
-    ],
-    brochureAvailable: true
+export const defaultCommercialTerms = {
+  terms: [
+    'All prices mentioned are in Indian Rupees (₹), exclusive of all taxes & will be charged extra as applicable.',
+    'Outside Kolkata forwarding charges will be charged extra on actual basis.',
+    'Delivery within 24 hours of order placement (subject to stock availability).',
+    'Payment within 21 days after delivery. A 1% discount will be given as credit note of GST exclusive order value if payment is made within 7 days of delivery of order.',
+    'Commercial validity: FY 25-26 (Valid until 31st March 2026).'
+  ],
+  bankDetails: {
+    bankName: 'UCO Bank',
+    accountName: 'ART Medical',
+    accountNumber: '17610210001660',
+    ifsc: 'UCBA0001761',
+    branch: 'Purna Das Road'
   },
-  {
-    id: 'prod-benchtop-incubator-omni',
-    name: 'OmniCell Multi-Chamber Tri-Gas Incubator',
-    category: 'Incubators & Warming',
-    modelNumber: 'OC-6X-PRO',
-    shortDesc: 'Six independent incubation chambers with individual heated lids and sub-3-minute gas recovery.',
-    fullDesc: 'Designed to replicate the physiological in-vivo environment, the OmniCell 6X incorporates individual sealed incubation chambers preventing cross-chamber environmental loss. High-speed infrared CO2 and ultrasonic O2 sensors ensure optimal pH maintenance and physiological hypoxia (5% O2) culture protocols.',
-    price: '$19,800',
-    priceType: 'fixed',
-    inStock: true,
-    isFeatured: true,
-    image: incubatorImg,
-    features: [
-      '6 completely separate chambers with individual thermal and gas supply manifolds',
-      'Rapid gas recovery: CO2 < 2 minutes, O2 < 3 minutes after 15-second opening',
-      'Direct contact bottom heating and heated lids preventing droplet condensation',
-      'Ethernet logging with real-time temperature/gas telemetry and SMS/Email alarms',
-      'Integrated medical-grade gas pre-heating and inline HEPA filtration'
-    ],
-    specs: [
-      { key: 'Chamber Capacity', value: '6 independent culture chambers (up to 24 dishes)' },
-      { key: 'CO2 Range & Control', value: '2.0% – 10.0% (±0.1% dual IR sensor)' },
-      { key: 'O2 Range & Control', value: '2.0% – 20.0% (±0.2% ultrasonic sensor)' },
-      { key: 'Temp Control Range', value: 'Ambient +5°C to 45°C (±0.1°C stability)' },
-      { key: 'Gas Connections', value: 'Premixed or separate Pure CO2 + N2 inputs' },
-      { key: 'Data Logging', value: 'Internal 90-day memory + USB/Ethernet output' }
-    ],
-    brochureAvailable: true
-  },
-  {
-    id: 'prod-micromanipulator-icsi',
-    name: 'PrecisionICSI Hydraulic Micromanipulator System',
-    category: 'Micromanipulation & Laser',
-    modelNumber: 'PXI-880',
-    shortDesc: 'Smooth 3D hydraulic micromanipulator system with sub-micron drift-free movement for ICSI and biopsy.',
-    fullDesc: 'The PrecisionICSI System provides embryologists with tactile, drift-free movement required for intracytoplasmic sperm injection (ICSI) and trophectoderm biopsy. Mountable on all standard inverted research microscopes (Olympus, Nikon, Leica, Zeiss), it combines hydraulic sensitivity with mechanical rigidity.',
-    price: '$14,200',
-    priceType: 'fixed',
-    inStock: true,
-    isFeatured: true,
-    image: micromanipulatorImg,
-    features: [
-      'Zero-drift hydraulic micro-drive mechanism with sub-micron movement step',
-      'Universal mounting adapters compatible with inverted microscope brands',
-      'Integrated tool holders for holding pipettes and injection needles with angular adjust',
-      'Ergonomic coarse-fine joystick controls positioned for low hand fatigue',
-      'Integrated pneumatic micro-injectors with oil or air displacement modes'
-    ],
-    specs: [
-      { key: 'Maximum Travel (X-Y-Z)', value: '30 mm coarse / 10 mm fine hydraulic travel' },
-      { key: 'Resolution / Drift', value: '< 0.5 μm step / < 1 μm drift per hour' },
-      { key: 'Tool Angle Adjustment', value: '0° to 45° continuous clamp' },
-      { key: 'Operating Medium', value: 'Degassed hydraulic silicone oil' },
-      { key: 'Total Weight', value: '6.4 kg (Left + Right assemblies)' }
-    ],
-    brochureAvailable: true
-  },
-  {
-    id: 'prod-cleanroom-turnkey',
-    name: 'Turnkey Modular IVF Cleanroom Infrastructure',
-    category: 'Turnkey Lab Setup',
-    modelNumber: 'TK-MODULAR-50',
-    shortDesc: 'Complete modular ISO Class 5 cleanroom panels, VOC air scrubbing, positive pressure cascades, and pass-boxes.',
-    fullDesc: 'Our turnkey cleanroom solutions transform clinical spaces into validated reproductive embryology laboratories. We handle architectural layout, anti-static antibacterial partition panels, ceiling HEPA/ULPA grid distribution, continuous positive pressure cascades, pass-through interlocks, and full cleanroom certification.',
-    price: 'Custom Project Quote',
-    priceType: 'inquire',
-    inStock: true,
-    isFeatured: true,
-    image: cleanroomImg,
-    features: [
-      'Modular 50mm cleanroom panels with antibacterial PVDF finish and coved joints',
-      'HVAC system engineered for VOC elimination and positive differential pressure',
-      'Stainless steel 304 dynamic pass-boxes with UV sterilization and interlocks',
-      'Integrated medical gas pipelines (CO2, N2, Medical Air) with auto-switchover manifolds',
-      'Full validation protocols including particle count and airflow velocity testing'
-    ],
-    specs: [
-      { key: 'Cleanliness Class', value: 'ISO 14644-1 Class 5 (Workstations) / Class 7 (Background Lab)' },
-      { key: 'Air Changes / Hour', value: '35 to 55 ACH continuous circulation' },
-      { key: 'Differential Pressure', value: '+15 to +25 Pa positive cascade' },
-      { key: 'Filtration Efficiency', value: 'Pre-filters (90%) + Intermediate (95%) + Terminal HEPA (99.99%)' },
-      { key: 'VOC Scrubbing', value: 'Chemical absorption activated charcoal & KMnO4 bed' }
-    ],
-    brochureAvailable: true
-  },
-  {
-    id: 'prod-cryosafe-storage',
-    name: 'CryoSafe Liquid Nitrogen Bio-Storage Tank',
-    category: 'Cryopreservation',
-    modelNumber: 'CS-LN2-80K',
-    shortDesc: 'Vacuum-insulated cryogenic liquid nitrogen dewar with auto-fill manifold and wireless level telemetry.',
-    fullDesc: 'Engineered for secure long-term cryopreservation of oocytes, sperm, and vitrified blastocysts. Super-insulated multi-layer vacuum design delivers industry-leading static evaporation rates, backed by continuous liquid nitrogen level monitoring and dual redundant temperature probes.',
-    price: '$7,400 – $9,800',
-    priceType: 'range',
-    inStock: true,
-    isFeatured: false,
-    image: incubatorImg,
-    features: [
-      'High-efficiency super-insulation keeping static evaporation below 0.85 L/day',
-      'Liquid level sensor with audible, visual, and remote cloud telemetry alarms',
-      'Durable lockable lid preventing unauthorized access to bio-samples',
-      'Compatible with standard goblets, visotubes, and cryo-canes',
-      'Sturdy roller base with dual-wheel locking castors for effortless lab transit'
-    ],
-    specs: [
-      { key: 'Capacity', value: '80 Liters (up to 4,800 straws or 2,400 cryovials)' },
-      { key: 'Static Holding Time', value: '94 days static storage' },
-      { key: 'Neck Diameter', value: '127 mm wide opening' },
-      { key: 'Dimensions', value: 'Outer Ø 500 mm x Height 950 mm' },
-      { key: 'Alarm Interface', value: 'Dry contact relay + RS485 + Audio Buzzer' }
-    ],
-    brochureAvailable: true
-  },
-  {
-    id: 'prod-dish-consumables',
-    name: 'VitriPlate Certified IVF Culture Dishes & Labware',
-    category: 'Consumables & Labware',
-    modelNumber: 'VP-DISH-SET',
-    shortDesc: 'Sterile medical-grade polystyrene embryo culture dishes, MEA and LAL tested with lot certifications.',
-    fullDesc: 'VitriPlate culture dishes and denudation pipettes undergo rigorous batch screening to guarantee gamete safety. Every batch is certified with Mouse Embryo Assay (MEA > 80% blastocyst development at 96h) and Limulus Amebocyte Lysate (LAL endotoxin < 0.05 EU/ml).',
-    price: '$340 / Box (50 pcs)',
-    priceType: 'fixed',
-    inStock: true,
-    isFeatured: false,
-    image: workstationImg,
-    features: [
-      'Certified MEA tested > 80% blastocyst rate & LAL endotoxin < 0.05 EU/ml',
-      'USP Class VI medical-grade non-embryotoxic crystal clear polystyrene',
-      'Individually peel-wrapped in medical sterile blister pouches',
-      'Deep wells optimized for oil overlay without micro-droplet coalescence',
-      'Lot-specific certificate of analysis (CoA) downloadable for every box'
-    ],
-    specs: [
-      { key: 'Sterilization', value: 'Gamma irradiation (SAL 10^-6)' },
-      { key: 'Configurations', value: 'Center-well, 4-well, GPS micro-well, ICSI holding dish' },
-      { key: 'Shelf Life', value: '3 Years from manufacture' },
-      { key: 'Packaging', value: '50 units per cleanroom sealed inner pack' }
-    ],
-    brochureAvailable: true
+  offices: {
+    registeredOffice: 'C/o- Modhumita Singh. Ground Floor, Village - Kirtankhola, PO - Bakhrahat, PS - Bishnupur, District - South 24 Parganas, WB - 743377',
+    operationalOffice: 'C/O Soumya Brata Banerjee. A/92 Baghajatin, Flat No-3B, Haimanti Apartment, Kolkata - 700092',
+    partner: 'Soumya Brata Banerjee'
   }
-];
+};
+
+export const defaultProducts: Product[] = artProducts;
 
 export const defaultGalleryItems: GalleryItem[] = [
   {
-    id: 'gal-1',
-    title: 'Turnkey IVF Cleanroom Suite',
-    category: 'Clinic Setup',
+    id: 'gal-cleanroom-modular',
+    title: 'Turnkey ISO Class 5 Modular Embryology Cleanroom Suite',
+    category: 'Turnkey Cleanrooms',
     image: cleanroomImg,
-    description: 'Complete ISO Class 5 cleanroom installation featuring modular antibacterial wall panels and positive pressure cascades.',
-    date: '2026'
+    description: 'Complete modular cleanroom architecture engineered to ISO Class 5 / Class 1000 standards. Featuring ceiling-mounted HEPA H14 fan-filter units, positive air pressure cascade (+15 Pa), VOC chemical scrubbers, antibacterial wall panels, and static-dissipative seamless vinyl flooring.',
+    date: '2026',
+    badge: 'ISO Class 5 / Turnkey Engineering',
+    specs: ['HEPA H14 Terminal Filtration', 'Positive Pressure (+15 Pa)', 'Active VOC / Carbon Scrubbers', 'Zero-VOC Clean Seal System'],
+    location: 'Embryology Cleanroom Suite'
   },
   {
-    id: 'gal-2',
-    title: 'Dual Embryology Workstation Center',
-    category: 'IVF Labs',
+    id: 'gal-laminar-workstation',
+    title: 'Dual-Operator Laminar Airflow IVF Workstation Installation',
+    category: 'Embryology Equipment',
     image: workstationImg,
-    description: 'AuraFlow dual heated stage workstations configured with stereomicroscopes for oocyte pickup and denudation.',
-    date: '2026'
+    description: 'Custom-configured Class II dual-operator IVF workstations with integrated precision-heated glass stages, dual stereomicroscopes, ambient LED light attenuation, and independent digital temperature controllers calibrated for gamete manipulation.',
+    date: '2026',
+    badge: 'Class II / Dual Station',
+    specs: ['Dual Heated Glass Inset Stages', 'Vertical Laminar Air Velocity 0.45 m/s', 'Vibration-Free Heavy Table Frame', 'Integrated Heated Pass-Through Hatch'],
+    location: 'Clinical Embryology Lab'
   },
   {
-    id: 'gal-3',
-    title: 'Multi-Chamber Tri-Gas Incubator Bank',
-    category: 'Equipment',
+    id: 'gal-multichamber-incubator',
+    title: 'Multi-Chamber Tri-Gas Incubator Bank (5% O2 Hypoxic Culture)',
+    category: 'Embryology Equipment',
     image: incubatorImg,
-    description: 'Bank of 6-chamber OmniCell tri-gas incubators operating under 5% O2 hypoxic culture conditions.',
-    date: '2026'
+    description: 'High-capacity benchtop incubation bank utilizing multi-chamber tri-gas incubators. Designed for individual patient culture security, rapid CO2/O2 recovery within 2 minutes, and precise 5% O2 physiological hypoxic incubation to achieve optimal blastocyst development.',
+    date: '2026',
+    badge: 'Tri-Gas Hypoxic System',
+    specs: ['6 Independent Patient Chambers', 'Tri-Gas Control: 5% O2, 6% CO2, N2', '<2 min Parameter Recovery', 'Real-Time Temperature & Gas Alarming'],
+    location: 'Culture & Incubation Zone'
   },
   {
-    id: 'gal-4',
-    title: 'ICSI & Trophectoderm Biopsy Station',
-    category: 'Equipment',
+    id: 'gal-icsi-micromanipulator',
+    title: 'ICSI & Laser-Assisted Trophectoderm Biopsy Station',
+    category: 'Embryology Equipment',
     image: micromanipulatorImg,
-    description: 'Precision hydraulic micromanipulator rig calibrated for single-sperm injection and PGT biopsy.',
-    date: '2026'
+    description: 'Precision intracytoplasmic sperm injection (ICSI) station mounted on a heavyweight active granite vibration-isolation platform. Equipped with 3-axis hydraulic micro-positioners, thermal heated glass stage, high-resolution inverted optics, and laser optical collimation for PGT trophectoderm biopsy.',
+    date: '2026',
+    badge: 'Sub-Micron Precision Rig',
+    specs: ['Active Granite Anti-Vibration Base', 'Hydraulic Smooth-Action Joysticks', 'Calibrated PGT Biopsy Laser Module', 'Integrated Embryo Heating Stage'],
+    location: 'Micromanipulation Suite'
   },
   {
-    id: 'gal-5',
-    title: 'State-of-the-Art IVF Laboratory Facility',
-    category: 'IVF Labs',
+    id: 'gal-cold-chain-media',
+    title: '2°C–8°C Validated Media Cold-Chain Logistics Hub',
+    category: 'Media & Cold Chain',
+    image: '/images/products/media_vials_fertipro.jpg',
+    description: 'Dedicated temperature-controlled cold-chain packaging facility at Baghajatin, Kolkata. Every media shipment (Fertipro, Nidacon, Origio, Hitech) is dispatched in certified vacuum-insulated shippers with electronic data loggers ensuring continuous 2°C–8°C temperature preservation during 24-hour delivery.',
+    date: '2026',
+    badge: '2°C–8°C Monitored Protocol',
+    specs: ['Certified Thermal Shipper Containers', 'Continuous USB Temp-Data Loggers', 'Same-Day Dispatch Guarantee', 'Strict Batch Sterility & MEA Testing'],
+    location: 'Kolkata Hub / Eastern India Logistics'
+  },
+  {
+    id: 'gal-media-warehouse',
+    title: 'Ready Stock Culture Media, Gradients & Flushing Buffer Bank',
+    category: 'Media & Cold Chain',
+    image: '/images/products/media_culture_liquid.jpg',
+    description: 'Extensive temperature-monitored inventory of authentic IVF culture media, sperm washing formulations, HTF with Gentamicin, density gradients (45/90, Sil-Select, PureSperm), and recombinant enzymes available with commercial rates valid for FY 25-26.',
+    date: '2026',
+    badge: '147+ Verified Catalog Items',
+    specs: ['Hitech, Fertipro & Origio Stocks', 'Sterility & Endotoxin Certificates', 'Direct Customer Supply Rates in ₹', 'Batch Expiry Monitoring Protocol'],
+    location: 'Central Consumables Inventory'
+  },
+  {
+    id: 'gal-catheters-needles',
+    title: 'Wallace & Allwin Embryo Transfer & OPU Needle Sterile Bank',
+    category: 'Disposables & Catheters',
+    image: '/images/products/catheter_embryo_transfer.jpg',
+    description: 'Authentic sterile clinical inventory of Wallace ONS single lumen aspiration needles, DNS double lumen flushing needles, Surelife curved IUI catheters, and Allwin Medical soft-tip echogenic embryo transfer catheters trusted by senior reproductive clinicians across India.',
+    date: '2026',
+    badge: 'USFDA / CE Class IIa',
+    specs: ['Wallace ONS 1733 / 1633 Needles', 'Allwin Echogenic Embryo Transfer Sets', 'Surelife Curved & Flexible IUI Cannulas', '100% MEA Batch Tested'],
+    location: 'Surgical & Catheter Sterile Staging'
+  },
+  {
+    id: 'gal-falcon-labware',
+    title: 'Falcon & Corning Disposables & Embryo Culture Labware Hub',
+    category: 'Disposables & Catheters',
+    image: '/images/products/falcon_dish_culture.jpg',
+    description: 'Comprehensive inventory of Falcon 3001 (35mm), Falcon 3002 (60mm), Falcon 3037 (4-well), and Falcon 3004 (organ center-well) IVF dishes, along with conical 15ml and 50ml centrifuge tubes, serological pipettes, and non-toxic cryovials.',
+    date: '2026',
+    badge: 'Falcon Authenticity Guaranteed',
+    specs: ['Falcon 3001, 3002, 3004, 3037 Ready Stock', 'Certified Non-Embryotoxic Plasticware', 'Pack Sizes: 20s, 100s, 500s', 'Transparent FY 25-26 Supply Rates'],
+    location: 'Labware Warehousing & Dispatch'
+  },
+  {
+    id: 'gal-cryo-cryobank',
+    title: 'Cryotech Vitrification Media & Cryo Straw Cryobank Setup',
+    category: 'Cryopreservation',
+    image: '/images/products/vitrification_kit_straw.jpg',
+    description: 'High-survival vitrification kits and cryobank equipment featuring genuine Cryotech freezing/warming media (101, 102, 110, 205), Reproplates, Vitrifit carriers, and liquid nitrogen storage dewars with color-coded aluminum canes and protective visotubes.',
+    date: '2026',
+    badge: '>98% Post-Thaw Survival',
+    specs: ['Cryotech Vitrification Kits', 'Cryovials with Silicone Gasket Sealing', 'Liquid Nitrogen Canes & Color Goblets', 'Vapor-Phase Cryo Storage Vessels'],
+    location: 'Cryobiology & Vitrification Suite'
+  },
+  {
+    id: 'gal-clinical-registers',
+    title: 'Mandatory National ART Regulatory Clinical Record Registers',
+    category: 'Clinical Registers',
+    image: '/images/products/registers_clinical_docs.jpg',
+    description: 'Official 50-page hardbound clinical logbooks and registers specifically printed and bound to satisfy National Assisted Reproductive Technology & Surrogacy Regulatory Board requirements. Includes IVF/ICSI Treatment registers, embryology culture sheets, and liquid nitrogen tank inventory logs.',
+    date: '2026',
+    badge: 'Regulatory Mandatory Format',
+    specs: ['50 Ledger-Sized Compliance Pages', 'IVF & ICSI Cycle Record Logbook', 'Embryo Freezing & Storage Register', 'Semen Analysis & IUI Patient Book'],
+    location: 'Clinical Documentation Division'
+  },
+  {
+    id: 'gal-kolkata-dispatch',
+    title: '24-Hour Rapid Dispatch & Order Staging Center',
+    category: 'Operations & Dispatch',
+    image: '/images/products/workstation_laminar_hood.jpg',
+    description: 'Operational order packing and cold-chain staging facility located at A/92 Baghajatin, Kolkata. Designed for rapid order processing within 24 hours of placement, complete with UCO Bank commercial invoicing, GST tax compliance (19ACLFA5383R1ZF), and transit insurance.',
+    date: '2026',
+    badge: '24-Hour SLA / Pan-India Logistics',
+    specs: ['Baghajatin Kolkata Operations', 'GST Invoice & Bank Payment Portal', 'Immediate Courier Staging', '21-Day Credit & 1% Discount Policy'],
+    location: 'Baghajatin, Kolkata - 700092'
+  },
+  {
+    id: 'gal-clinic-turnkey',
+    title: 'Full Turnkey Reproductive Medicine Center Infrastructure',
+    category: 'Turnkey Cleanrooms',
     image: heroImg,
-    description: 'Comprehensive embryology suite setup for high-throughput clinical reproductive operations.',
-    date: '2026'
-  },
-  {
-    id: 'gal-6',
-    title: 'Hands-on Clinical Embryology Workshop',
-    category: 'Trainings & Workshops',
-    image: workstationImg,
-    description: 'Biomedical engineers conducting calibration and protocol training for embryologists and lab directors.',
-    date: '2026'
+    description: 'Full turnkey facility engineering by ART Solution — covering architectural floor planning, gas pipeline manifolds (CO2/N2/Air), positive pressure airlocks, equipment procurement, cleanroom validation, clinical register provisioning, and initial batch media stocking.',
+    date: '2026',
+    badge: 'End-to-End Turnkey Delivery',
+    specs: ['Concept-to-Commissioning Execution', 'Cleanroom Air Balancing & HEPA Validation', 'Comprehensive AMC & Technical Support', 'Offering Full Solution Guarantee'],
+    location: 'Turnkey Fertility Center Projects'
   }
 ];
 
 export const defaultInquiries: Inquiry[] = [
   {
     id: 'inq-1',
-    date: '2026-09-28',
-    timestamp: '2026-09-28 14:32:00',
-    name: 'Dr. Priya Sharma',
-    clinicName: 'Bliss Fertility & Reproductive Hospital',
-    email: 'drpriya@blissfertility.org',
-    phone: '+91 98111 22334',
-    country: 'India',
-    inquiryType: 'Turnkey Lab Setup',
-    message: 'We are expanding our center with a new 800 sq ft embryology cleanroom and require quotation for 2 workstations and 3 tri-gas incubators.',
+    date: '2026-09-29',
+    timestamp: '2026-09-29 11:20:00',
+    name: 'Dr. Debabrata Roy',
+    clinicName: 'Genesis Fertility & IVF Center',
+    email: 'dr.droy@genesisfertility.in',
+    phone: '+91 98301 44552',
+    country: 'India (Kolkata)',
+    inquiryType: 'Consumables Supply',
+    message: 'Require 20 sets of IUI Media Set Glass Vial (Hitech) and 10 packs of Wallace ONS 1733 Single Lumen needles. Please send commercial invoice.',
     status: 'new',
     emailSentTo: 'onlinewithsudip@gmail.com',
-    emailSentAt: '2026-09-28 14:32:05',
+    emailSentAt: '2026-09-29 11:20:05',
     emailDeliveryStatus: 'delivered'
   },
   {
     id: 'inq-2',
-    date: '2026-09-27',
-    timestamp: '2026-09-27 10:15:00',
-    name: 'Dr. Marcus Vance',
-    clinicName: 'Apex Reproductive Medicine Center',
-    email: 'm.vance@apexivf.com',
-    phone: '+44 20 7946 0912',
-    country: 'United Kingdom',
-    inquiryType: 'Equipment Purchase',
-    message: 'Interested in the PrecisionICSI Hydraulic Micromanipulator and OmniCell 6X incubator. Please send technical datasheets and delivery schedule.',
-    productId: 'prod-micromanipulator-icsi',
-    productName: 'PrecisionICSI Hydraulic Micromanipulator System',
+    date: '2026-09-28',
+    timestamp: '2026-09-28 15:45:00',
+    name: 'Dr. Ananya Sen',
+    clinicName: 'Care Reproductive Healthcare',
+    email: 'ananya.sen@careivf.com',
+    phone: '+91 98312 99881',
+    country: 'India (West Bengal)',
+    inquiryType: 'Consumables Supply',
+    message: 'Please send quotation for Fertipro USFDA Approved IUI Media Sets and Cryotech vitrification kits with delivery schedule.',
+    productId: 'prod-iui-media-set-5-ml-htf-1-ml-upper-layer-1-ml-lower-layer-usfda-approved',
+    productName: 'IUI Media Set (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) ( USFDA Approved )',
     status: 'contacted',
     emailSentTo: 'onlinewithsudip@gmail.com',
-    emailSentAt: '2026-09-27 10:15:10',
+    emailSentAt: '2026-09-28 15:45:10',
     emailDeliveryStatus: 'delivered'
   }
 ];

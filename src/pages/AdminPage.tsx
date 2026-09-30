@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import * as XLSX from 'xlsx';
 import { useSite } from '../context/SiteContext';
 import {
   Product,
@@ -46,8 +47,12 @@ import {
   UploadCloud,
   Layout,
   Globe,
+  Tag,
+  Building2,
+  Box,
+  FileSpreadsheet,
 } from 'lucide-react';
-import { heroImg, cleanroomImg } from '../data/defaultData';
+import { heroImg, cleanroomImg, mediaVialsImg, catheterImg, labwareImg, cryoImg, registerImg } from '../data/defaultData';
 import { BrandIcon, AVAILABLE_ICONS } from '../components/BrandIcon';
 
 export const AdminPage: React.FC = () => {
@@ -60,6 +65,10 @@ export const AdminPage: React.FC = () => {
     addProduct,
     updateProduct,
     deleteProduct,
+    categories,
+    addCategory,
+    editCategory,
+    removeCategory,
     galleryItems,
     addGalleryItem,
     updateGalleryItem,
@@ -102,7 +111,7 @@ export const AdminPage: React.FC = () => {
 
   // Local state for lead email test
   const [testEmailAddress, setTestEmailAddress] = useState(
-    themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'
+    themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'
   );
   const [isTestingEmail, setIsTestingEmail] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -112,24 +121,44 @@ export const AdminPage: React.FC = () => {
   const [forwardEmailInput, setForwardEmailInput] = useState('');
   const [isForwarding, setIsForwarding] = useState(false);
 
+  // Category Manager Modal state
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryInput, setNewCategoryInput] = useState('');
+  const [editingCatName, setEditingCatName] = useState<string | null>(null);
+  const [editedCatNameInput, setEditedCatNameInput] = useState('');
+  const [showInlineAddCat, setShowInlineAddCat] = useState(false);
+  const [inlineCatInput, setInlineCatInput] = useState('');
+
+  // Bulk Excel / CSV Import Modal state
+  const [isBulkImportModalOpen, setIsBulkImportModalOpen] = useState(false);
+  const [importedPreview, setImportedPreview] = useState<Omit<Product, 'id'>[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
+  const excelFileInputRef = useRef<HTMLInputElement>(null);
+  const [adminProductSearch, setAdminProductSearch] = useState('');
+  const [adminCategoryFilter, setAdminCategoryFilter] = useState('All');
+
   // Local state for Product modal (Add or Edit)
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [productForm, setProductForm] = useState<Omit<Product, 'id'>>({
     name: '',
-    category: 'IVF Workstations',
+    category: categories[0] || 'IUI & IVF Media',
     modelNumber: '',
+    makeImporter: '',
+    packSize: '',
+    rate: 550,
     shortDesc: '',
     fullDesc: '',
-    price: '$10,000',
+    price: '₹550',
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
     image: '',
-    features: ['ISO Class 5 laminar air environment', 'PID temperature stability ±0.1°C'],
+    features: ['Sterility certified', 'MEA batch tested for high viability'],
     specs: [
-      { key: 'Temperature Stability', value: '±0.1°C' },
-      { key: 'Dimensions', value: '1800 x 780 x 1400 mm' },
+      { key: 'Make / Importer', value: 'ART Solution' },
+      { key: 'Pack Size', value: 'Single Sterile' },
+      { key: 'FY 25-26 Cust Supply Rate', value: '₹550' }
     ],
   });
   const [newFeatureText, setNewFeatureText] = useState('');
@@ -225,19 +254,23 @@ export const AdminPage: React.FC = () => {
     setEditingProductId(null);
     setProductForm({
       name: '',
-      category: 'IVF Workstations',
-      modelNumber: 'MOD-' + Math.floor(100 + Math.random() * 900),
+      category: categories[0] || 'IUI & IVF Media',
+      modelNumber: 'ART-' + Math.floor(100 + Math.random() * 900),
+      makeImporter: 'ART Solution',
+      packSize: 'Single Sterile',
+      rate: 550,
       shortDesc: '',
       fullDesc: '',
-      price: '$12,000',
+      price: '₹550',
       priceType: 'fixed',
       inStock: true,
       isFeatured: false,
-      image: products[0]?.image || '',
-      features: ['Precision thermal PID regulation', 'Cleanroom HEPA filtration'],
+      image: mediaVialsImg || products[0]?.image || '',
+      features: ['Sterility certified', 'MEA batch tested for clinical compliance'],
       specs: [
-        { key: 'Filtration Efficiency', value: '99.999% at 0.12 μm' },
-        { key: 'Temperature Uniformity', value: '±0.1°C' },
+        { key: 'Make / Importer', value: 'ART Solution' },
+        { key: 'Pack Size', value: 'Single Sterile' },
+        { key: 'FY 25-26 Cust Supply Rate', value: '₹550' },
       ],
     });
     setIsProductModalOpen(true);
@@ -249,6 +282,9 @@ export const AdminPage: React.FC = () => {
       name: prod.name,
       category: prod.category,
       modelNumber: prod.modelNumber,
+      makeImporter: prod.makeImporter || '',
+      packSize: prod.packSize || '',
+      rate: prod.rate || 0,
       shortDesc: prod.shortDesc,
       fullDesc: prod.fullDesc,
       price: prod.price,
@@ -260,6 +296,143 @@ export const AdminPage: React.FC = () => {
       specs: [...prod.specs],
     });
     setIsProductModalOpen(true);
+  };
+
+  // Excel / CSV File parser handler
+  const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const bstr = evt.target?.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const wsName = wb.SheetNames[0];
+        const ws = wb.Sheets[wsName];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+
+        if (!rows || rows.length === 0) {
+          showToast('No product records detected in file', 'error');
+          return;
+        }
+
+        const parsedProducts: Omit<Product, 'id'>[] = rows.map((row, idx) => {
+          const desc = row['Description'] || row['description'] || row['Item'] || row['Product'] || row['Name'] || `Product ${idx + 1}`;
+          const make = row['Make/Importer'] || row['Make'] || row['Importer'] || row['Manufacturer'] || row['Brand'] || 'ART Solution';
+          const pack = row['Pack Size in ml/pice'] || row['Pack Size'] || row['Pack'] || row['Size'] || 'Single Sterile';
+          const rawRate = row['FY 25-26 Cust Supply Rate'] || row['Supply Rate'] || row['Rate'] || row['Price'] || row['Rate (₹)'] || '550';
+          const numericRate = typeof rawRate === 'number' ? rawRate : parseFloat(String(rawRate).replace(/[^0-9.]/g, '')) || 550;
+          const formattedPrice = `₹${numericRate.toLocaleString('en-IN')}`;
+
+          let cat = row['Category'] || row['category'];
+          if (!cat) {
+            const descLower = String(desc).toLowerCase();
+            if (descLower.includes('catheter') || descLower.includes('cannula') || descLower.includes('lumen') || descLower.includes('needle') || descLower.includes('opu')) {
+              cat = 'Needles, Catheters & Cannulas';
+            } else if (descLower.includes('oil') || descLower.includes('gradient') || descLower.includes('sil select')) {
+              cat = 'Oils & Density Gradients';
+            } else if (descLower.includes('cryo') || descLower.includes('vitrif') || descLower.includes('freeze') || descLower.includes('straw') || descLower.includes('cane') || descLower.includes('goblet')) {
+              cat = 'Cryopreservation & Vitrification';
+            } else if (descLower.includes('dish') || descLower.includes('tube') || descLower.includes('mat') || descLower.includes('syringe') || descLower.includes('container')) {
+              cat = 'Disposables & Labware';
+            } else if (descLower.includes('tip') || descLower.includes('pipette') || descLower.includes('stripper')) {
+              cat = 'Micropipettes & Stripper Tips';
+            } else if (descLower.includes('pvp') || descLower.includes('hydase') || descLower.includes('prp') || descLower.includes('dna') || descLower.includes('magic')) {
+              cat = 'Enzymes & Preparation Kits';
+            } else if (descLower.includes('register') || descLower.includes('record')) {
+              cat = 'Clinical Registers & Documentation';
+            } else if (descLower.includes('workstation') || descLower.includes('incubator') || descLower.includes('manipulator') || descLower.includes('cleanroom')) {
+              cat = 'Laboratory Equipment & Accessories';
+            } else {
+              cat = 'IUI & IVF Media';
+            }
+          }
+
+          let chosenImg = mediaVialsImg;
+          if (cat === 'Needles, Catheters & Cannulas') chosenImg = catheterImg;
+          else if (cat === 'Disposables & Labware') chosenImg = labwareImg;
+          else if (cat === 'Cryopreservation & Vitrification') chosenImg = cryoImg;
+          else if (cat === 'Clinical Registers & Documentation') chosenImg = registerImg;
+          else if (cat === 'Micropipettes & Stripper Tips') chosenImg = catheterImg;
+
+          return {
+            name: String(desc),
+            category: cat,
+            modelNumber: `ART-${String(make).toUpperCase().replace(/[^A-Z0-9]/g, '')}-${Math.floor(100 + Math.random() * 900)}`,
+            makeImporter: String(make),
+            packSize: String(pack),
+            rate: numericRate,
+            price: formattedPrice,
+            priceType: 'fixed' as const,
+            inStock: true,
+            isFeatured: false,
+            image: chosenImg,
+            shortDesc: `${desc} by ${make}. Pack size: ${pack}. FY 25-26 Cust Supply Rate: ${formattedPrice}.`,
+            fullDesc: `${desc} is an authentic clinical IVF/ART product manufactured/imported by ${make}. Validated for reproductive medicine laboratories. Pack: ${pack}.`,
+            features: [
+              `Make / Importer: ${make}`,
+              `Pack Size: ${pack}`,
+              `Supply Rate: ${formattedPrice}`,
+              'Batch verified and sterility certified'
+            ],
+            specs: [
+              { key: 'Make / Importer', value: String(make) },
+              { key: 'Pack Size', value: String(pack) },
+              { key: 'FY 25-26 Cust Supply Rate', value: formattedPrice },
+              { key: 'Validity', value: '31st March 2026' }
+            ]
+          };
+        });
+
+        setImportedPreview(parsedProducts);
+        setIsBulkImportModalOpen(true);
+        showToast(`Parsed ${parsedProducts.length} items from file! Review preview before adding.`, 'info');
+      } catch (err) {
+        showToast('Error reading Excel/CSV file: ' + (err as any).message, 'error');
+      }
+    };
+    reader.readAsBinaryString(file);
+    if (e.target) e.target.value = '';
+  };
+
+  const handleConfirmBulkImport = () => {
+    if (importedPreview.length === 0) return;
+    setIsImporting(true);
+
+    importedPreview.forEach((p) => {
+      if (p.category && !categories.includes(p.category)) {
+        addCategory(p.category);
+      }
+      addProduct(p);
+    });
+
+    showToast(`Successfully added ${importedPreview.length} products to inventory!`, 'success');
+    setIsBulkImportModalOpen(false);
+    setImportedPreview([]);
+    setIsImporting(false);
+  };
+
+  const exportProductsCSV = () => {
+    const headers = ['Description', 'Make/Importer', 'Pack Size', 'FY 25-26 Cust Supply Rate', 'Category', 'Code'];
+    const rows = products.map((p) => [
+      `"${p.name.replace(/"/g, '""')}"`,
+      `"${(p.makeImporter || 'ART Solution').replace(/"/g, '""')}"`,
+      `"${(p.packSize || 'Single Sterile').replace(/"/g, '""')}"`,
+      `"${p.price.replace(/"/g, '""')}"`,
+      `"${p.category.replace(/"/g, '""')}"`,
+      `"${p.modelNumber.replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `art_solution_catalog_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Catalog exported to CSV successfully!', 'success');
   };
 
   const handleSaveProduct = (e: React.FormEvent) => {
@@ -721,10 +894,10 @@ export const AdminPage: React.FC = () => {
                     {settingsForm.logoType !== 'image' && (
                       <div>
                         <div className="font-bold text-slate-900 leading-tight">
-                          {settingsForm.logoText || 'A to Z Fertility'}
+                          {settingsForm.logoText || 'ART Solution'}
                         </div>
                         <div className="text-[11px] text-slate-500">
-                          {settingsForm.logoTagline || 'Complete Turnkey Solutions'}
+                          {settingsForm.logoTagline || 'Offering Full Solution'}
                         </div>
                       </div>
                     )}
@@ -1013,7 +1186,7 @@ export const AdminPage: React.FC = () => {
                       setSettingsForm({ ...settingsForm, logoText: e.target.value });
                       setHasUnsavedChanges(true);
                     }}
-                    placeholder="A to Z Fertility"
+                    placeholder="ART Solution"
                     className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-sm"
                   />
                 </div>
@@ -1029,7 +1202,7 @@ export const AdminPage: React.FC = () => {
                       setSettingsForm({ ...settingsForm, logoTagline: e.target.value });
                       setHasUnsavedChanges(true);
                     }}
-                    placeholder="Complete Turnkey Solutions"
+                    placeholder="Offering Full Solution"
                     className="w-full p-2.5 rounded-xl border border-slate-200 font-medium text-xs"
                   />
                 </div>
@@ -1051,7 +1224,7 @@ export const AdminPage: React.FC = () => {
                           accept="image/*"
                           onChange={(e) =>
                             handleFileUpload(e, (base64) => {
-                              setSettingsForm({ ...settingsForm, logoUrl: base64, logoType: 'both' });
+                              setSettingsForm({ ...settingsForm, logoUrl: base64, logoType: 'image' });
                               setHasUnsavedChanges(true);
                             })
                           }
@@ -1177,7 +1350,7 @@ export const AdminPage: React.FC = () => {
                       });
                       setHasUnsavedChanges(true);
                     }}
-                    placeholder="© 2026 A to Z Fertility Solutions. All rights reserved."
+                    placeholder="© 2026 ART Solution. All rights reserved."
                     className="w-full p-2.5 rounded-xl border border-slate-200"
                   />
                 </div>
@@ -2375,7 +2548,7 @@ export const AdminPage: React.FC = () => {
                         accept="image/*"
                         onChange={(e) =>
                           handleFileUpload(e, (base64) => {
-                            updateThemeSettings({ logoUrl: base64, logoType: 'both' });
+                            updateThemeSettings({ logoUrl: base64, logoType: 'image' });
                           })
                         }
                         className="hidden"
@@ -2518,23 +2691,107 @@ export const AdminPage: React.FC = () => {
         {/* ============================================================== */}
         {adminTab === 'products' && (
           <div className="space-y-6 animate-in fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
               <div>
-                <h3 className="text-base font-bold text-slate-900">
-                  Equipment Catalog Management
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <span>Equipment & Consumables Catalog</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 font-mono font-bold border border-teal-200">
+                    {products.length} Items (₹)
+                  </span>
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Add, update, or remove medical systems, pricing, specifications, and images.
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Manage categories, add/edit clinical products, customer supply rates in ₹, and bulk import Excel files.
                 </p>
               </div>
 
-              <button
-                onClick={openAddProductModal}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-700 text-white hover:bg-teal-800 text-xs font-semibold shadow-xs transition-colors shrink-0"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add New Equipment</span>
-              </button>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                {/* Manage Categories Button (Directly requested by user) */}
+                <button
+                  onClick={() => setIsCategoryModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-200 shadow-xs transition-colors"
+                >
+                  <Tag className="w-3.5 h-3.5 text-teal-700" />
+                  <span>Manage Categories</span>
+                  <span className="px-1.5 py-0.5 rounded-full bg-teal-600 text-white text-[10px] font-mono">
+                    {categories.length}
+                  </span>
+                </button>
+
+                {/* Bulk Import Button */}
+                <button
+                  onClick={() => excelFileInputRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-semibold border border-sky-200 shadow-xs transition-colors"
+                  title="Upload Excel (.xlsx, .xls) or CSV file"
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-sky-600" />
+                  <span>Import Excel / CSV</span>
+                </button>
+                <input
+                  type="file"
+                  ref={excelFileInputRef}
+                  accept=".xlsx,.xls,.csv"
+                  onChange={handleExcelUpload}
+                  className="hidden"
+                />
+
+                {/* Export CSV Button */}
+                <button
+                  onClick={exportProductsCSV}
+                  className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 shadow-xs transition-colors"
+                  title="Download inventory as CSV"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Export CSV</span>
+                </button>
+
+                {/* Add New Equipment Button */}
+                <button
+                  onClick={openAddProductModal}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-teal-700 text-white hover:bg-teal-800 text-xs font-semibold shadow-xs transition-colors shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add New Equipment</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Admin Filter & Search Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+              <div className="relative flex-1 w-full">
+                <input
+                  type="text"
+                  value={adminProductSearch}
+                  onChange={(e) => setAdminProductSearch(e.target.value)}
+                  placeholder="Quick search by name, Make, pack size, code..."
+                  className="w-full pl-8 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                {adminProductSearch && (
+                  <button
+                    onClick={() => setAdminProductSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <span className="text-slate-500 font-medium shrink-0">Filter:</span>
+                <select
+                  value={adminCategoryFilter}
+                  onChange={(e) => setAdminCategoryFilter(e.target.value)}
+                  className="p-2 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 w-full sm:w-auto"
+                >
+                  <option value="All">All Categories ({categories.length})</option>
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Product List Table */}
@@ -2543,89 +2800,107 @@ export const AdminPage: React.FC = () => {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
                     <tr>
-                      <th className="py-3 px-4">Item</th>
+                      <th className="py-3 px-4">Item / Description</th>
+                      <th className="py-3 px-4">Make / Importer</th>
+                      <th className="py-3 px-4">Pack Size</th>
                       <th className="py-3 px-4">Category</th>
-                      <th className="py-3 px-4">Model</th>
-                      <th className="py-3 px-4">Price / Estimate</th>
+                      <th className="py-3 px-4">Supply Rate (₹)</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {products.map((prod) => (
-                      <tr key={prod.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={prod.image}
-                              alt={prod.name}
-                              className="w-12 h-12 rounded-lg object-cover border border-slate-200 bg-slate-100 shrink-0"
-                            />
-                            <div>
-                              <span className="font-bold text-slate-900 block line-clamp-1 max-w-xs">
-                                {prod.name}
-                              </span>
-                              <span className="text-[11px] text-slate-400 line-clamp-1 max-w-xs">
-                                {prod.shortDesc}
-                              </span>
+                    {products
+                      .filter((prod) => {
+                        const matchesCat =
+                          adminCategoryFilter === 'All' || prod.category === adminCategoryFilter;
+                        const q = adminProductSearch.toLowerCase().trim();
+                        const matchesSearch =
+                          !q ||
+                          prod.name.toLowerCase().includes(q) ||
+                          prod.modelNumber.toLowerCase().includes(q) ||
+                          (prod.makeImporter && prod.makeImporter.toLowerCase().includes(q)) ||
+                          (prod.packSize && prod.packSize.toLowerCase().includes(q)) ||
+                          prod.category.toLowerCase().includes(q);
+                        return matchesCat && matchesSearch;
+                      })
+                      .map((prod) => (
+                        <tr key={prod.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={prod.image}
+                                alt={prod.name}
+                                className="w-12 h-12 rounded-lg object-cover border border-slate-200 bg-slate-100 shrink-0"
+                              />
+                              <div>
+                                <span className="font-bold text-slate-900 block line-clamp-1 max-w-xs">
+                                  {prod.name}
+                                </span>
+                                <span className="text-[11px] text-slate-400 font-mono">
+                                  {prod.modelNumber}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 font-medium text-slate-700">
-                          {prod.category}
-                        </td>
-                        <td className="py-3.5 px-4 font-mono text-slate-500">
-                          {prod.modelNumber}
-                        </td>
-                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900 tabular-nums">
-                          {prod.price}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          {prod.inStock ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              In Stock
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
-                              Order
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => viewProduct(prod.id)}
-                              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                              title="View on site"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => openEditProductModal(prod)}
-                              className="p-1.5 rounded-lg text-sky-600 hover:bg-sky-50"
-                              title="Edit product"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (
-                                  window.confirm(
-                                    `Are you sure you want to delete "${prod.name}"?`
-                                  )
-                                ) {
-                                  deleteProduct(prod.id);
-                                }
-                              }}
-                              className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50"
-                              title="Delete product"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="py-3.5 px-4 font-semibold text-sky-800">
+                            {prod.makeImporter || 'ART Solution'}
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-600 font-mono text-[11px]">
+                            {prod.packSize || 'Single Sterile'}
+                          </td>
+                          <td className="py-3.5 px-4 font-medium text-slate-700">
+                            {prod.category}
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-900 tabular-nums">
+                            {prod.price}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            {prod.inStock ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                In Stock
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
+                                Order
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => viewProduct(prod.id)}
+                                className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                title="View on site"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => openEditProductModal(prod)}
+                                className="p-1.5 rounded-lg text-sky-600 hover:bg-sky-50"
+                                title="Edit product"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (
+                                    window.confirm(
+                                      `Are you sure you want to delete "${prod.name}"?`
+                                    )
+                                  ) {
+                                    deleteProduct(prod.id);
+                                  }
+                                }}
+                                className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50"
+                                title="Delete product"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -3099,9 +3374,9 @@ export const AdminPage: React.FC = () => {
                     accept="image/*"
                     onChange={(e) =>
                       handleFileUpload(e, (base64) => {
-                        const updated = { ...settingsForm, logoUrl: base64 };
+                        const updated = { ...settingsForm, logoUrl: base64, logoType: 'image' as const };
                         setSettingsForm(updated);
-                        updateThemeSettings({ logoUrl: base64 });
+                        updateThemeSettings({ logoUrl: base64, logoType: 'image' });
                       })
                     }
                     className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
@@ -3227,7 +3502,7 @@ export const AdminPage: React.FC = () => {
                           setSettingsForm({ ...settingsForm, leadNotificationEmail: val });
                           setTestEmailAddress(val);
                         }}
-                        placeholder="e.g. sales@atozfertilitysolutions.com"
+                        placeholder="e.g. onlinewithsudip@gmail.com"
                         className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       />
                     </div>
@@ -3249,7 +3524,7 @@ export const AdminPage: React.FC = () => {
                           const val = e.target.value;
                           setSettingsForm({ ...settingsForm, ccNotificationEmail: val });
                         }}
-                        placeholder="e.g. director@atozfertilitysolutions.com"
+                        placeholder="e.g. artmedical4560@gmail.com"
                         className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       />
                     </div>
@@ -3421,7 +3696,7 @@ export const AdminPage: React.FC = () => {
                     Lead Notification Destination
                   </span>
                   <span className="font-mono font-semibold">
-                    {themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'}
+                    {themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}
                   </span>
                 </div>
                 <button
@@ -3496,7 +3771,7 @@ export const AdminPage: React.FC = () => {
                         <span className="text-slate-600">
                           Dispatched to Email:{' '}
                           <span className="font-mono font-semibold text-slate-800">
-                            {inq.emailSentTo || themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'}
+                            {inq.emailSentTo || themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}
                           </span>
                         </span>
                         {inq.emailSentAt && (
@@ -3510,7 +3785,7 @@ export const AdminPage: React.FC = () => {
                         onClick={() => {
                           setForwardingInquiry(inq);
                           setForwardEmailInput(
-                            inq.emailSentTo || themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'
+                            inq.emailSentTo || themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'
                           );
                         }}
                         className="text-[11px] font-semibold text-teal-700 hover:text-teal-900 underline flex items-center gap-1"
@@ -3532,7 +3807,7 @@ export const AdminPage: React.FC = () => {
                     <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
                       <span className="text-slate-500">Contact Details:</span>
                       <a
-                        href={`mailto:${inq.email}?subject=RE: Inquiry with A to Z Fertility Solutions&body=Dear ${encodeURIComponent(inq.name)},%0D%0A%0D%0AThank you for contacting A to Z Fertility Solutions regarding ${encodeURIComponent(inq.productName || inq.inquiryType)}.`}
+                        href={`mailto:${inq.email}?subject=RE: Inquiry with ART Solution&body=Dear ${encodeURIComponent(inq.name)},%0D%0A%0D%0AThank you for contacting ART Solution regarding ${encodeURIComponent(inq.productName || inq.inquiryType)}.`}
                         className="font-mono text-sky-600 hover:underline flex items-center gap-1"
                         title="Click to email customer"
                       >
@@ -3564,8 +3839,8 @@ export const AdminPage: React.FC = () => {
                           onClick={() => {
                             const cleanPhone = inq.phone.replace(/\D/g, '');
                             const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
-                              `Hello ${inq.name}, this is A to Z Fertility Solutions regarding your inquiry about ${
-                                inq.productName || 'our turnkey IVF services'
+                              `Hello ${inq.name}, this is ART Solution regarding your inquiry about ${
+                                inq.productName || 'our IVF and laboratory equipment solutions'
                               }.`
                             )}`;
                             window.open(url, '_blank');
@@ -3703,30 +3978,116 @@ export const AdminPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={productForm.category}
-                    onChange={(e) =>
-                      setProductForm({ ...productForm, category: e.target.value })
-                    }
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
-                  >
-                    <option value="IVF Workstations">IVF Workstations</option>
-                    <option value="Incubators & Warming">Incubators & Warming</option>
-                    <option value="Micromanipulation & Laser">Micromanipulation & Laser</option>
-                    <option value="Turnkey Lab Setup">Turnkey Lab Setup</option>
-                    <option value="Cryopreservation">Cryopreservation</option>
-                    <option value="Consumables & Labware">Consumables & Labware</option>
-                  </select>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold uppercase text-slate-600">
+                      Category *
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowInlineAddCat(!showInlineAddCat)}
+                        className="text-[11px] font-semibold text-teal-700 hover:text-teal-900 underline"
+                      >
+                        {showInlineAddCat ? 'Cancel' : '+ Add Category'}
+                      </button>
+                      <span className="text-slate-300">·</span>
+                      <button
+                        type="button"
+                        onClick={() => setIsCategoryModalOpen(true)}
+                        className="text-[11px] font-semibold text-slate-600 hover:text-slate-900 underline"
+                      >
+                        Manage
+                      </button>
+                    </div>
+                  </div>
+
+                  {showInlineAddCat ? (
+                    <div className="flex items-center gap-1.5 p-1 bg-teal-50 border border-teal-200 rounded-xl">
+                      <input
+                        type="text"
+                        placeholder="New category name..."
+                        value={inlineCatInput}
+                        onChange={(e) => setInlineCatInput(e.target.value)}
+                        className="flex-1 px-2.5 py-1.5 rounded-lg border border-teal-300 bg-white text-xs text-slate-800"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (inlineCatInput.trim()) {
+                            const newName = inlineCatInput.trim();
+                            if (addCategory(newName)) {
+                              setProductForm({ ...productForm, category: newName });
+                            }
+                            setInlineCatInput('');
+                            setShowInlineAddCat(false);
+                          }
+                        }}
+                        className="px-2.5 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-semibold"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowInlineAddCat(false)}
+                        className="p-1 text-slate-400 hover:text-slate-600"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <select
+                      value={productForm.category}
+                      onChange={(e) =>
+                        setProductForm({ ...productForm, category: e.target.value })
+                      }
+                      className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800"
+                    >
+                      {categories.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Model Number
+                    Make / Importer (Brand)
+                  </label>
+                  <input
+                    type="text"
+                    value={productForm.makeImporter || ''}
+                    onChange={(e) =>
+                      setProductForm({ ...productForm, makeImporter: e.target.value })
+                    }
+                    placeholder="e.g. Fertipro, Origio, Wallace, Hitech"
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold uppercase text-slate-600 mb-1">
+                    Pack Size / Format
+                  </label>
+                  <input
+                    type="text"
+                    value={productForm.packSize || ''}
+                    onChange={(e) =>
+                      setProductForm({ ...productForm, packSize: e.target.value })
+                    }
+                    placeholder="e.g. 5 ml HTF + 1 ml Upper Layer, Single Sterile"
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-bold uppercase text-slate-600 mb-1">
+                    Catalog / Model Code
                   </label>
                   <input
                     type="text"
@@ -3734,23 +4095,34 @@ export const AdminPage: React.FC = () => {
                     onChange={(e) =>
                       setProductForm({ ...productForm, modelNumber: e.target.value })
                     }
+                    placeholder="e.g. ART-MED-101"
                     className="w-full p-2.5 rounded-xl border border-slate-200 font-mono"
                   />
                 </div>
 
                 <div>
                   <label className="block font-bold uppercase text-slate-600 mb-1">
-                    Price or Quotation Estimate
+                    FY 25-26 Cust Supply Rate (₹) *
                   </label>
-                  <input
-                    type="text"
-                    value={productForm.price}
-                    onChange={(e) =>
-                      setProductForm({ ...productForm, price: e.target.value })
-                    }
-                    placeholder="e.g. $14,500 or Custom Quote"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-bold"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-500 text-sm">
+                      ₹
+                    </span>
+                    <input
+                      type="text"
+                      required
+                      value={productForm.price.replace(/^₹\s*/, '')}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        setProductForm({
+                          ...productForm,
+                          price: val.startsWith('₹') ? val : `₹${val}`,
+                        });
+                      }}
+                      placeholder="550, 1,000, 8,500"
+                      className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 font-mono font-bold text-slate-900"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -3984,6 +4356,203 @@ export const AdminPage: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* CATEGORY MANAGER MODAL (Add, Edit, Remove Equipment Categories) */}
+      {/* ============================================================== */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl border border-slate-200">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
+                  <Tag className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    Equipment Category Manager
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Add new categories, rename existing categories, or remove unused ones.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setIsCategoryModalOpen(false);
+                  setEditingCatName(null);
+                }}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Add New Category Input */}
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+              <label className="block text-xs font-bold uppercase text-slate-700">
+                + Create New Equipment Category
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="e.g. Laser Systems, Cleanroom Garments, Cryo Canes..."
+                  value={newCategoryInput}
+                  onChange={(e) => setNewCategoryInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (newCategoryInput.trim()) {
+                        if (addCategory(newCategoryInput.trim())) {
+                          setNewCategoryInput('');
+                        }
+                      }
+                    }
+                  }}
+                  className="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-medium text-slate-800 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newCategoryInput.trim()) {
+                      if (addCategory(newCategoryInput.trim())) {
+                        setNewCategoryInput('');
+                      }
+                    } else {
+                      showToast('Please enter a category name.', 'error');
+                    }
+                  }}
+                  className="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Category</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Existing Categories List */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase px-1">
+                <span>Existing Categories ({categories.length})</span>
+                <span>Actions</span>
+              </div>
+              <div className="max-h-72 overflow-y-auto space-y-2 pr-1 divide-y divide-slate-100">
+                {categories.map((cat) => {
+                  const count = products.filter((p) => p.category === cat).length;
+                  const isEditing = editingCatName === cat;
+
+                  return (
+                    <div
+                      key={cat}
+                      className="pt-2 flex items-center justify-between gap-3 text-xs p-2 rounded-xl hover:bg-slate-50 transition-colors"
+                    >
+                      {isEditing ? (
+                        <div className="flex-1 flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={editedCatNameInput}
+                            onChange={(e) => setEditedCatNameInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                if (editedCatNameInput.trim()) {
+                                  if (editCategory(cat, editedCatNameInput.trim())) {
+                                    setEditingCatName(null);
+                                  }
+                                }
+                              }
+                            }}
+                            className="flex-1 px-2.5 py-1.5 rounded-lg border border-teal-400 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (editedCatNameInput.trim()) {
+                                if (editCategory(cat, editedCatNameInput.trim())) {
+                                  setEditingCatName(null);
+                                }
+                              }
+                            }}
+                            className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingCatName(null)}
+                            className="px-2 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs hover:bg-slate-300"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="font-semibold text-slate-800 truncate">
+                              {cat}
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] shrink-0">
+                              {count} {count === 1 ? 'product' : 'products'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingCatName(cat);
+                                setEditedCatNameInput(cat);
+                              }}
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-teal-700 hover:bg-teal-50 transition-colors"
+                              title={`Edit / Rename "${cat}"`}
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (categories.length <= 1) {
+                                  showToast('At least one category must be retained.', 'error');
+                                  return;
+                                }
+                                if (
+                                  window.confirm(
+                                    `Are you sure you want to remove category "${cat}"? Any products assigned to it will be safely moved to another category.`
+                                  )
+                                ) {
+                                  removeCategory(cat);
+                                }
+                              }}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                              title={`Remove "${cat}"`}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCategoryModalOpen(false);
+                  setEditingCatName(null);
+                }}
+                className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}

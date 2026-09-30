@@ -141,6 +141,26 @@ export const ContactPage: React.FC = () => {
 
             {/* Office & Details */}
             <div className="space-y-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center">
+                  <img
+                    src={themeSettings.logoUrl || '/logo.svg'}
+                    alt={themeSettings.logoText || 'ART Solution'}
+                    style={{ height: '44px' }}
+                    className="w-auto object-contain"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== `${window.location.origin}/logo.svg`) {
+                        target.src = '/logo.svg';
+                      }
+                    }}
+                  />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                  GST Verified
+                </span>
+              </div>
+
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
@@ -210,6 +230,29 @@ export const ContactPage: React.FC = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-start gap-3 pt-3 border-t border-slate-100">
+                <Building className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5 text-xs">
+                  <span className="font-bold text-slate-800 uppercase block">
+                    Kolkata Operational Office
+                  </span>
+                  <p className="text-slate-600 leading-relaxed">
+                    C/O Soumya Brata Banerjee. A/92 Baghajatin, Flat No-3B, Haimanti Apartment, Kolkata - 700092
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-slate-700">GSTIN:</span>
+                  <span className="font-mono font-bold text-teal-700">19ACLFA5383R1ZF</span>
+                </div>
+                <div className="flex justify-between items-center text-[11px] text-slate-500 pt-1 border-t border-slate-200">
+                  <span>Official Bank:</span>
+                  <span className="font-medium text-slate-700">UCO Bank (A/C: 17610210001660)</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -242,7 +285,7 @@ export const ContactPage: React.FC = () => {
                   </p>
                   <div className="max-w-md mx-auto text-[11px] text-emerald-800 bg-emerald-100/60 py-2 px-3.5 rounded-xl flex items-center justify-center gap-2 font-mono">
                     <Mail className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                    <span>Lead notification routed to {themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'}</span>
+                    <span>Lead notification routed to {themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}</span>
                   </div>
                   <button
                     onClick={() => {

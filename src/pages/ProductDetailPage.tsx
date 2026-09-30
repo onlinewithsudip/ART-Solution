@@ -162,18 +162,28 @@ export const ProductDetailPage: React.FC = () => {
 
           {/* Right Column: Details, Pricing & WhatsApp Connect */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded bg-slate-100 text-slate-600">
-                  Model: {product.modelNumber}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-700">
+                  Code: {product.modelNumber}
                 </span>
+                {product.makeImporter && (
+                  <span className="text-xs font-bold px-2.5 py-1 rounded bg-sky-100 text-sky-800 border border-sky-200">
+                    Make: {product.makeImporter}
+                  </span>
+                )}
+                {product.packSize && (
+                  <span className="text-xs font-medium px-2.5 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                    Pack: {product.packSize}
+                  </span>
+                )}
                 {product.inStock ? (
                   <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-                    Ready for Clinical Dispatch
+                    In Stock / 24h Dispatch
                   </span>
                 ) : (
                   <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                    Custom Build on Request
+                    Available on Request
                   </span>
                 )}
               </div>
@@ -188,18 +198,22 @@ export const ProductDetailPage: React.FC = () => {
             </div>
 
             {/* Price Box */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                  Price / Quotation Estimate
+                  FY 25-26 Customer Supply Rate
                 </span>
-                <span className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums">
                   {product.price}
                 </span>
+                <span className="text-[11px] text-slate-500 block mt-0.5">
+                  Exclusive of all taxes; forwarding extra on actuals
+                </span>
               </div>
-              <span className="text-xs text-slate-500">
-                Official quotation valid 30 days
-              </span>
+              <div className="text-left sm:text-right text-xs text-slate-500">
+                <span className="font-semibold text-emerald-700 block">1% Prompt Payment Credit</span>
+                <span>if paid within 7 days of delivery</span>
+              </div>
             </div>
 
             {/* WhatsApp Connect Button (Requested by User) */}
@@ -283,6 +297,26 @@ export const ProductDetailPage: React.FC = () => {
           {/* Direct Product Inquiry Form (Requested by User) */}
           <div className="lg:col-span-5">
             <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center">
+                  <img
+                    src={themeSettings.logoUrl || '/logo.svg'}
+                    alt={themeSettings.logoText || 'ART Solution'}
+                    style={{ height: '40px' }}
+                    className="w-auto object-contain"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== `${window.location.origin}/logo.svg`) {
+                        target.src = '/logo.svg';
+                      }
+                    }}
+                  />
+                </div>
+                <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-teal-50 text-teal-700 font-semibold border border-teal-200">
+                  Direct Supply (₹)
+                </span>
+              </div>
+
               <div>
                 <span
                   className="text-xs font-bold uppercase tracking-wider block mb-1"
@@ -310,7 +344,7 @@ export const ProductDetailPage: React.FC = () => {
                   </p>
                   <div className="text-[11px] text-emerald-800 bg-emerald-100/60 py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 font-mono">
                     <Mail className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Lead notification dispatched to {themeSettings.leadNotificationEmail || 'leads@atozfertilitysolutions.com'}</span>
+                    <span>Lead notification dispatched to {themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}</span>
                   </div>
                   <button
                     onClick={() => {

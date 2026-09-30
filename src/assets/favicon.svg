@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="fav_cyan_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#1E3A8A" />
+    </linearGradient>
+    <linearGradient id="fav_soft_teal" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0D9488" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+  </defs>
+
+  <rect width="100" height="100" rx="26" fill="#0F172A" />
+  <rect x="2" y="2" width="96" height="96" rx="24" stroke="url(#fav_cyan_grad)" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- Outer caring swoosh -->
+  <path d="M 50 18 C 70 18, 86 34, 86 54 C 86 70, 74 83, 58 86 C 54 87, 50 84, 51 80 C 52 76, 56 75, 59 74 C 70 71, 78 61, 78 50 C 78 35, 65 24, 50 24 C 36 24, 25 35, 25 49 C 25 58, 30 66, 38 70 C 42 72, 43 76, 40 79 C 37 82, 33 81, 29 78 C 20 72, 15 62, 15 50 C 15 31, 31 18, 50 18 Z" fill="url(#fav_cyan_grad)"/>
+  
+  <!-- Inner embryo / life droplet symbol -->
+  <path d="M 50 34 C 58 34, 64 40, 64 48 C 64 56, 57 63, 49 63 C 44 63, 40 60, 39 55 C 38 50, 42 46, 47 46 C 50 46, 53 49, 54 52 C 55 53, 56 53, 57 51 C 57 47, 54 41, 49 41 C 44 41, 40 45, 40 50 C 40 53, 38 55, 35 55 C 33 55, 32 53, 32 50 C 32 41, 40 34, 50 34 Z" fill="url(#fav_soft_teal)"/>
+  
+  <!-- Vitality pulse dot -->
+  <circle cx="50" cy="50" r="5" fill="#38BDF8"/>
+  <circle cx="68" cy="32" r="3.5" fill="#06B6D4"/>
+  <circle cx="32" cy="68" r="2.5" fill="#0D9488"/>
+</svg>

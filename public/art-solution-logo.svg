@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 110" fill="none">
+  <defs>
+    <linearGradient id="art_navy_cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A8CC" />
+      <stop offset="50%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0F2C59" />
+    </linearGradient>
+    <linearGradient id="art_teal_gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00C9A7" />
+      <stop offset="100%" stop-color="#00838F" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Emblem: Assisted Reproductive Technology (Embryology / Life Motif) -->
+  <g transform="translate(10, 10)">
+    <!-- Outer caring arc in deep navy & cyan -->
+    <path d="M 45 6 C 65 6, 82 22, 82 42 C 82 58, 70 72, 54 75 C 50 76, 47 73, 48 69 C 49 65, 53 64, 56 63 C 67 60, 74 51, 74 41 C 74 27, 61 16, 46 16 C 32 16, 21 27, 21 40 C 21 49, 26 57, 34 61 C 38 63, 39 67, 36 70 C 33 73, 29 72, 25 69 C 16 63, 11 53, 11 41 C 11 22, 26 6, 45 6 Z" fill="url(#art_navy_cyan)"/>
+    
+    <!-- Inner embryo curve in vibrant teal -->
+    <path d="M 45 23 C 53 23, 59 29, 59 37 C 59 45, 52 52, 44 52 C 39 52, 35 49, 34 44 C 33 39, 37 35, 42 35 C 45 35, 48 38, 49 41 C 50 42, 51 42, 52 40 C 52 36, 49 30, 44 30 C 39 30, 35 34, 35 39 C 35 42, 33 44, 30 44 C 28 44, 27 42, 27 39 C 27 30, 35 23, 45 23 Z" fill="url(#art_teal_gradient)"/>
+    
+    <!-- Nucleus dot -->
+    <circle cx="45" cy="38" r="4.5" fill="#0F2C59"/>
+    <circle cx="62" cy="20" r="3" fill="#00A8CC"/>
+  </g>
+
+  <!-- Brand Typography: ART Solution -->
+  <text x="110" y="55" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" letter-spacing="-0.5" fill="#0F2C59">
+    ART
+  </text>
+  <text x="216" y="55" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="44" font-weight="700" letter-spacing="0.5" fill="#00838F">
+    Solution
+  </text>
+
+  <!-- Tagline: OFFERING FULL SOLUTION -->
+  <text x="112" y="85" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" letter-spacing="3.5" fill="#0F2C59">
+    OFFERING FULL SOLUTION
+  </text>
+</svg>

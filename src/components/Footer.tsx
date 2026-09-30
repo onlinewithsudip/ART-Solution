@@ -42,12 +42,20 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               {themeSettings.logoUrl ? (
-                <img
-                  src={themeSettings.logoUrl}
-                  alt={themeSettings.logoText}
-                  style={{ height: '36px' }}
-                  className="w-auto object-contain brightness-110"
-                />
+                <div className="bg-white/95 px-3 py-1.5 rounded-xl shadow-xs inline-flex items-center">
+                  <img
+                    src={themeSettings.logoUrl}
+                    alt={themeSettings.logoText || 'ART Solution'}
+                    style={{ height: '38px' }}
+                    className="w-auto object-contain"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== `${window.location.origin}/logo.svg`) {
+                        target.src = '/logo.svg';
+                      }
+                    }}
+                  />
+                </div>
               ) : (
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-xs"
@@ -60,14 +68,17 @@ export const Footer: React.FC = () => {
                   />
                 </div>
               )}
-              <div>
-                <span className="font-bold text-lg text-white tracking-tight block">
-                  {themeSettings.logoText || 'A to Z Fertility'}
-                </span>
-                <span className="text-[11px] text-slate-400 font-medium">
-                  {themeSettings.logoTagline || 'Complete Turnkey Solutions'}
-                </span>
-              </div>
+
+              {themeSettings.logoType !== 'image' && (
+                <div>
+                  <span className="font-bold text-lg text-white tracking-tight block">
+                    {themeSettings.logoText || 'ART Solution'}
+                  </span>
+                  <span className="text-[11px] text-teal-400 font-semibold tracking-wider uppercase">
+                    {themeSettings.logoTagline || 'Offering Full Solution'}
+                  </span>
+                </div>
+              )}
             </div>
 
             <p className="text-xs leading-relaxed text-slate-400">

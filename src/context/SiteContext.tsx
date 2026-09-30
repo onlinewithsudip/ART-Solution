@@ -14,6 +14,7 @@ import {
   defaultProducts,
   defaultGalleryItems,
   defaultInquiries,
+  DEFAULT_EQUIPMENT_CATEGORIES,
 } from '../data/defaultData';
 
 export interface ToastMessage {
@@ -31,6 +32,11 @@ interface SiteContextType {
   setProductCategoryFilter: (category: string) => void;
   productSearchQuery: string;
   setProductSearchQuery: (query: string) => void;
+
+  categories: string[];
+  addCategory: (name: string) => boolean;
+  editCategory: (oldName: string, newName: string) => boolean;
+  removeCategory: (name: string) => boolean;
   
   themeSettings: ThemeSettings;
   updateThemeSettings: (settings: Partial<ThemeSettings>) => void;
@@ -77,11 +83,12 @@ interface SiteContextType {
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  theme: 'atoz_fertility_theme_v1',
-  content: 'atoz_fertility_content_v1',
-  products: 'atoz_fertility_products_v1',
-  gallery: 'atoz_fertility_gallery_v1',
-  inquiries: 'atoz_fertility_inquiries_v1',
+  theme: 'art_solution_theme_v2',
+  content: 'art_solution_content_v2',
+  products: 'art_solution_products_v5',
+  gallery: 'art_solution_gallery_v3',
+  inquiries: 'art_solution_inquiries_v2',
+  categories: 'art_solution_categories_v4',
 };
 
 const getInitialPage = (): Page => {
@@ -134,7 +141,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.theme);
-      return saved ? { ...defaultThemeSettings, ...JSON.parse(saved) } : defaultThemeSettings;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (!parsed.logoUrl || parsed.logoUrl.trim() === '') {
+          parsed.logoUrl = defaultThemeSettings.logoUrl;
+        }
+        return { ...defaultThemeSettings, ...parsed };
+      }
+      return defaultThemeSettings;
     } catch {
       return defaultThemeSettings;
     }
@@ -151,8 +165,27 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [products, setProducts] = useState<Product[]>(() => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('art_solution_products_v2');
+        localStorage.removeItem('art_solution_products_v3');
+      }
       const saved = localStorage.getItem(STORAGE_KEYS.products);
-      return saved ? JSON.parse(saved) : defaultProducts;
+      if (saved) {
+        const parsed: Product[] = JSON.parse(saved);
+        const dummyIds = new Set([
+          'prod-ivf-workstation-aura',
+          'prod-benchtop-incubator-omni',
+          'prod-micromanipulator-icsi',
+          'prod-turnkey-cleanroom-modular'
+        ]);
+        const cleaned = parsed.filter(
+          (p) => !dummyIds.has(p.id) && p.makeImporter !== 'ART Solution Engineering'
+        );
+        if (cleaned.length >= 100) {
+          return cleaned;
+        }
+      }
+      return defaultProducts;
     } catch {
       return defaultProducts;
     }
@@ -173,6 +206,30 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return saved ? JSON.parse(saved) : defaultInquiries;
     } catch {
       return defaultInquiries;
+    }
+  });
+
+  const [categories, setCategories] = useState<string[]>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('art_solution_categories_v2');
+        localStorage.removeItem('art_solution_categories_v3');
+      }
+      const saved = localStorage.getItem(STORAGE_KEYS.categories);
+      if (saved) {
+        const parsed: string[] = JSON.parse(saved);
+        const dummyCats = new Set([
+          'IVF Workstations',
+          'Incubators & Warming',
+          'Micromanipulation & Laser',
+          'Turnkey Lab Setup'
+        ]);
+        const cleaned = parsed.filter((c) => !dummyCats.has(c));
+        if (cleaned.length > 0) return cleaned;
+      }
+      return DEFAULT_EQUIPMENT_CATEGORIES;
+    } catch {
+      return DEFAULT_EQUIPMENT_CATEGORIES;
     }
   });
 
@@ -225,6 +282,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [inquiries]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(categories));
+    } catch {
+      // ignore storage error
+    }
+  }, [categories]);
+
   // Toast helper
   const showToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -236,6 +301,63 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // Category management functions
+  const addCategory = (name: string): boolean => {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      showToast('Category name cannot be empty', 'error');
+      return false;
+    }
+    if (categories.some((c) => c.toLowerCase() === trimmed.toLowerCase())) {
+      showToast(`Category "${trimmed}" already exists`, 'info');
+      return false;
+    }
+    setCategories((prev) => [...prev, trimmed]);
+    showToast(`Category "${trimmed}" added successfully!`, 'success');
+    return true;
+  };
+
+  const editCategory = (oldName: string, newName: string): boolean => {
+    const trimmedNew = newName.trim();
+    if (!trimmedNew) {
+      showToast('New category name cannot be empty', 'error');
+      return false;
+    }
+    if (oldName === trimmedNew) return true;
+    if (categories.some((c) => c.toLowerCase() === trimmedNew.toLowerCase() && c !== oldName)) {
+      showToast(`Category "${trimmedNew}" already exists`, 'error');
+      return false;
+    }
+    setCategories((prev) => prev.map((c) => (c === oldName ? trimmedNew : c)));
+    // Synchronize all products with old category
+    setProducts((prev) =>
+      prev.map((p) => (p.category === oldName ? { ...p, category: trimmedNew } : p))
+    );
+    if (productCategoryFilter === oldName) {
+      setProductCategoryFilter(trimmedNew);
+    }
+    showToast(`Category "${oldName}" updated to "${trimmedNew}" across all products!`, 'success');
+    return true;
+  };
+
+  const removeCategory = (catName: string): boolean => {
+    if (categories.length <= 1) {
+      showToast('At least one category must be retained', 'error');
+      return false;
+    }
+    const fallbackCategory = categories.find((c) => c !== catName) || 'General Equipment';
+    setCategories((prev) => prev.filter((c) => c !== catName));
+    // Reassign products with removed category to fallback
+    setProducts((prev) =>
+      prev.map((p) => (p.category === catName ? { ...p, category: fallbackCategory } : p))
+    );
+    if (productCategoryFilter === catName) {
+      setProductCategoryFilter('All');
+    }
+    showToast(`Category "${catName}" removed. Associated products moved to "${fallbackCategory}".`, 'info');
+    return true;
   };
 
   // Nav actions
@@ -443,8 +565,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({
           lead: {
             name: 'System Verification Test',
-            clinicName: 'A to Z Fertility Validation Center',
-            email: 'system-test@atozfertilitysolutions.com',
+            clinicName: 'ART Solution HQ Kolkata',
+            email: 'artmedical4560@gmail.com',
             phone: '+91 98712 34567',
             country: 'Corporate Office',
             inquiryType: 'Turnkey Lab Setup',
@@ -485,11 +607,13 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setProducts(defaultProducts);
     setGalleryItems(defaultGalleryItems);
     setInquiries(defaultInquiries);
+    setCategories(DEFAULT_EQUIPMENT_CATEGORIES);
     localStorage.removeItem(STORAGE_KEYS.theme);
     localStorage.removeItem(STORAGE_KEYS.content);
     localStorage.removeItem(STORAGE_KEYS.products);
     localStorage.removeItem(STORAGE_KEYS.gallery);
     localStorage.removeItem(STORAGE_KEYS.inquiries);
+    localStorage.removeItem(STORAGE_KEYS.categories);
     showToast('All website settings and data reset to initial defaults.', 'info');
   };
 
@@ -500,6 +624,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       products,
       galleryItems,
       inquiries,
+      categories,
       exportedAt: new Date().toISOString(),
     };
     return JSON.stringify(data, null, 2);
@@ -513,6 +638,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (parsed.products) setProducts(parsed.products);
       if (parsed.galleryItems) setGalleryItems(parsed.galleryItems);
       if (parsed.inquiries) setInquiries(parsed.inquiries);
+      if (parsed.categories && Array.isArray(parsed.categories)) setCategories(parsed.categories);
       showToast('Website data successfully imported!');
       return true;
     } catch {
@@ -551,7 +677,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const rawNumber = websiteContent.contact.whatsapp.replace(/\D/g, '');
     const defaultMsg =
       websiteContent.contact.whatsappMessage ||
-      `Hello ${websiteContent.contact.companyName}, I would like to inquire about your IVF laboratory equipment and turnkey solutions.`;
+      `Hello ${websiteContent.contact.companyName}, I would like to inquire about your IVF laboratory equipment, media, and turnkey solutions.`;
     const message = customMessage || defaultMsg;
     const url = `https://wa.me/${rawNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -568,6 +694,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProductCategoryFilter,
         productSearchQuery,
         setProductSearchQuery,
+        categories,
+        addCategory,
+        editCategory,
+        removeCategory,
         themeSettings,
         updateThemeSettings,
         websiteContent,

@@ -78,9 +78,15 @@ export const Navbar: React.FC = () => {
               {themeSettings.logoUrl ? (
                 <img
                   src={themeSettings.logoUrl}
-                  alt={themeSettings.logoText}
+                  alt={themeSettings.logoText || 'ART Solution'}
                   style={{ height: `${themeSettings.logoHeight || 42}px` }}
                   className="w-auto object-contain transition-transform group-hover:scale-102"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== `${window.location.origin}/logo.svg`) {
+                      target.src = '/logo.svg';
+                    }
+                  }}
                 />
               ) : (
                 <div
@@ -98,10 +104,10 @@ export const Navbar: React.FC = () => {
               {themeSettings.logoType !== 'image' && (
                 <div className="flex flex-col">
                   <span className="font-bold text-lg sm:text-xl text-slate-900 tracking-tight leading-none group-hover:text-slate-700 transition-colors">
-                    {themeSettings.logoText || 'A to Z Fertility'}
+                    {themeSettings.logoText || 'ART Solution'}
                   </span>
                   <span className="text-[11px] font-medium text-slate-500 tracking-wide mt-1">
-                    {themeSettings.logoTagline || 'Complete Turnkey Solutions'}
+                    {themeSettings.logoTagline || 'Offering Full Solution'}
                   </span>
                 </div>
               )}

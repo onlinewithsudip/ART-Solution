@@ -21,15 +21,22 @@ export interface Product {
   features: string[];
   specs: ProductSpec[];
   brochureAvailable?: boolean;
+  makeImporter?: string;
+  packSize?: string;
+  rate?: number | string;
 }
 
 export interface GalleryItem {
   id: string;
   title: string;
-  category: 'IVF Labs' | 'Equipment' | 'Clinic Setup' | 'Trainings & Workshops';
+  category: string;
   image: string;
   description: string;
   date?: string;
+  badge?: string;
+  specs?: string[];
+  highlight?: string;
+  location?: string;
 }
 
 export interface StatItem {
@@ -112,6 +119,7 @@ export interface ThemeSettings {
   enableEmailAlerts: boolean;
   adminEmail: string;
   adminPassword: string;
+  heroBgStyle?: 'sapphire-teal' | 'ocean-cobalt' | 'midnight-emerald' | 'charcoal-cyan';
 }
 
 export interface Inquiry {
