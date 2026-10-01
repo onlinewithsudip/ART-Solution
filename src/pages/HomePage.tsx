@@ -20,7 +20,8 @@ import {
   BookOpen,
   Building2,
 } from 'lucide-react';
-import heroLabImg from '../assets/images/fertility_hero_lab_1790663824905.jpg';
+
+const heroLabImg = '/images/assets/fertility_hero_lab_1790663824905.jpg';
 
 export const HomePage: React.FC = () => {
   const {

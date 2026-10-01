@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,11 +11,26 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json({ limit: '20mb' }));
-  app.use(express.urlencoded({ limit: '20mb', extended: true }));
+  // Global CORS & preflight handler
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Cache-Control, Pragma');
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    next();
+  });
 
-  // Static uploads directory
+  app.use(express.json({ limit: '25mb' }));
+  app.use(express.urlencoded({ limit: '25mb', extended: true }));
+
+  // Static files and uploads directories
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+  if (fs.existsSync(path.join(__dirname, 'dist'))) {
+    app.use(express.static(path.join(__dirname, 'dist')));
+  }
 
   // Production Storage & Database API routes
   const syncHandler = (await import('./api/sync')).default;

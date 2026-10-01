@@ -70,9 +70,15 @@ async function fetchFromKv(): Promise<SiteDatabase | null> {
     });
     if (res.ok) {
       const data: any = await res.json();
-      if (data && data.result) {
-        const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
-        if (parsed && parsed.products) {
+      if (data && data.result !== undefined && data.result !== null) {
+        let parsed = data.result;
+        if (typeof parsed === 'string') {
+          try { parsed = JSON.parse(parsed); } catch {}
+        }
+        if (typeof parsed === 'string') {
+          try { parsed = JSON.parse(parsed); } catch {}
+        }
+        if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
           return parsed as SiteDatabase;
         }
       }
@@ -88,15 +94,28 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
   const kv = getKvConfig();
   if (!kv) return false;
   try {
-    const res = await fetch(`${kv.url}/set/art_medical_site_db`, {
+    const rawJson = JSON.stringify(db);
+    // 1. Try standard Upstash / Vercel KV REST command payload
+    const res = await fetch(`${kv.url}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${kv.token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(db)
+      body: JSON.stringify(['SET', 'art_medical_site_db', rawJson])
     });
-    return res.ok;
+    if (res.ok) return true;
+
+    // 2. Fallback to /set endpoint
+    const fallbackRes = await fetch(`${kv.url}/set/art_medical_site_db`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${kv.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rawJson)
+    });
+    return fallbackRes.ok;
   } catch (err) {
     console.warn('[STORAGE] KV write failed:', err);
     return false;

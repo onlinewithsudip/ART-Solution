@@ -1,9 +1,10 @@
 import { applyApiHeaders, saveMediaFile } from './storage';
+import { put } from '@vercel/blob';
 
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '15mb',
+      sizeLimit: '25mb',
     },
   },
 };
@@ -36,28 +37,21 @@ export default async function handler(req: any, res: any) {
           base64.replace(/^data:[^;]+;base64,/, ''),
           'base64'
         );
-        const cleanName = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const blobRes = await fetch(`https://blob.vercel-storage.com/${cleanName}`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-            'x-api-version': '7',
-            'content-type': contentType || 'application/octet-stream',
-          },
-          body: buffer,
+        const cleanName = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const blob = await put(cleanName, buffer, {
+          access: 'public',
+          contentType: contentType || 'application/octet-stream',
+          token: process.env.BLOB_READ_WRITE_TOKEN
         });
 
-        if (blobRes.ok) {
-          const blobData: any = await blobRes.json();
-          if (blobData && blobData.url) {
-            return res.status(200).json({
-              success: true,
-              url: blobData.url,
-              id: blobData.pathname || cleanName,
-              filename,
-              provider: 'vercel-blob'
-            });
-          }
+        if (blob && blob.url) {
+          return res.status(200).json({
+            success: true,
+            url: blob.url,
+            id: blob.pathname || cleanName,
+            filename,
+            provider: 'vercel-blob'
+          });
         }
       } catch (blobErr) {
         console.warn('[UPLOAD] Vercel blob direct upload error, using fallback:', blobErr);
