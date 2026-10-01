@@ -230,7 +230,7 @@ export const ProductDetailPage: React.FC = () => {
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm bg-[#25D366] text-white hover:bg-[#20ba5a] active:scale-98 transition-all shadow-sm"
               >
                 <MessageCircle className="w-5 h-5 fill-current stroke-none" />
-                <span>Inquire on WhatsApp about this Model</span>
+                <span>Inquire on WhatsApp (+91 98754 06943)</span>
               </button>
             </div>
 

@@ -1,30 +1,18 @@
 import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../types';
 import { artProducts, DEFAULT_EQUIPMENT_CATEGORIES } from './artProducts';
 
-import heroImg from '../assets/images/fertility_hero_lab_1790663824905.jpg';
-import workstationImg from '../assets/images/product_ivf_workstation_1790663839811.jpg';
-import incubatorImg from '../assets/images/product_benchtop_incubator_1790663852918.jpg';
-import micromanipulatorImg from '../assets/images/product_micromanipulator_1790663865258.jpg';
-import cleanroomImg from '../assets/images/gallery_cleanroom_setup_1790663877901.jpg';
-import mediaVialsImg from '../assets/images/art_media_vials_1790759397048.jpg';
-import catheterImg from '../assets/images/art_catheters_cannula_1790759417050.jpg';
-import labwareImg from '../assets/images/art_petri_labware_1790759431806.jpg';
-import cryoImg from '../assets/images/art_cryo_devices_1790759458406.jpg';
-import registerImg from '../assets/images/art_clinic_registers_1790759495328.jpg';
+export const heroImg = '/images/assets/fertility_hero_lab_1790663824905.jpg';
+export const workstationImg = '/images/assets/product_ivf_workstation_1790663839811.jpg';
+export const incubatorImg = '/images/assets/product_benchtop_incubator_1790663852918.jpg';
+export const micromanipulatorImg = '/images/assets/product_micromanipulator_1790663865258.jpg';
+export const cleanroomImg = '/images/assets/gallery_cleanroom_setup_1790663877901.jpg';
+export const mediaVialsImg = '/images/assets/art_media_vials_1790759397048.jpg';
+export const catheterImg = '/images/assets/art_catheters_cannula_1790759417050.jpg';
+export const labwareImg = '/images/assets/art_petri_labware_1790759431806.jpg';
+export const cryoImg = '/images/assets/art_cryo_devices_1790759458406.jpg';
+export const registerImg = '/images/assets/art_clinic_registers_1790759495328.jpg';
 
-export {
-  heroImg,
-  workstationImg,
-  incubatorImg,
-  micromanipulatorImg,
-  cleanroomImg,
-  mediaVialsImg,
-  catheterImg,
-  labwareImg,
-  cryoImg,
-  registerImg,
-  DEFAULT_EQUIPMENT_CATEGORIES
-};
+export { DEFAULT_EQUIPMENT_CATEGORIES };
 
 export const defaultThemeSettings: ThemeSettings = {
   primaryColor: '#0284c7', // Medical Azure / Cyan
@@ -49,7 +37,7 @@ export const defaultWebsiteContent: WebsiteContent = {
   header: {
     topRibbonKicker: 'GSTIN: 19ACLFA5383R1ZF',
     topRibbonSubtitle: 'Offering Full Solution — IVF Labs, Media & Clinical Disposables',
-    topRibbonPhone: '+91 9330951039',
+    topRibbonPhone: '+91 98754 06943',
     ctaButtonText: 'Request Quotation (₹)',
   },
   hero: {
@@ -62,16 +50,16 @@ export const defaultWebsiteContent: WebsiteContent = {
     stats: [
       { label: 'Clinical Products', value: '147 Items', detail: 'Authentic media, kits & devices' },
       { label: 'Delivery Turnaround', value: 'Within 24h', detail: 'Rapid dispatch protocol' },
-      { label: 'Direct Helpline', value: '9330951039', detail: 'Kolkata & Pan-India support' },
+      { label: 'Direct Helpline', value: '+91 98754 06943', detail: 'Kolkata & Pan-India support' },
       { label: 'GST Certified', value: '19ACLFA5383R1ZF', detail: '100% Tax compliant billing' }
     ],
     heroImage: heroImg,
   },
   about: {
     title: 'Empowering Reproductive Medicine, Offering Full Solution',
-    subtitle: 'ART Solution is your premier partner for assisted reproduction technologies, high-yield culture media, disposables, precision equipment, and turnkey laboratory installations.',
-    storyParagraph1: 'ART Solution operates with a clear mandate: offering full, dependable solutions for IVF laboratories, clinical embryologists, and reproductive medicine centers. We supply certified culture media, sperm washing formulations, vitrification systems, micropipettes, and laboratory plasticware from globally recognized manufacturers including Fertipro, Origio, Wallace, Allwin Medical, Falcon, Cryotech, and more.',
-    storyParagraph2: 'Headquartered in West Bengal with operational facilities in Kolkata, we provide end-to-end equipment supply, maintenance, clinical registers, and priority delivery within 24 hours of order placement. Every product adheres to rigorous quality control standards, ensuring zero environmental variability and optimal embryology outcomes.',
+    subtitle: 'ART MEDICAL is your premier partner for assisted reproduction technologies, high-yield culture media, disposables, precision equipment, and turnkey laboratory installations.',
+    storyParagraph1: 'ART MEDICAL operates with a clear mandate: offering full, dependable solutions for IVF laboratories, clinical embryologists, and reproductive medicine centers. We supply certified culture media, sperm washing formulations, vitrification systems, micropipettes, and laboratory plasticware from globally recognized manufacturers including Fertipro, Origio, Wallace, Allwin Medical, Falcon, Cryotech, and more.',
+    storyParagraph2: 'Headquartered at 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Near kalua aboitonic school), we provide end-to-end equipment supply, maintenance, clinical registers, and priority delivery within 24 hours of order placement. Every product adheres to rigorous quality control standards, ensuring zero environmental variability and optimal embryology outcomes.',
     mission: 'To provide comprehensive, reliable, and cost-effective reproductive technology solutions that empower fertility clinics and embryologists to achieve peak clinical pregnancy rates.',
     vision: 'To be the most trusted distributor and turnkey infrastructure partner in assisted reproductive technology across India, renowned for product authenticity and rapid support.',
     values: [
@@ -101,14 +89,16 @@ export const defaultWebsiteContent: WebsiteContent = {
     aboutImage: cleanroomImg,
   },
   contact: {
-    companyName: 'ART Solution',
-    address: 'C/o- Modhumita Singh.Village - Kirtankhola. PO-Bakhrahat. PS- Bisnupur. District-24 Pargarna(S). Pin-743377.',
-    phone1: '+91 9330951039',
-    phone2: '9330951039',
+    companyName: 'ART MEDICAL',
+    address: '17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104',
+    landmark: 'Near kalua aboitonic school',
+    phone1: '+91 98754 06943',
+    phone2: '+91 74396 88406',
+    phone3: '+91 95930 76979',
     email: 'artmedical4560@gmail.com',
-    whatsapp: '+91 9330951039',
-    whatsappLink: 'https://wa.me/919330951039',
-    whatsappMessage: 'Hello ART Solution, I would like to inquire about your IVF laboratory products, media, and quotation estimates.',
+    whatsapp: '+91 98754 06943',
+    whatsappLink: 'https://wa.me/919875406943',
+    whatsappMessage: 'Hello ART MEDICAL, I would like to inquire about your IVF laboratory products, media, and quotation estimates.',
     workingHours: 'Monday – Saturday: 9:00 AM – 7:00 PM (IST) | 24/7 Priority Emergency Support',
     supportEmail: 'artmedical4560@gmail.com',
     googleMapsUrl: 'https://maps.google.com'
@@ -116,7 +106,7 @@ export const defaultWebsiteContent: WebsiteContent = {
   footer: {
     tagline: 'Offering Full Solution — High-Precision IVF Equipment, Culture Media, Disposables, and Turnkey Lab Infrastructure.',
     certificationBadge: 'GSTIN: 19ACLFA5383R1ZF | UCO Bank Verified Partner',
-    copyrightText: '© 2026 ART Solution. All rights reserved. Registered Office: South 24 Parganas, WB - 743377.',
+    copyrightText: '© 2026 ART MEDICAL. All rights reserved. 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104.',
     disclaimer: 'All prices quoted are in Indian Rupees (₹), exclusive of taxes. Products displayed are intended for clinical assisted reproductive medicine facilities and accredited healthcare practitioners.',
     linkedinUrl: '',
     twitterUrl: '',
@@ -141,9 +131,13 @@ export const defaultCommercialTerms = {
     branch: 'Purna Das Road'
   },
   offices: {
-    registeredOffice: 'C/o- Modhumita Singh. Ground Floor, Village - Kirtankhola, PO - Bakhrahat, PS - Bishnupur, District - South 24 Parganas, WB - 743377',
-    operationalOffice: 'C/O Soumya Brata Banerjee. A/92 Baghajatin, Flat No-3B, Haimanti Apartment, Kolkata - 700092',
-    partner: 'Soumya Brata Banerjee'
+    registeredOffice: '17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Landmark: Near kalua aboitonic school)',
+    operationalOffice: '17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Landmark: Near kalua aboitonic school)',
+    companyName: 'ART MEDICAL',
+    landmark: 'Near kalua aboitonic school',
+    primaryPhone: '+91 98754 06943',
+    otherPhones: ['+91 98754 06943', '+91 74396 88406', '+91 95930 76979'],
+    email: 'artmedical4560@gmail.com'
   }
 };
 
@@ -199,11 +193,11 @@ export const defaultGalleryItems: GalleryItem[] = [
     title: '2°C–8°C Validated Media Cold-Chain Logistics Hub',
     category: 'Media & Cold Chain',
     image: '/images/products/media_vials_fertipro.jpg',
-    description: 'Dedicated temperature-controlled cold-chain packaging facility at Baghajatin, Kolkata. Every media shipment (Fertipro, Nidacon, Origio, Hitech) is dispatched in certified vacuum-insulated shippers with electronic data loggers ensuring continuous 2°C–8°C temperature preservation during 24-hour delivery.',
+    description: 'Dedicated temperature-controlled cold-chain packaging facility at Thakurpukur, Kolkata. Every media shipment (Fertipro, Nidacon, Origio, Hitech) is dispatched in certified vacuum-insulated shippers with electronic data loggers ensuring continuous 2°C–8°C temperature preservation during 24-hour delivery.',
     date: '2026',
     badge: '2°C–8°C Monitored Protocol',
     specs: ['Certified Thermal Shipper Containers', 'Continuous USB Temp-Data Loggers', 'Same-Day Dispatch Guarantee', 'Strict Batch Sterility & MEA Testing'],
-    location: 'Kolkata Hub / Eastern India Logistics'
+    location: 'Thakurpukur, Kolkata Hub'
   },
   {
     id: 'gal-media-warehouse',
@@ -265,18 +259,18 @@ export const defaultGalleryItems: GalleryItem[] = [
     title: '24-Hour Rapid Dispatch & Order Staging Center',
     category: 'Operations & Dispatch',
     image: '/images/products/workstation_laminar_hood.jpg',
-    description: 'Operational order packing and cold-chain staging facility located at A/92 Baghajatin, Kolkata. Designed for rapid order processing within 24 hours of placement, complete with UCO Bank commercial invoicing, GST tax compliance (19ACLFA5383R1ZF), and transit insurance.',
+    description: 'Operational order packing and cold-chain staging facility located at 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Near kalua aboitonic school). Designed for rapid order processing within 24 hours of placement, complete with UCO Bank commercial invoicing, GST tax compliance (19ACLFA5383R1ZF), and transit insurance.',
     date: '2026',
     badge: '24-Hour SLA / Pan-India Logistics',
-    specs: ['Baghajatin Kolkata Operations', 'GST Invoice & Bank Payment Portal', 'Immediate Courier Staging', '21-Day Credit & 1% Discount Policy'],
-    location: 'Baghajatin, Kolkata - 700092'
+    specs: ['Thakurpukur Kolkata Hub', 'GST Invoice & Bank Payment Portal', 'Immediate Courier Staging', '21-Day Credit & 1% Discount Policy'],
+    location: 'Thakurpukur, Kolkata - 700104'
   },
   {
     id: 'gal-clinic-turnkey',
     title: 'Full Turnkey Reproductive Medicine Center Infrastructure',
     category: 'Turnkey Cleanrooms',
     image: heroImg,
-    description: 'Full turnkey facility engineering by ART Solution — covering architectural floor planning, gas pipeline manifolds (CO2/N2/Air), positive pressure airlocks, equipment procurement, cleanroom validation, clinical register provisioning, and initial batch media stocking.',
+    description: 'Full turnkey facility engineering by ART MEDICAL — covering architectural floor planning, gas pipeline manifolds (CO2/N2/Air), positive pressure airlocks, equipment procurement, cleanroom validation, clinical register provisioning, and initial batch media stocking.',
     date: '2026',
     badge: 'End-to-End Turnkey Delivery',
     specs: ['Concept-to-Commissioning Execution', 'Cleanroom Air Balancing & HEPA Validation', 'Comprehensive AMC & Technical Support', 'Offering Full Solution Guarantee'],

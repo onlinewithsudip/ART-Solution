@@ -1,10 +1,11 @@
 // Generated ART Solution authentic clinical products portfolio & equipment
 import { Product } from '../types';
-import mediaVialsImg from '../assets/images/art_media_vials_1790759397048.jpg';
-import catheterImg from '../assets/images/art_catheters_cannula_1790759417050.jpg';
-import labwareImg from '../assets/images/art_petri_labware_1790759431806.jpg';
-import cryoImg from '../assets/images/art_cryo_devices_1790759458406.jpg';
-import registerImg from '../assets/images/art_clinic_registers_1790759495328.jpg';
+
+const mediaVialsImg = '/images/assets/art_media_vials_1790759397048.jpg';
+const catheterImg = '/images/assets/art_catheters_cannula_1790759417050.jpg';
+const labwareImg = '/images/assets/art_petri_labware_1790759431806.jpg';
+const cryoImg = '/images/assets/art_cryo_devices_1790759458406.jpg';
+const registerImg = '/images/assets/art_clinic_registers_1790759495328.jpg';
 
 export const DEFAULT_EQUIPMENT_CATEGORIES: string[] = [
   'IUI & IVF Media',
@@ -31,7 +32,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: mediaVialsImg,
+    image: '/images/products/prod-iui-media-set-glass-vial-5-ml-htf-1-ml-upper-layer-1-ml-lower-layer.svg',
     shortDesc: "IUI Media Set Glass Vial (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) by Hitech. Pack size: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. Official FY 25-26 commercial supply rate: ₹550.",
     fullDesc: "IUI Media Set Glass Vial (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) is an authentic clinical-grade product manufactured/imported by Hitech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -60,7 +61,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/media_vials_fertipro.jpg',
+    image: '/images/products/prod-iui-media-set-5-ml-htf-1-ml-upper-layer-1-ml-lower-layer-usfda-approved.svg',
     shortDesc: "IUI Media Set (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) ( USFDA Approved ) by Fertipro. Pack size: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. Official FY 25-26 commercial supply rate: ₹1,000.",
     fullDesc: "IUI Media Set (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) ( USFDA Approved ) is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -89,7 +90,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: mediaVialsImg,
+    image: '/images/products/prod-dg-media-set-glass-vial-1-ml-upper-layer-1-ml-lower-layer.svg',
     shortDesc: "DG Media Set Glass Vial ( 1 ml upper layer + 1 ml lower layer) by Hitech. Pack size: 1 ml upper layer + 1 ml lower layer. Official FY 25-26 commercial supply rate: ₹400.",
     fullDesc: "DG Media Set Glass Vial ( 1 ml upper layer + 1 ml lower layer) is an authentic clinical-grade product manufactured/imported by Hitech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml upper layer + 1 ml lower layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -118,7 +119,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-iui-media-set-plastic-vial-5-ml-htf-1-ml-upper-layer-1-ml-lower-layer.svg',
     shortDesc: "IUI Media Set Plastic Vial (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) by Hitech. Pack size: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. Official FY 25-26 commercial supply rate: ₹600.",
     fullDesc: "IUI Media Set Plastic Vial (5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer) is an authentic clinical-grade product manufactured/imported by Hitech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5 ml HTF + 1 ml Upper Layer + 1 ml Lower Layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -147,7 +148,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-dg-media-set-plastic-vial-1-ml-upper-layer-1-ml-lower-layer.svg',
     shortDesc: "DG Media Set Plastic Vial ( 1 ml upper layer + 1 ml lower layer) by Hitech. Pack size: 1 ml upper layer + 1 ml lower layer. Official FY 25-26 commercial supply rate: ₹450.",
     fullDesc: "DG Media Set Plastic Vial ( 1 ml upper layer + 1 ml lower layer) is an authentic clinical-grade product manufactured/imported by Hitech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml upper layer + 1 ml lower layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -176,7 +177,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_fertipro.jpg',
+    image: '/images/products/prod-dg-media-set-1-ml-upper-layer-1-ml-lower-layer.svg',
     shortDesc: "DG Media Set ( 1 ml upper layer + 1 ml lower layer) by Fertipro. Pack size: 1 ml upper layer + 1 ml lower layer. Official FY 25-26 commercial supply rate: ₹650.",
     fullDesc: "DG Media Set ( 1 ml upper layer + 1 ml lower layer) is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml upper layer + 1 ml lower layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -205,7 +206,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-sil-select-plus.svg',
     shortDesc: "Fertipro Sil Select Plus by Fertipro. Pack size: 8 bottles of 5 ml sperm wash + 8 bottles of 2.5 ml upper layer + 8 bottles of 2.5 ml lower layer. Official FY 25-26 commercial supply rate: ₹9,500.",
     fullDesc: "Fertipro Sil Select Plus is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 8 bottles of 5 ml sperm wash + 8 bottles of 2.5 ml upper layer + 8 bottles of 2.5 ml lower layer. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -234,7 +235,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-stickey-mat.svg',
     shortDesc: "Stickey Mat by Indian Made. Pack size: 30. Official FY 25-26 commercial supply rate: ₹750.",
     fullDesc: "Stickey Mat is an authentic clinical-grade product manufactured/imported by Indian Made. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 30. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -263,7 +264,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-sperm-wash.svg',
     shortDesc: "Sperm Wash by Origio. Pack size: 60 ml. Official FY 25-26 commercial supply rate: ₹6,100.",
     fullDesc: "Sperm Wash is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 60 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -292,7 +293,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-origio-flushing-media-with-hsa.svg',
     shortDesc: "Origio Flushing Media with HSA by Origio. Pack size: 125 ml. Official FY 25-26 commercial supply rate: ₹7,000.",
     fullDesc: "Origio Flushing Media with HSA is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 125 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -321,7 +322,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-sage-1-step.svg',
     shortDesc: "Sage 1 step by Origio. Pack size: 10 ml. Official FY 25-26 commercial supply rate: ₹3,600.",
     fullDesc: "Sage 1 step is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -350,7 +351,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-oil-for-tissue-culture.svg',
     shortDesc: "Oil for tissue culture by Origio. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Oil for tissue culture is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -379,7 +380,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-sperm-freez.svg',
     shortDesc: "Sperm Freez by Origio. Pack size: 12 ml. Official FY 25-26 commercial supply rate: ₹3,000.",
     fullDesc: "Sperm Freez is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 12 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -408,7 +409,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-stripper-tips-135-um.svg',
     shortDesc: "Stripper tips 135 um by Origio. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Stripper tips 135 um is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -437,7 +438,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-stripper-tips-150-um.svg',
     shortDesc: "Stripper tips 150 um by Origio. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Stripper tips 150 um is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -466,7 +467,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-stripper-tips-175-um.svg',
     shortDesc: "Stripper tips 175 um by Origio. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Stripper tips 175 um is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -495,7 +496,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-stripper-tips-275-um.svg',
     shortDesc: "Stripper tips 275 um by Origio. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Stripper tips 275 um is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -524,7 +525,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pvp_viscosity_media.jpg',
+    image: '/images/products/prod-pvp-7.svg',
     shortDesc: "PvP 7% by Origio. Pack size: 0.5 ml. Official FY 25-26 commercial supply rate: ₹2,100.",
     fullDesc: "PvP 7% is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 0.5 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -553,7 +554,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-hydase-80-iu.svg',
     shortDesc: "Hydase 80 IU by Origio. Pack size: 1 ml. Official FY 25-26 commercial supply rate: ₹2,100.",
     fullDesc: "Hydase 80 IU is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -582,7 +583,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-vitrifit.svg',
     shortDesc: "Vitrifit by Origio. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,200.",
     fullDesc: "Vitrifit is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -611,7 +612,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-cryomatrix.svg',
     shortDesc: "Cryomatrix by Cryomatrix. Pack size: Pack of 10 pics/Rate of single pics. Official FY 25-26 commercial supply rate: ₹950.",
     fullDesc: "Cryomatrix is an authentic clinical-grade product manufactured/imported by Cryomatrix. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 10 pics/Rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -640,7 +641,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cleanroom_embryo_suite.jpg',
+    image: '/images/products/prod-humidification-bottle-old-for-bt-37-planner.svg',
     shortDesc: "Humidification Bottle Old for BT 37 planner by Origio. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹8,500.",
     fullDesc: "Humidification Bottle Old for BT 37 planner is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -669,7 +670,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cleanroom_embryo_suite.jpg',
+    image: '/images/products/prod-humidification-bottle-new-for-bt-37-mk-ii.svg',
     shortDesc: "Humidification Bottle New for BT 37 MK II by Origio. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹8,500.",
     fullDesc: "Humidification Bottle New for BT 37 MK II is an authentic clinical-grade product manufactured/imported by Origio. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -698,7 +699,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/prod-wallace-ons-1733-single-lumen.svg',
     shortDesc: "Wallace ONS 1733 Single Lumen by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,850.",
     fullDesc: "Wallace ONS 1733 Single Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -727,7 +728,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/prod-wallace-dns-1733-double-lumen.svg',
     shortDesc: "Wallace DNS 1733 Double Lumen by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹4,200.",
     fullDesc: "Wallace DNS 1733 Double Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -756,7 +757,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-wallace-peb-623.svg',
     shortDesc: "Wallace PEB 623 by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹2,200.",
     fullDesc: "Wallace PEB 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -785,7 +786,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-wallace-pes-623.svg',
     shortDesc: "Wallace PES 623 by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹2,300.",
     fullDesc: "Wallace PES 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -814,7 +815,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-wallace-ce-123.svg',
     shortDesc: "Wallace CE 123 by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,850.",
     fullDesc: "Wallace CE 123 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -843,7 +844,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-wallace-ce-18.svg',
     shortDesc: "Wallace CE 18 by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,850.",
     fullDesc: "Wallace CE 18 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -872,7 +873,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-wallace-1816n.svg',
     shortDesc: "Wallace 1816N by Wallace. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,850.",
     fullDesc: "Wallace 1816N is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -901,7 +902,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/prod-allwin-opu-single-lumen.svg',
     shortDesc: "Allwin OPU Single lumen by Allwin Medical. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,400.",
     fullDesc: "Allwin OPU Single lumen is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -930,7 +931,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-allwin-bt-etc-up.svg',
     shortDesc: "Allwin BT ETC UP by Allwin Medical. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,400.",
     fullDesc: "Allwin BT ETC UP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -959,7 +960,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-allwin-bt-etc-usp.svg',
     shortDesc: "Allwin BT ETC USP by Allwin Medical. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹1,500.",
     fullDesc: "Allwin BT ETC USP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -988,7 +989,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/iui_catheter_flexible.jpg',
+    image: '/images/products/prod-iui-cannula-sperm-o-way-curved-straight-with-syringe.svg',
     shortDesc: "IUI Cannula Sperm O Way Curved/Straight with syringe by Sperm O Way. Pack size: 50. Official FY 25-26 commercial supply rate: ₹3,250.",
     fullDesc: "IUI Cannula Sperm O Way Curved/Straight with syringe is an authentic clinical-grade product manufactured/imported by Sperm O Way. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1017,7 +1018,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/prod-allwin-iui-cannula-curved-straight-without-syringe.svg',
     shortDesc: "Allwin IUI Cannula Curved/Straight without syringe by Allwin Medical. Pack size: 25. Official FY 25-26 commercial supply rate: ₹1,750.",
     fullDesc: "Allwin IUI Cannula Curved/Straight without syringe is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 25. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1046,7 +1047,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/iui_catheter_flexible.jpg',
+    image: '/images/products/prod-iui-cannula-solution-ivf-curved-straight-with-syringe.svg',
     shortDesc: "IUI Cannula Solution IVF Curved/Straight with syringe by Solution IVF. Pack size: 50. Official FY 25-26 commercial supply rate: ₹3,250.",
     fullDesc: "IUI Cannula Solution IVF Curved/Straight with syringe is an authentic clinical-grade product manufactured/imported by Solution IVF. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1075,7 +1076,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-gilson-tips-200-ul.svg',
     shortDesc: "Gilson Tips 200 ul by Gilson. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹28.",
     fullDesc: "Gilson Tips 200 ul is an authentic clinical-grade product manufactured/imported by Gilson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1104,7 +1105,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-gilson-tips-1000-ul.svg',
     shortDesc: "Gilson Tips 1000 ul by Gilson. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹31.",
     fullDesc: "Gilson Tips 1000 ul is an authentic clinical-grade product manufactured/imported by Gilson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1133,7 +1134,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-cansure-laminar.svg',
     shortDesc: "Cansure laminar by Candore. Pack size: 500. Official FY 25-26 commercial supply rate: ₹2,100.",
     fullDesc: "Cansure laminar is an authentic clinical-grade product manufactured/imported by Candore. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 500. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1162,7 +1163,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-cansure-floor.svg',
     shortDesc: "Cansure Floor by Candore. Pack size: 500. Official FY 25-26 commercial supply rate: ₹2,300.",
     fullDesc: "Cansure Floor is an authentic clinical-grade product manufactured/imported by Candore. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 500. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1191,7 +1192,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/vitrification_kit_straw.jpg',
+    image: '/images/products/prod-cryotech-101.svg',
     shortDesc: "Cryotech 101 by Cryotech. Pack size: ES-1 ml + VS 1 ml + Cryotech-4 devices + Vitriplate-3 Plates. Official FY 25-26 commercial supply rate: ₹9,500.",
     fullDesc: "Cryotech 101 is an authentic clinical-grade product manufactured/imported by Cryotech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: ES-1 ml + VS 1 ml + Cryotech-4 devices + Vitriplate-3 Plates. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1220,7 +1221,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/vitrification_kit_straw.jpg',
+    image: '/images/products/prod-cryotech-102.svg',
     shortDesc: "Cryotech 102 by Cryotech. Pack size: TS-1.8 ML + DS-0.5 ml + WS-1 ml + Warm Plate-1 Plate. Official FY 25-26 commercial supply rate: ₹6,500.",
     fullDesc: "Cryotech 102 is an authentic clinical-grade product manufactured/imported by Cryotech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: TS-1.8 ML + DS-0.5 ml + WS-1 ml + Warm Plate-1 Plate. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1249,7 +1250,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/vitrification_kit_straw.jpg',
+    image: '/images/products/prod-cryotech-110.svg',
     shortDesc: "Cryotech 110 by Cryotech. Pack size: 2*1.8 ml ES + 4*1.8 ml VS. Official FY 25-26 commercial supply rate: ₹22,500.",
     fullDesc: "Cryotech 110 is an authentic clinical-grade product manufactured/imported by Cryotech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 2*1.8 ml ES + 4*1.8 ml VS. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1278,7 +1279,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/vitrification_kit_straw.jpg',
+    image: '/images/products/prod-cryotech-205.svg',
     shortDesc: "Cryotech 205 by Cryotech. Pack size: 5*1.8 ml TS + 1.8 ml DS + 2*1.8 ml WS. Official FY 25-26 commercial supply rate: ₹12,500.",
     fullDesc: "Cryotech 205 is an authentic clinical-grade product manufactured/imported by Cryotech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5*1.8 ml TS + 1.8 ml DS + 2*1.8 ml WS. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1307,7 +1308,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-reproplate.svg',
     shortDesc: "Reproplate by Cryotech. Pack size: 10. Official FY 25-26 commercial supply rate: ₹8,900.",
     fullDesc: "Reproplate is an authentic clinical-grade product manufactured/imported by Cryotech. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1336,7 +1337,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-tc-grade-5-ml-rbt.svg',
     shortDesc: "Falcon ( TC Grade ) 5 ml RBT by Falcon. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹19.",
     fullDesc: "Falcon ( TC Grade ) 5 ml RBT is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1365,7 +1366,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-falcon-tc-grade-14-ml-rbt.svg',
     shortDesc: "Falcon ( TC Grade ) 14 ml RBT by Falcon. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹24.",
     fullDesc: "Falcon ( TC Grade ) 14 ml RBT is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1394,7 +1395,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-falcon-tc-grade-15-ml-cbt.svg',
     shortDesc: "Falcon ( TC Grade ) 15 ml CBT by Falcon. Pack size: 50 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹19.",
     fullDesc: "Falcon ( TC Grade ) 15 ml CBT is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1423,7 +1424,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-tc-grade-60x15-mm-dish.svg',
     shortDesc: "Falcon ( TC Grade ) 60X15 mm Dish by Falcon. Pack size: 20 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹35.",
     fullDesc: "Falcon ( TC Grade ) 60X15 mm Dish is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1452,7 +1453,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-tc-grade-35x10-mm-dish.svg',
     shortDesc: "Falcon ( TC Grade ) 35X10 mm dish by Falcon. Pack size: 20 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹34.",
     fullDesc: "Falcon ( TC Grade ) 35X10 mm dish is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1481,7 +1482,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-icsi-dish-tc-grade-50x9-mm.svg',
     shortDesc: "Falcon ICSI Dish ( TC Grade ) 50X9 mm by Falcon. Pack size: 20 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹40.",
     fullDesc: "Falcon ICSI Dish ( TC Grade ) 50X9 mm is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1510,7 +1511,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-falcon-tc-grade-3-ml-pipette.svg',
     shortDesc: "Falcon ( TC Grade ) 3 ml pipette by Falcon. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹40.",
     fullDesc: "Falcon ( TC Grade ) 3 ml pipette is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1539,7 +1540,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-tc-grade-100x20-mm-dish.svg',
     shortDesc: "Falcon ( TC Grade ) 100X20 mm dish by Falcon. Pack size: 20 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹42.",
     fullDesc: "Falcon ( TC Grade ) 100X20 mm dish is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1568,7 +1569,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-falcon-tc-grade-cwd.svg',
     shortDesc: "Falcon ( TC Grade ) CWD by Falcon. Pack size: 20 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹40.",
     fullDesc: "Falcon ( TC Grade ) CWD is an authentic clinical-grade product manufactured/imported by Falcon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1597,7 +1598,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/falcon_dish_culture.jpg',
+    image: '/images/products/prod-nunc-4-well-dish.svg',
     shortDesc: "Nunc 4 well Dish by Thermo. Pack size: 4 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹105.",
     fullDesc: "Nunc 4 well Dish is an authentic clinical-grade product manufactured/imported by Thermo. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 4 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1626,7 +1627,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-5-ml-rb-tube-ivf-grade.svg',
     shortDesc: "Advy 5 ml RB Tube ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹21.",
     fullDesc: "Advy 5 ml RB Tube ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1655,7 +1656,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-advy-14-ml-rb-tube-ivf-grade.svg',
     shortDesc: "Advy 14 ml RB Tube ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹25.",
     fullDesc: "Advy 14 ml RB Tube ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1684,7 +1685,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-advy-15-ml-cb-tube-ivf-grade.svg',
     shortDesc: "Advy 15 ml CB Tube ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹25.",
     fullDesc: "Advy 15 ml CB Tube ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1713,7 +1714,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-57x16-mm-dish-ivf-grade.svg',
     shortDesc: "Advy 57X16 mm Dish ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹38.",
     fullDesc: "Advy 57X16 mm Dish ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1742,7 +1743,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-35x10-mm-dish-ivf-grade.svg',
     shortDesc: "Advy 35X10 mm Dish ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹37.",
     fullDesc: "Advy 35X10 mm Dish ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1771,7 +1772,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-90x20-mm-dish-ivf-grade.svg',
     shortDesc: "Advy 90X20 mm Dish ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹50.",
     fullDesc: "Advy 90X20 mm Dish ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1800,7 +1801,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/falcon_dish_culture.jpg',
+    image: '/images/products/prod-advy-4-well-dish-ivf-grade.svg',
     shortDesc: "Advy 4 well Dish ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹110.",
     fullDesc: "Advy 4 well Dish ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1829,7 +1830,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/falcon_dish_culture.jpg',
+    image: '/images/products/prod-advy-4-well-conical-dish-ivf-grade.svg',
     shortDesc: "Advy 4 well Conical Dish ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹150.",
     fullDesc: "Advy 4 well Conical Dish ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1858,7 +1859,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-icsi-dish-50x9-mm-ivf-grade.svg',
     shortDesc: "Advy ICSI Dish 50X9 mm ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹45.",
     fullDesc: "Advy ICSI Dish 50X9 mm ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1887,7 +1888,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-advy-3-ml-pipette-ivf-grade.svg',
     shortDesc: "Advy 3 ml pipette ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹40.",
     fullDesc: "Advy 3 ml pipette ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1916,7 +1917,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-cwd-ivf-grade.svg',
     shortDesc: "Advy CWD ( IVF Grade ) by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹41.",
     fullDesc: "Advy CWD ( IVF Grade ) is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1945,7 +1946,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-advy-microfludics-ca-0.svg',
     shortDesc: "Advy Microfludics CA 0 by Advy. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Advy Microfludics CA 0 is an authentic clinical-grade product manufactured/imported by Advy. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -1974,7 +1975,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-glass-pasteur-pipette-with-cotton-plug-6.svg',
     shortDesc: "Glass Pasteur Pipette with Cotton Plug 6\" by Volac/Krishco. Pack size: 250/150 Pics, rate of single pics. Official FY 25-26 commercial supply rate: ₹70.",
     fullDesc: "Glass Pasteur Pipette with Cotton Plug 6\" is an authentic clinical-grade product manufactured/imported by Volac/Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 250/150 Pics, rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2003,7 +2004,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-glass-pasteur-pipette-with-cotton-plug-9.svg',
     shortDesc: "Glass Pasteur Pipette with Cotton Plug 9\" by Volac/Krishco. Pack size: 250/150 Pics, rate of single pics. Official FY 25-26 commercial supply rate: ₹70.",
     fullDesc: "Glass Pasteur Pipette with Cotton Plug 9\" is an authentic clinical-grade product manufactured/imported by Volac/Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 250/150 Pics, rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2032,7 +2033,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-holding-35.svg',
     shortDesc: "Holding 35* by Krishco. Pack size: 10 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹1,100.",
     fullDesc: "Holding 35* is an authentic clinical-grade product manufactured/imported by Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2061,7 +2062,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-injecting-35.svg',
     shortDesc: "Injecting 35* by Krishco. Pack size: 10 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹1,400.",
     fullDesc: "Injecting 35* is an authentic clinical-grade product manufactured/imported by Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2090,7 +2091,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-tpc-holding-35.svg',
     shortDesc: "TPC Holding 35* by TPC. Pack size: 10 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹1,400.",
     fullDesc: "TPC Holding 35* is an authentic clinical-grade product manufactured/imported by TPC. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2119,7 +2120,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-tpc-injecting-35.svg',
     shortDesc: "TPC Injecting 35* by TPC. Pack size: 10 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹1,800.",
     fullDesc: "TPC Injecting 35* is an authentic clinical-grade product manufactured/imported by TPC. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2148,7 +2149,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-tissue-culture-water.svg',
     shortDesc: "Tissue Culture Water by APS Labs. Pack size: 1000 ml. Official FY 25-26 commercial supply rate: ₹1,500.",
     fullDesc: "Tissue Culture Water is an authentic clinical-grade product manufactured/imported by APS Labs. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1000 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2177,7 +2178,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-bd-syringe.svg',
     shortDesc: "BD Syringe by BD. Pack size: 1. Official FY 25-26 commercial supply rate: ₹10.",
     fullDesc: "BD Syringe is an authentic clinical-grade product manufactured/imported by BD. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2206,7 +2207,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: cryoImg,
+    image: '/images/products/prod-cane.svg',
     shortDesc: "Cane by Indian Made. Pack size: 1. Official FY 25-26 commercial supply rate: ₹50.",
     fullDesc: "Cane is an authentic clinical-grade product manufactured/imported by Indian Made. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2235,7 +2236,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-tarson-100-ml-container.svg',
     shortDesc: "Tarson 100 ml Container by Tarson. Pack size: 284 Pics/Rate is of single pics if purchase loose. Official FY 25-26 commercial supply rate: ₹17.",
     fullDesc: "Tarson 100 ml Container is an authentic clinical-grade product manufactured/imported by Tarson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 284 Pics/Rate is of single pics if purchase loose. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2264,7 +2265,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/falcon_tubes_50ml.jpg',
+    image: '/images/products/prod-tarson-50-ml-container.svg',
     shortDesc: "Tarson 50 ml Container by Tarson. Pack size: 384 Pics/Rate is of single pics if purchase loose. Official FY 25-26 commercial supply rate: ₹15.",
     fullDesc: "Tarson 50 ml Container is an authentic clinical-grade product manufactured/imported by Tarson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 384 Pics/Rate is of single pics if purchase loose. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2293,7 +2294,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-tarson-15-ml-single-sterile-cb-tube.svg',
     shortDesc: "Tarson 15 ml Single Sterile CB Tube by Tarson. Pack size: Single Sterile/Rate is of single pics if purchase loose. Official FY 25-26 commercial supply rate: ₹15.",
     fullDesc: "Tarson 15 ml Single Sterile CB Tube is an authentic clinical-grade product manufactured/imported by Tarson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile/Rate is of single pics if purchase loose. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2322,7 +2323,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-tarson-3-ml-single-sterile-pasteur-pipette.svg',
     shortDesc: "Tarson 3 ml Single Sterile Pasteur Pipette by Tarson. Pack size: Single Sterile/Rate is of single pics if purchase loose. Official FY 25-26 commercial supply rate: ₹12.",
     fullDesc: "Tarson 3 ml Single Sterile Pasteur Pipette is an authentic clinical-grade product manufactured/imported by Tarson. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile/Rate is of single pics if purchase loose. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2351,7 +2352,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: cryoImg,
+    image: '/images/products/prod-goblet.svg',
     shortDesc: "Goblet by Indian Made. Pack size: Box of 10 Pics/rate is of single pics. Official FY 25-26 commercial supply rate: ₹40.",
     fullDesc: "Goblet is an authentic clinical-grade product manufactured/imported by Indian Made. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Box of 10 Pics/rate is of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2380,7 +2381,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-growth-x-prp.svg',
     shortDesc: "Growth X PRP by Krishco. Pack size: Pack of 5 pics/Rate of single pics. Official FY 25-26 commercial supply rate: ₹1,500.",
     fullDesc: "Growth X PRP is an authentic clinical-grade product manufactured/imported by Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 5 pics/Rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2409,7 +2410,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_fertipro.jpg',
+    image: '/images/products/prod-fertipro-aspiration-media-without-hsa.svg',
     shortDesc: "Fertipro Aspiration Media without HSA by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Fertipro Aspiration Media without HSA is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2438,7 +2439,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-flushing-media-with-ab-hsa.svg',
     shortDesc: "Fertipro Flushing Media with Ab & HSA by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Fertipro Flushing Media with Ab & HSA is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2467,7 +2468,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-sil-select-100-stock-solution.svg',
     shortDesc: "Fertipro Sil Select 100 % Stock Solution by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹18,900.",
     fullDesc: "Fertipro Sil Select 100 % Stock Solution is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2496,7 +2497,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-45-90-gradient.svg',
     shortDesc: "Fertipro 45/90 Gradient by Fertipro. Pack size: 2*20 ml. Official FY 25-26 commercial supply rate: ₹8,500.",
     fullDesc: "Fertipro 45/90 Gradient is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 2*20 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2525,7 +2526,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-fertipro-90.svg',
     shortDesc: "Fertipro 90 % by Fertipro. Pack size: 20 ml. Official FY 25-26 commercial supply rate: ₹5,460.",
     fullDesc: "Fertipro 90 % is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2554,7 +2555,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-45-90-gradient-88.svg',
     shortDesc: "Fertipro 45/90 Gradient by Fertipro. Pack size: 2*100 ml. Official FY 25-26 commercial supply rate: ₹26,250.",
     fullDesc: "Fertipro 45/90 Gradient is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 2*100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2583,7 +2584,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-fertipro-90-89.svg',
     shortDesc: "Fertipro 90 % by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹15,750.",
     fullDesc: "Fertipro 90 % is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2612,7 +2613,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-fertipro-sperm-freez.svg',
     shortDesc: "Fertipro Sperm Freez by Fertipro. Pack size: 20 ml. Official FY 25-26 commercial supply rate: ₹4,000.",
     fullDesc: "Fertipro Sperm Freez is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2641,7 +2642,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-hydase.svg',
     shortDesc: "Fertipro hydase by Fertipro. Pack size: 1 ml. Official FY 25-26 commercial supply rate: ₹1,500.",
     fullDesc: "Fertipro hydase is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2670,7 +2671,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pvp_viscosity_media.jpg',
+    image: '/images/products/prod-fertipro-pvp-10.svg',
     shortDesc: "Fertipro PvP 10 % by Fertipro. Pack size: 0.5 ml. Official FY 25-26 commercial supply rate: ₹1,500.",
     fullDesc: "Fertipro PvP 10 % is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 0.5 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2699,7 +2700,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-fertipro-minarel-oil-light-weight.svg',
     shortDesc: "Fertipro Minarel oil light weight by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,300.",
     fullDesc: "Fertipro Minarel oil light weight is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2728,7 +2729,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-fertipro-minarel-oil-light-weight-94.svg',
     shortDesc: "Fertipro Minarel oil light weight by Fertipro. Pack size: 50 ml. Official FY 25-26 commercial supply rate: ₹2,900.",
     fullDesc: "Fertipro Minarel oil light weight is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2757,7 +2758,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_paraffin_bottle.jpg',
+    image: '/images/products/prod-fertipro-high-viscocity-oil.svg',
     shortDesc: "Fertipro High Viscocity Oil by Fertipro. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,400.",
     fullDesc: "Fertipro High Viscocity Oil is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2786,7 +2787,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_paraffin_bottle.jpg',
+    image: '/images/products/prod-fertipro-high-viscocity-oil-96.svg',
     shortDesc: "Fertipro High Viscocity Oil by Fertipro. Pack size: 50 ml. Official FY 25-26 commercial supply rate: ₹3,100.",
     fullDesc: "Fertipro High Viscocity Oil is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2815,7 +2816,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_fertipro.jpg',
+    image: '/images/products/prod-fertipro-gain-media-single-step.svg',
     shortDesc: "Fertipro Gain Media ( Single Step ) by Fertipro. Pack size: 10 ml. Official FY 25-26 commercial supply rate: ₹3,500.",
     fullDesc: "Fertipro Gain Media ( Single Step ) is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2844,7 +2845,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-fertipro-sper-magic.svg',
     shortDesc: "Fertipro Sper Magic by Fertipro. Pack size: 0.5 ml. Official FY 25-26 commercial supply rate: ₹42,000.",
     fullDesc: "Fertipro Sper Magic is an authentic clinical-grade product manufactured/imported by Fertipro. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 0.5 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2873,7 +2874,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-ivf-grade-4-ml-round-bottom-tube.svg',
     shortDesc: "IVF Grade 4 ml round bottom tube by IVF Gen. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹20.",
     fullDesc: "IVF Grade 4 ml round bottom tube is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2902,7 +2903,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-ivf-grade-12-ml-round-bottem-tube.svg',
     shortDesc: "IVF Grade 12 ml round bottem tube by IVF Gen. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹24.",
     fullDesc: "IVF Grade 12 ml round bottem tube is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2931,7 +2932,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/tubes_centrifuge_rack.jpg',
+    image: '/images/products/prod-ivf-grade-15-ml-conical-bottom-tube.svg',
     shortDesc: "IVF Grade 15 ml conical bottom tube by IVF Gen. Pack size: Pack of 50 Pics/Rate of Single pics. Official FY 25-26 commercial supply rate: ₹24.",
     fullDesc: "IVF Grade 15 ml conical bottom tube is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 50 Pics/Rate of Single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2960,7 +2961,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pipette_micromanipulator.jpg',
+    image: '/images/products/prod-ivf-grade-3-ml-pastuer-pipette.svg',
     shortDesc: "IVF Grade 3 ml pastuer pipette by IVF Gen. Pack size: Single Sterile. Official FY 25-26 commercial supply rate: ₹35.",
     fullDesc: "IVF Grade 3 ml pastuer pipette is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -2989,7 +2990,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-ivf-grade-90x15-mm-dish.svg',
     shortDesc: "IVF Grade 90x15 mm dish by IVF Gen. Pack size: Pack of 10 Pics/Rate of single pics. Official FY 25-26 commercial supply rate: ₹45.",
     fullDesc: "IVF Grade 90x15 mm dish is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 10 Pics/Rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3018,7 +3019,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-ivf-grade-55x15-mm-dish.svg',
     shortDesc: "IVF Grade 55x15 mm dish by IVF Gen. Pack size: Pack of 10 Pics/Rate of single pics. Official FY 25-26 commercial supply rate: ₹35.",
     fullDesc: "IVF Grade 55x15 mm dish is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 10 Pics/Rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3047,7 +3048,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-ivf-grade-35x10-mm-dish.svg',
     shortDesc: "IVF Grade 35x10 mm dish by IVF Gen. Pack size: Pack of 10 Pics/Rate of single pics. Official FY 25-26 commercial supply rate: ₹33.",
     fullDesc: "IVF Grade 35x10 mm dish is an authentic clinical-grade product manufactured/imported by IVF Gen. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Pack of 10 Pics/Rate of single pics. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3076,7 +3077,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: labwareImg,
+    image: '/images/products/prod-iui-disposable-set.svg',
     shortDesc: "IUI Disposable set by Krishco. Pack size: 1 box. Official FY 25-26 commercial supply rate: ₹250.",
     fullDesc: "IUI Disposable set is an authentic clinical-grade product manufactured/imported by Krishco. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 box. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3105,7 +3106,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-sperm-wash.svg',
     shortDesc: "Gynotec Sperm Wash by Gynotec. Pack size: 10 ml. Official FY 25-26 commercial supply rate: ₹1,838.",
     fullDesc: "Gynotec Sperm Wash is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3134,7 +3135,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-sperm-wash-108.svg',
     shortDesc: "Gynotec Sperm Wash by Gynotec. Pack size: 50 ml. Official FY 25-26 commercial supply rate: ₹4,725.",
     fullDesc: "Gynotec Sperm Wash is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3163,7 +3164,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-gradient-10-ml-set-45-80.svg',
     shortDesc: "Gynotec Gradient 10 ml Set 45% & 80% by Gynotec. Pack size: 10 ml *2. Official FY 25-26 commercial supply rate: ₹6,825.",
     fullDesc: "Gynotec Gradient 10 ml Set 45% & 80% is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 ml *2. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3192,7 +3193,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-gradient-50-ml-set-45-80.svg',
     shortDesc: "Gynotec Gradient 50 ml set 45% & 80% by Gynotec. Pack size: 50 ml * 2. Official FY 25-26 commercial supply rate: ₹13,125.",
     fullDesc: "Gynotec Gradient 50 ml set 45% & 80% is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml * 2. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3221,7 +3222,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-gynotec-sperm-freez-media.svg',
     shortDesc: "Gynotec Sperm Freez Media by Gynotec. Pack size: 10 ml *2. Official FY 25-26 commercial supply rate: ₹6,825.",
     fullDesc: "Gynotec Sperm Freez Media is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 10 ml *2. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3250,7 +3251,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-flushing-media-with-hsa.svg',
     shortDesc: "Gynotec Flushing Media With HSA by Gynotec. Pack size: 30 ml. Official FY 25-26 commercial supply rate: ₹3,675.",
     fullDesc: "Gynotec Flushing Media With HSA is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 30 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3279,7 +3280,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-flushing-media-with-hsa-113.svg',
     shortDesc: "Gynotec Flushing Media With HSA by Gynotec. Pack size: 60 ml. Official FY 25-26 commercial supply rate: ₹4,725.",
     fullDesc: "Gynotec Flushing Media With HSA is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 60 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3308,7 +3309,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-flushing-media-with-hsa-114.svg',
     shortDesc: "Gynotec Flushing Media With HSA by Gynotec. Pack size: 120 ml. Official FY 25-26 commercial supply rate: ₹7,350.",
     fullDesc: "Gynotec Flushing Media With HSA is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 120 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3337,7 +3338,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pvp_viscosity_media.jpg',
+    image: '/images/products/prod-gynotec-pvp.svg',
     shortDesc: "Gynotec PvP by Gynotec. Pack size: 0.2 ml. Official FY 25-26 commercial supply rate: ₹1,890.",
     fullDesc: "Gynotec PvP is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 0.2 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3366,7 +3367,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-hydase.svg',
     shortDesc: "Gynotec Hydase by Gynotec. Pack size: 1 ml. Official FY 25-26 commercial supply rate: ₹1,890.",
     fullDesc: "Gynotec Hydase is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3395,7 +3396,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-gynotec-single-step.svg',
     shortDesc: "Gynotec Single Step by Gynotec. Pack size: 20 ml. Official FY 25-26 commercial supply rate: ₹7,560.",
     fullDesc: "Gynotec Single Step is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3424,7 +3425,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-gynotec-oil-with-20-mm-opening.svg',
     shortDesc: "Gynotec Oil With 20 mm Opening by Gynotec. Pack size: 50 ml. Official FY 25-26 commercial supply rate: ₹3,885.",
     fullDesc: "Gynotec Oil With 20 mm Opening is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3453,7 +3454,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-gynotec-oil-with-32-mm-opening.svg',
     shortDesc: "Gynotec Oil With 32 mm Opening by Gynotec. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹4,935.",
     fullDesc: "Gynotec Oil With 32 mm Opening is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3482,7 +3483,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-gradient-50-ml-100.svg',
     shortDesc: "Gynotec Gradient 50 ml 100% by Gynotec. Pack size: 50 ml. Official FY 25-26 commercial supply rate: ₹11,550.",
     fullDesc: "Gynotec Gradient 50 ml 100% is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3511,7 +3512,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-gynotec-gradient-100-ml-100.svg',
     shortDesc: "Gynotec Gradient 100 ml 100% by Gynotec. Pack size: 100 ml. Official FY 25-26 commercial supply rate: ₹21,000.",
     fullDesc: "Gynotec Gradient 100 ml 100% is an authentic clinical-grade product manufactured/imported by Gynotec. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100 ml. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3540,7 +3541,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: registerImg,
+    image: '/images/products/prod-register-ivf-icsi-register.svg',
     shortDesc: "Register- IVF/ICSI Register by ART Medical. Pack size: 1 Register of 50 Pages. Official FY 25-26 commercial supply rate: ₹600.",
     fullDesc: "Register- IVF/ICSI Register is an authentic clinical-grade product manufactured/imported by ART Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 Register of 50 Pages. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3569,7 +3570,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: registerImg,
+    image: '/images/products/prod-register-art-register.svg',
     shortDesc: "Register- ART Register by ART Medical. Pack size: 1 Register of 50 Pages. Official FY 25-26 commercial supply rate: ₹600.",
     fullDesc: "Register- ART Register is an authentic clinical-grade product manufactured/imported by ART Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 Register of 50 Pages. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3598,7 +3599,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: registerImg,
+    image: '/images/products/prod-register-et-register.svg',
     shortDesc: "Register-ET Register by ART Medical. Pack size: 1 Register of 50 Pages. Official FY 25-26 commercial supply rate: ₹600.",
     fullDesc: "Register-ET Register is an authentic clinical-grade product manufactured/imported by ART Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 Register of 50 Pages. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3627,7 +3628,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: registerImg,
+    image: '/images/products/prod-register-vitrification-thawing-register.svg',
     shortDesc: "Register- Vitrification & Thawing Register by ART Medical. Pack size: 1 Register of 50 Pages. Official FY 25-26 commercial supply rate: ₹600.",
     fullDesc: "Register- Vitrification & Thawing Register is an authentic clinical-grade product manufactured/imported by ART Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 1 Register of 50 Pages. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3656,7 +3657,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: true,
-    image: registerImg,
+    image: '/images/products/prod-set-of-4-registers-ivf-icsi-art-et-vitrification-thawing.svg',
     shortDesc: "Set of 4 registers ( IVF/ICSI + ART + ET + Vitrification & Thawing ) by ART Medical. Pack size: 4 Registers of 50 pages each. Official FY 25-26 commercial supply rate: ₹2,200.",
     fullDesc: "Set of 4 registers ( IVF/ICSI + ART + ET + Vitrification & Thawing ) is an authentic clinical-grade product manufactured/imported by ART Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 4 Registers of 50 pages each. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3685,7 +3686,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-ri-ez-tip-135-um.svg',
     shortDesc: "RI EZ Tip 135 um by RI. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "RI EZ Tip 135 um is an authentic clinical-grade product manufactured/imported by RI. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3714,7 +3715,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-ri-ez-tip-145-um.svg',
     shortDesc: "RI EZ Tip 145 um by RI. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "RI EZ Tip 145 um is an authentic clinical-grade product manufactured/imported by RI. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3743,7 +3744,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-ri-ez-tip-170-um.svg',
     shortDesc: "RI EZ Tip 170 um by RI. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "RI EZ Tip 170 um is an authentic clinical-grade product manufactured/imported by RI. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3772,7 +3773,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-ri-ez-tip-200-um.svg',
     shortDesc: "RI EZ Tip 200 um by RI. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "RI EZ Tip 200 um is an authentic clinical-grade product manufactured/imported by RI. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3801,7 +3802,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/stripper_tips_denudation.jpg',
+    image: '/images/products/prod-ri-ez-tip-290-um.svg',
     shortDesc: "RI EZ Tip 290 um by RI. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "RI EZ Tip 290 um is an authentic clinical-grade product manufactured/imported by RI. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3830,7 +3831,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-global-total-tm.svg',
     shortDesc: "Global Total TM by Life Global. Pack size: 30. Official FY 25-26 commercial supply rate: ₹11,500.",
     fullDesc: "Global Total TM is an authentic clinical-grade product manufactured/imported by Life Global. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 30. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3859,7 +3860,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-global-total-flushing-media-with-hepes-hsa.svg',
     shortDesc: "Global Total Flushing Media With HEPES & HSA by Life Global. Pack size: 50. Official FY 25-26 commercial supply rate: ₹7,000.",
     fullDesc: "Global Total Flushing Media With HEPES & HSA is an authentic clinical-grade product manufactured/imported by Life Global. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3888,7 +3889,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_paraffin_bottle.jpg',
+    image: '/images/products/prod-lg-parafin-oil.svg',
     shortDesc: "LG Parafin Oil by LG Lifesciences. Pack size: 100. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "LG Parafin Oil is an authentic clinical-grade product manufactured/imported by LG Lifesciences. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3917,7 +3918,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-haloview-sperm-dna-fragmentation-kit.svg',
     shortDesc: "Haloview sperm DNA fragmentation kit by Haloview. Pack size: 12 Test. Official FY 25-26 commercial supply rate: ₹23,000.",
     fullDesc: "Haloview sperm DNA fragmentation kit is an authentic clinical-grade product manufactured/imported by Haloview. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 12 Test. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3946,7 +3947,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cleanroom_embryo_suite.jpg',
+    image: '/images/products/prod-7x-cleaning-solution.svg',
     shortDesc: "7X Cleaning Solution by Shivani Scientific. Pack size: 3.8 Litre. Official FY 25-26 commercial supply rate: ₹8,000.",
     fullDesc: "7X Cleaning Solution is an authentic clinical-grade product manufactured/imported by Shivani Scientific. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 3.8 Litre. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -3975,7 +3976,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-profert-flushing-media-with-hepes-and-hsa.svg',
     shortDesc: "Profert Flushing Media with HEPES and HSA by Profert. Pack size: 100. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Profert Flushing Media with HEPES and HSA is an authentic clinical-grade product manufactured/imported by Profert. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4004,7 +4005,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_vials_hitech.jpg',
+    image: '/images/products/prod-surelife-single-step.svg',
     shortDesc: "Surelife Single step by Surelife. Pack size: 20. Official FY 25-26 commercial supply rate: ₹6,800.",
     fullDesc: "Surelife Single step is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4033,7 +4034,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-surelife-sperm-wash-media.svg',
     shortDesc: "Surelife Sperm Wash Media by Surelife. Pack size: 60. Official FY 25-26 commercial supply rate: ₹4,000.",
     fullDesc: "Surelife Sperm Wash Media is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 60. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4062,7 +4063,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-surelife-sperm-gradient-media-set.svg',
     shortDesc: "Surelife Sperm Gradient Media Set by Surelife. Pack size: 2x 10. Official FY 25-26 commercial supply rate: ₹6,000.",
     fullDesc: "Surelife Sperm Gradient Media Set is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 2x 10. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4091,7 +4092,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/cryo_storage_vials.jpg',
+    image: '/images/products/prod-surelife-sperm-freezing-media.svg',
     shortDesc: "Surelife Sperm Freezing Media by Surelife. Pack size: 20. Official FY 25-26 commercial supply rate: ₹4,000.",
     fullDesc: "Surelife Sperm Freezing Media is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 20. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4120,7 +4121,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-invitrcare-flushing-media-with-hepes.svg',
     shortDesc: "Invitrcare Flushing Media with HEPES by Invitrocare. Pack size: 100. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Invitrcare Flushing Media with HEPES is an authentic clinical-grade product manufactured/imported by Invitrocare. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4149,7 +4150,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-invitrocare-oil.svg',
     shortDesc: "Invitrocare Oil by Invitrocare. Pack size: 100. Official FY 25-26 commercial supply rate: ₹4,500.",
     fullDesc: "Invitrocare Oil is an authentic clinical-grade product manufactured/imported by Invitrocare. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4178,7 +4179,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/pvp_viscosity_media.jpg',
+    image: '/images/products/prod-surelife-pvp-7.svg',
     shortDesc: "Surelife PVP 7 % by Surelife. Pack size: 5x 0.2. Official FY 25-26 commercial supply rate: ₹6,500.",
     fullDesc: "Surelife PVP 7 % is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5x 0.2. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4207,7 +4208,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/media_culture_liquid.jpg',
+    image: '/images/products/prod-surelife-hydase.svg',
     shortDesc: "Surelife Hydase by Surelife. Pack size: 5x 1. Official FY 25-26 commercial supply rate: ₹7,500.",
     fullDesc: "Surelife Hydase is an authentic clinical-grade product manufactured/imported by Surelife. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 5x 1. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4236,7 +4237,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-invitrocare-oil-146.svg',
     shortDesc: "Invitrocare Oil by Invitrocare. Pack size: 500. Official FY 25-26 commercial supply rate: ₹12,500.",
     fullDesc: "Invitrocare Oil is an authentic clinical-grade product manufactured/imported by Invitrocare. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 500. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -4265,7 +4266,7 @@ export const artProducts: Product[] = [
     priceType: 'fixed',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/oil_mineral_flask.jpg',
+    image: '/images/products/prod-nidacon-oil.svg',
     shortDesc: "Nidacon Oil by Nidacon. Pack size: 100. Official FY 25-26 commercial supply rate: ₹4,200.",
     fullDesc: "Nidacon Oil is an authentic clinical-grade product manufactured/imported by Nidacon. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [

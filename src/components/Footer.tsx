@@ -193,50 +193,50 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs">
               <li>
                 <button
-                  onClick={() => handleCategoryClick('IVF Workstations')}
+                  onClick={() => handleCategoryClick('IUI & IVF Media')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Laminar Flow IVF Workstations
+                  IUI & IVF Media (Fertipro, Hitech, Origio)
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleCategoryClick('Incubators & Warming')}
+                  onClick={() => handleCategoryClick('Needles, Catheters & Cannulas')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Multi-Chamber Tri-Gas Incubators
+                  Wallace & Allwin Catheters & Needles
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleCategoryClick('Micromanipulation & Laser')}
+                  onClick={() => handleCategoryClick('Cryopreservation & Vitrification')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Precision ICSI & Laser Systems
+                  Cryotech Vitrification & Cryovials
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleCategoryClick('Cryopreservation')}
+                  onClick={() => handleCategoryClick('Disposables & Labware')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Cryopreservation & Bio-Banking
+                  Falcon 35mm/60mm/4-Well Dishes & Tubes
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleCategoryClick('Consumables & Labware')}
+                  onClick={() => handleCategoryClick('Micropipettes & Stripper Tips')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Certified Culture Dishes & Media
+                  Holding & ICSI Injection Pipettes
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleCategoryClick('Turnkey Lab Setup')}
+                  onClick={() => handleCategoryClick('Clinical Registers & Documentation')}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Turnkey Modular Cleanrooms
+                  ART Compliance Clinical Registers
                 </button>
               </li>
             </ul>
@@ -245,21 +245,43 @@ export const Footer: React.FC = () => {
           {/* Column 4: Contact & WhatsApp */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Get in Touch
+              Get in Touch — ART MEDICAL
             </h4>
             <div className="space-y-2.5 text-xs text-slate-400">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-                <span>{websiteContent.contact.address}</span>
+                <div>
+                  <span className="text-slate-300 font-medium block">ART MEDICAL</span>
+                  <span>{websiteContent.contact.address}</span>
+                  {websiteContent.contact.landmark && (
+                    <span className="text-teal-400 block text-[11px] pt-0.5">
+                      Landmark: {websiteContent.contact.landmark}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-slate-500 shrink-0" />
-                <a
-                  href={`tel:${websiteContent.contact.phone1}`}
-                  className="hover:text-white transition-colors font-mono"
-                >
-                  {websiteContent.contact.phone1}
-                </a>
+              <div className="flex items-start gap-2">
+                <Phone className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5 font-mono">
+                  <a
+                    href="tel:+919875406943"
+                    className="hover:text-white transition-colors font-bold text-slate-200 block"
+                  >
+                    +91 98754 06943
+                  </a>
+                  <a
+                    href="tel:+917439688406"
+                    className="hover:text-white transition-colors text-slate-400 block"
+                  >
+                    +91 74396 88406
+                  </a>
+                  <a
+                    href="tel:+919593076979"
+                    className="hover:text-white transition-colors text-slate-400 block"
+                  >
+                    +91 95930 76979
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-slate-500 shrink-0" />

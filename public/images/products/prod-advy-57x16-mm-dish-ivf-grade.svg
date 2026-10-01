@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+    <defs>
+      <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f8fafc" />
+        <stop offset="50%" stop-color="#f1f5f9" />
+        <stop offset="100%" stop-color="#e2e8f0" />
+      </linearGradient>
+      <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+        <stop offset="20%" stop-color="#f8fafc" stop-opacity="0.6" />
+        <stop offset="80%" stop-color="#e2e8f0" stop-opacity="0.7" />
+        <stop offset="100%" stop-color="#cbd5e1" stop-opacity="0.9" />
+      </linearGradient>
+      <linearGradient id="liquidMediaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fed7aa" stop-opacity="0.85" />
+        <stop offset="100%" stop-color="#fdba74" stop-opacity="0.95" />
+      </linearGradient>
+      <linearGradient id="amberGlassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#d97706" stop-opacity="0.8" />
+        <stop offset="50%" stop-color="#b45309" stop-opacity="0.9" />
+        <stop offset="100%" stop-color="#78350f" stop-opacity="0.95" />
+      </linearGradient>
+      <linearGradient id="goldenOilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#fef3c7" stop-opacity="0.9" />
+        <stop offset="100%" stop-color="#fde68a" stop-opacity="0.95" />
+      </linearGradient>
+      <linearGradient id="plasticGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+        <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0.85" />
+      </linearGradient>
+      <linearGradient id="lidGlassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.4" />
+      </linearGradient>
+      <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="100%" stop-color="#0284c7" />
+      </linearGradient>
+      <linearGradient id="liquidRedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#fecaca" />
+        <stop offset="100%" stop-color="#f87171" />
+      </linearGradient>
+      <pattern id="gridPattern" width="24" height="24" patternUnits="userSpaceOnUse">
+        <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#cbd5e1" stroke-width="0.5" opacity="0.4" />
+      </pattern>
+    </defs>
+
+    <!-- Studio Clean Background -->
+    <rect width="600" height="450" fill="url(#bgGrad)" />
+    <rect width="600" height="450" fill="url(#gridPattern)" />
+
+    <!-- Ambient Vignette Ring -->
+    <ellipse cx="300" cy="240" rx="240" ry="160" fill="#ffffff" opacity="0.6" filter="blur(20px)" />
+
+    <!-- Top Left Category Badge -->
+    <rect x="24" y="24" width="auto" height="26" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" />
+    <g transform="translate(34, 41)">
+      <circle cx="4" cy="-3" r="3.5" fill="#0891b2" />
+      <text x="14" y="0" font-size="10" font-weight="bold" fill="#334155" font-family="sans-serif">DISPOSABLES & LABWARE</text>
+    </g>
+
+    <!-- Top Right Authentic Supply Badge -->
+    <rect x="430" y="24" width="146" height="26" rx="6" fill="#047857" opacity="0.1" />
+    <rect x="430" y="24" width="146" height="26" rx="6" fill="none" stroke="#10b981" stroke-width="1" />
+    <text x="503" y="41" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle" font-family="sans-serif">AUTHENTIC BATCH CERTIFIED</text>
+
+    <!-- Center Product Graphic -->
+    
+      <!-- Dish Shadow -->
+      <ellipse cx="300" cy="265" rx="115" ry="35" fill="#000000" opacity="0.15" filter="blur(6px)" />
+      <!-- Bottom Dish -->
+      <ellipse cx="300" cy="240" rx="105" ry="30" fill="url(#plasticGrad)" stroke="#94a3b8" stroke-width="2" />
+      <!-- Inner Wells or Area -->
+      <ellipse cx="300" cy="238" rx="90" ry="24" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+      <!-- If 4-Well or Center Well -->
+      <circle cx="270" cy="232" r="16" fill="#ffffff" stroke="#0891b2" stroke-width="1.5" />
+      <circle cx="330" cy="232" r="16" fill="#ffffff" stroke="#0891b2" stroke-width="1.5" />
+      <circle cx="270" cy="248" r="16" fill="#ffffff" stroke="#0891b2" stroke-width="1.5" />
+      <circle cx="330" cy="248" r="16" fill="#ffffff" stroke="#0891b2" stroke-width="1.5" />
+      <!-- Top Transparent Lid -->
+      <ellipse cx="300" cy="210" rx="110" ry="32" fill="url(#lidGlassGrad)" stroke="#64748b" stroke-width="1.5" opacity="0.7" />
+      <!-- Lid Rim Highlights -->
+      <ellipse cx="300" cy="210" rx="108" ry="30" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+      <!-- Falcon / Labware Logo Mark -->
+      <rect x="255" y="145" width="90" height="28" rx="6" fill="#ffffff" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))" />
+      <text x="300" y="158" font-size="8" font-weight="bold" fill="#0891b2" text-anchor="middle">ADVY</text>
+      <text x="300" y="168" font-size="7" fill="#475569" text-anchor="middle">TC GRADE / MEA TESTED</text>
+    
+
+    <!-- Bottom Product Description Banner -->
+    <rect x="20" y="360" width="560" height="70" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.05))" />
+    <!-- Brand Tag -->
+    <rect x="36" y="374" width="auto" height="18" rx="4" fill="#0891b2" opacity="0.15" />
+    <text x="42" y="387" font-size="9" font-weight="bold" fill="#0891b2" font-family="sans-serif">ADVY</text>
+    <!-- Code Tag -->
+    <text x="160" y="387" font-size="9" font-family="monospace" fill="#64748b">REF: ART-ADVY-159</text>
+    <!-- Product Name -->
+    <text x="36" y="408" font-size="13" font-weight="bold" fill="#0f172a" font-family="sans-serif">Advy 57X16 mm Dish ( IVF Grade )</text>
+    <!-- Pack Size -->
+    <text x="36" y="422" font-size="10" font-family="monospace" fill="#475569">Pack Size: Single Sterile | FY 25-26 Supply Rate Validated</text>
+  </svg>

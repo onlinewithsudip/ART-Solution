@@ -7,7 +7,7 @@ export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = () => {
-    openWhatsApp('Hello ART Solution, I would like to consult regarding your IVF equipment, media and supplies.');
+    openWhatsApp('Hello ART MEDICAL, I would like to consult regarding your IVF equipment, media and supplies.');
   };
 
   return (

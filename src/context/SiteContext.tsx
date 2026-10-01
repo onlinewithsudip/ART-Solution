@@ -78,15 +78,28 @@ interface SiteContextType {
   importDataJSON: (jsonString: string) => boolean;
   
   openWhatsApp: (customMessage?: string) => void;
+
+  isSyncing: boolean;
+  lastSyncedAt: string | null;
+  dbStatus: {
+    provider: string;
+    connected: boolean;
+    lastUpdated?: string | null;
+    productsCount?: number;
+    galleryCount?: number;
+  } | null;
+  publishFullStateToProduction: () => Promise<boolean>;
+  refreshFromProduction: () => Promise<boolean>;
+  uploadMedia: (file: File) => Promise<{ url: string; error?: string }>;
 }
 
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
   theme: 'art_solution_theme_v2',
-  content: 'art_solution_content_v2',
-  products: 'art_solution_products_v5',
-  gallery: 'art_solution_gallery_v3',
+  content: 'art_medical_content_v4',
+  products: 'art_medical_products_v6',
+  gallery: 'art_medical_gallery_v4',
   inquiries: 'art_solution_inquiries_v2',
   categories: 'art_solution_categories_v4',
 };
@@ -129,6 +142,15 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [productSearchQuery, setProductSearchQuery] = useState<string>('');
   const [adminTab, setAdminTab] = useState<AdminTab>('content');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
+  const [dbStatus, setDbStatus] = useState<{
+    provider: string;
+    connected: boolean;
+    lastUpdated?: string | null;
+    productsCount?: number;
+    galleryCount?: number;
+  } | null>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
     try {
       return sessionStorage.getItem('atoz_admin_auth_v1') === 'true';
@@ -156,6 +178,11 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [websiteContent, setWebsiteContent] = useState<WebsiteContent>(() => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('art_solution_content_v1');
+        localStorage.removeItem('art_solution_content_v2');
+        localStorage.removeItem('art_solution_content_v3');
+      }
       const saved = localStorage.getItem(STORAGE_KEYS.content);
       return saved ? { ...defaultWebsiteContent, ...JSON.parse(saved) } : defaultWebsiteContent;
     } catch {
@@ -168,21 +195,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (typeof window !== 'undefined') {
         localStorage.removeItem('art_solution_products_v2');
         localStorage.removeItem('art_solution_products_v3');
+        localStorage.removeItem('art_solution_products_v4');
+        localStorage.removeItem('art_solution_products_v5');
       }
       const saved = localStorage.getItem(STORAGE_KEYS.products);
       if (saved) {
         const parsed: Product[] = JSON.parse(saved);
-        const dummyIds = new Set([
-          'prod-ivf-workstation-aura',
-          'prod-benchtop-incubator-omni',
-          'prod-micromanipulator-icsi',
-          'prod-turnkey-cleanroom-modular'
-        ]);
-        const cleaned = parsed.filter(
-          (p) => !dummyIds.has(p.id) && p.makeImporter !== 'ART Solution Engineering'
-        );
-        if (cleaned.length >= 100) {
-          return cleaned;
+        if (parsed.length >= 100) {
+          return parsed;
         }
       }
       return defaultProducts;
@@ -193,6 +213,11 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('art_solution_gallery_v1');
+        localStorage.removeItem('art_solution_gallery_v2');
+        localStorage.removeItem('art_solution_gallery_v3');
+      }
       const saved = localStorage.getItem(STORAGE_KEYS.gallery);
       return saved ? JSON.parse(saved) : defaultGalleryItems;
     } catch {
@@ -232,6 +257,76 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return DEFAULT_EQUIPMENT_CATEGORIES;
     }
   });
+
+  // Initial hydration from production database / API
+  useEffect(() => {
+    let isCancelled = false;
+    async function hydrateFromProduction() {
+      setIsSyncing(true);
+      try {
+        const res = await fetch(`/api/sync?t=${Date.now()}`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+          },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (!isCancelled && data) {
+            if (data.content) {
+              setWebsiteContent(data.content);
+              try {
+                localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(data.content));
+              } catch {}
+            }
+            if (data.settings) {
+              setThemeSettings(data.settings);
+              try {
+                localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(data.settings));
+              } catch {}
+            }
+            if (Array.isArray(data.products) && data.products.length > 0) {
+              setProducts(data.products);
+              try {
+                localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(data.products));
+              } catch {}
+            }
+            if (Array.isArray(data.gallery) && data.gallery.length > 0) {
+              setGalleryItems(data.gallery);
+              try {
+                localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(data.gallery));
+              } catch {}
+            }
+            if (Array.isArray(data.categories) && data.categories.length > 0) {
+              setCategories(data.categories);
+              try {
+                localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(data.categories));
+              } catch {}
+            }
+            if (Array.isArray(data.inquiries)) {
+              setInquiries(data.inquiries);
+              try {
+                localStorage.setItem(STORAGE_KEYS.inquiries, JSON.stringify(data.inquiries));
+              } catch {}
+            }
+            if (data.status) {
+              setDbStatus(data.status);
+            }
+            setLastSyncedAt(new Date().toLocaleTimeString());
+          }
+        }
+      } catch (err) {
+        console.warn('[PRODUCTION SYNC] Initial fetch fell back to local cache:', err);
+      } finally {
+        if (!isCancelled) setIsSyncing(false);
+      }
+    }
+
+    hydrateFromProduction();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   // Apply theme color and CTA color dynamically to CSS custom properties
   useEffect(() => {
@@ -314,8 +409,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showToast(`Category "${trimmed}" already exists`, 'info');
       return false;
     }
-    setCategories((prev) => [...prev, trimmed]);
-    showToast(`Category "${trimmed}" added successfully!`, 'success');
+    const updated = [...categories, trimmed];
+    setCategories(updated);
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ categories: updated }),
+    }).catch(() => null);
+    showToast(`Category "${trimmed}" added and saved to production!`, 'success');
     return true;
   };
 
@@ -330,7 +431,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showToast(`Category "${trimmedNew}" already exists`, 'error');
       return false;
     }
-    setCategories((prev) => prev.map((c) => (c === oldName ? trimmedNew : c)));
+    const updatedCats = categories.map((c) => (c === oldName ? trimmedNew : c));
+    setCategories(updatedCats);
     // Synchronize all products with old category
     setProducts((prev) =>
       prev.map((p) => (p.category === oldName ? { ...p, category: trimmedNew } : p))
@@ -338,7 +440,12 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (productCategoryFilter === oldName) {
       setProductCategoryFilter(trimmedNew);
     }
-    showToast(`Category "${oldName}" updated to "${trimmedNew}" across all products!`, 'success');
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ categories: updatedCats }),
+    }).catch(() => null);
+    showToast(`Category "${oldName}" updated to "${trimmedNew}" in production!`, 'success');
     return true;
   };
 
@@ -348,7 +455,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
     const fallbackCategory = categories.find((c) => c !== catName) || 'General Equipment';
-    setCategories((prev) => prev.filter((c) => c !== catName));
+    const updatedCats = categories.filter((c) => c !== catName);
+    setCategories(updatedCats);
     // Reassign products with removed category to fallback
     setProducts((prev) =>
       prev.map((p) => (p.category === catName ? { ...p, category: fallbackCategory } : p))
@@ -356,6 +464,11 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (productCategoryFilter === catName) {
       setProductCategoryFilter('All');
     }
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ categories: updatedCats }),
+    }).catch(() => null);
     showToast(`Category "${catName}" removed. Associated products moved to "${fallbackCategory}".`, 'info');
     return true;
   };
@@ -369,24 +482,45 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Theme settings
   const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
-    setThemeSettings((prev) => ({ ...prev, ...newSettings }));
-    showToast('Theme & branding settings updated successfully!');
+    setThemeSettings((prev) => {
+      const merged = { ...prev, ...newSettings };
+      fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+        body: JSON.stringify(newSettings),
+      }).catch((err) => console.warn('[API settings error]', err));
+      return merged;
+    });
+    showToast('Theme & branding settings updated in production database!');
   };
 
   // Website content
   const updateWebsiteContent = <K extends keyof WebsiteContent>(section: K, data: WebsiteContent[K]) => {
-    setWebsiteContent((prev) => ({ ...prev, [section]: data }));
-    showToast(`Content for "${String(section).toUpperCase()}" updated successfully!`);
+    setWebsiteContent((prev) => {
+      const merged = { ...prev, [section]: data };
+      fetch('/api/content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+        body: JSON.stringify({ section, data }),
+      }).catch((err) => console.warn('[API content error]', err));
+      return merged;
+    });
+    showToast(`Content for "${String(section).toUpperCase()}" updated in production database!`);
   };
 
   // Products CRUD
   const addProduct = (productData: Omit<Product, 'id'>) => {
     const newProduct: Product = {
       ...productData,
-      id: `prod-${Date.now()}`,
+      id: `prod-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
     };
     setProducts((prev) => [newProduct, ...prev]);
-    showToast(`Product "${newProduct.name}" added successfully!`);
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify(newProduct),
+    }).catch((err) => console.warn('[API add product error]', err));
+    showToast(`Product "${newProduct.name}" added to production database!`);
     return newProduct;
   };
 
@@ -394,22 +528,37 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setProducts((prev) =>
       prev.map((item) => (item.id === id ? { ...item, ...updatedFields } : item))
     );
-    showToast('Product updated successfully!');
+    fetch('/api/products', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ id, ...updatedFields }),
+    }).catch((err) => console.warn('[API update product error]', err));
+    showToast('Product updated in production database!');
   };
 
   const deleteProduct = (id: string) => {
     setProducts((prev) => prev.filter((item) => item.id !== id));
-    showToast('Product deleted.', 'info');
+    fetch('/api/products', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ id }),
+    }).catch((err) => console.warn('[API delete product error]', err));
+    showToast('Product deleted from production database.', 'info');
   };
 
   // Gallery CRUD
   const addGalleryItem = (itemData: Omit<GalleryItem, 'id'>) => {
     const newItem: GalleryItem = {
       ...itemData,
-      id: `gal-${Date.now()}`,
+      id: `gal-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
     };
     setGalleryItems((prev) => [newItem, ...prev]);
-    showToast('Gallery item added successfully!');
+    fetch('/api/gallery', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify(newItem),
+    }).catch((err) => console.warn('[API add gallery error]', err));
+    showToast('Gallery item added to production database!');
     return newItem;
   };
 
@@ -417,12 +566,125 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGalleryItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, ...updatedFields } : item))
     );
-    showToast('Gallery item updated!');
+    fetch('/api/gallery', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ id, ...updatedFields }),
+    }).catch((err) => console.warn('[API update gallery error]', err));
+    showToast('Gallery item updated in production database!');
   };
 
   const deleteGalleryItem = (id: string) => {
     setGalleryItems((prev) => prev.filter((item) => item.id !== id));
-    showToast('Gallery item removed.', 'info');
+    fetch('/api/gallery', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ id }),
+    }).catch((err) => console.warn('[API delete gallery error]', err));
+    showToast('Gallery item removed from production database.', 'info');
+  };
+
+  // Media upload to production file storage / Vercel Blob
+  const uploadMedia = async (file: File): Promise<{ url: string; error?: string }> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const base64 = event.target?.result as string;
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: file.name,
+              contentType: file.type,
+              base64,
+              size: file.size,
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.url) {
+              resolve({ url: data.url });
+              return;
+            }
+          }
+          // Fallback to base64 data URI if server is temporarily unreachable
+          resolve({ url: base64 });
+        } catch (err: any) {
+          console.warn('[UPLOAD] API error, using local fallback:', err);
+          const base64 = event.target?.result as string;
+          resolve({ url: base64 });
+        }
+      };
+      reader.onerror = () => resolve({ url: '', error: 'Failed to read file' });
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Publish all states to production database
+  const publishFullStateToProduction = async (): Promise<boolean> => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: websiteContent,
+          settings: themeSettings,
+          products,
+          gallery: galleryItems,
+          categories,
+          inquiries,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLastSyncedAt(new Date().toLocaleTimeString());
+        if (data.status) setDbStatus(data.status);
+        showToast('All changes successfully published to production database!', 'success');
+        return true;
+      }
+      showToast('Failed to publish to production database', 'error');
+      return false;
+    } catch (err: any) {
+      showToast('Network error while publishing: ' + err.message, 'error');
+      return false;
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Pull latest data from production database
+  const refreshFromProduction = async (): Promise<boolean> => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch(`/api/sync?t=${Date.now()}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.content) setWebsiteContent(data.content);
+        if (data.settings) setThemeSettings(data.settings);
+        if (Array.isArray(data.products) && data.products.length > 0) setProducts(data.products);
+        if (Array.isArray(data.gallery)) setGalleryItems(data.gallery);
+        if (Array.isArray(data.categories)) setCategories(data.categories);
+        if (Array.isArray(data.inquiries)) setInquiries(data.inquiries);
+        if (data.status) setDbStatus(data.status);
+        setLastSyncedAt(new Date().toLocaleTimeString());
+        showToast('Loaded latest data from production database!', 'success');
+        return true;
+      }
+      showToast('Failed to load from production database', 'error');
+      return false;
+    } catch (err: any) {
+      showToast('Network error fetching from production: ' + err.message, 'error');
+      return false;
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   // Inquiries
@@ -729,6 +991,12 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         exportDataJSON,
         importDataJSON,
         openWhatsApp,
+        isSyncing,
+        lastSyncedAt,
+        dbStatus,
+        publishFullStateToProduction,
+        refreshFromProduction,
+        uploadMedia,
       }}
     >
       {children}

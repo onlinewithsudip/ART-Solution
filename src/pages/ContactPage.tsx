@@ -165,32 +165,46 @@ export const ContactPage: React.FC = () => {
                 <MapPin className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-slate-800 uppercase block">
-                    Headquarters & Demo Facility
+                    Office Address
                   </span>
+                  <p className="text-xs font-semibold text-slate-900 leading-relaxed">
+                    ART MEDICAL
+                  </p>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {websiteContent.contact.address}
                   </p>
+                  {websiteContent.contact.landmark && (
+                    <p className="text-xs text-teal-700 font-medium pt-1">
+                      Landmark: {websiteContent.contact.landmark}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="flex items-start gap-3 pt-3 border-t border-slate-100">
                 <Phone className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
-                <div className="space-y-0.5 text-xs">
+                <div className="space-y-1 text-xs">
                   <span className="font-bold text-slate-800 uppercase block">
-                    Direct Lines
+                    Phone Numbers
                   </span>
                   <div>
                     <a
-                      href={`tel:${websiteContent.contact.phone1}`}
-                      className="text-slate-600 hover:text-slate-900 font-mono block"
+                      href="tel:+919875406943"
+                      className="text-slate-900 font-bold hover:text-teal-700 font-mono block"
                     >
-                      {websiteContent.contact.phone1} (Sales & Turnkey)
+                      +91 98754 06943
                     </a>
                     <a
-                      href={`tel:${websiteContent.contact.phone2}`}
-                      className="text-slate-600 hover:text-slate-900 font-mono block"
+                      href="tel:+917439688406"
+                      className="text-slate-600 hover:text-slate-900 font-mono block pt-0.5"
                     >
-                      {websiteContent.contact.phone2} (Board Line)
+                      +91 74396 88406
+                    </a>
+                    <a
+                      href="tel:+919593076979"
+                      className="text-slate-600 hover:text-slate-900 font-mono block pt-0.5"
+                    >
+                      +91 95930 76979
                     </a>
                   </div>
                 </div>
@@ -205,15 +219,9 @@ export const ContactPage: React.FC = () => {
                   <div>
                     <a
                       href={`mailto:${websiteContent.contact.email}`}
-                      className="text-slate-600 hover:text-slate-900 block"
+                      className="text-slate-700 hover:text-slate-900 font-medium block"
                     >
                       {websiteContent.contact.email}
-                    </a>
-                    <a
-                      href={`mailto:${websiteContent.contact.supportEmail}`}
-                      className="text-slate-600 hover:text-slate-900 block"
-                    >
-                      {websiteContent.contact.supportEmail}
                     </a>
                   </div>
                 </div>
@@ -227,18 +235,6 @@ export const ContactPage: React.FC = () => {
                   </span>
                   <p className="text-slate-600">
                     {websiteContent.contact.workingHours}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 pt-3 border-t border-slate-100">
-                <Building className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
-                <div className="space-y-0.5 text-xs">
-                  <span className="font-bold text-slate-800 uppercase block">
-                    Kolkata Operational Office
-                  </span>
-                  <p className="text-slate-600 leading-relaxed">
-                    C/O Soumya Brata Banerjee. A/92 Baghajatin, Flat No-3B, Haimanti Apartment, Kolkata - 700092
                   </p>
                 </div>
               </div>

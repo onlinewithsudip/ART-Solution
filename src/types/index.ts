@@ -81,8 +81,10 @@ export interface WebsiteContent {
   contact: {
     companyName: string;
     address: string;
+    landmark?: string;
     phone1: string;
     phone2: string;
+    phone3?: string;
     email: string;
     whatsapp: string;
     whatsappLink?: string;

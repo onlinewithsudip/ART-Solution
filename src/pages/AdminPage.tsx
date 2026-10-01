@@ -51,6 +51,8 @@ import {
   Building2,
   Box,
   FileSpreadsheet,
+  Database,
+  RefreshCw,
 } from 'lucide-react';
 import { heroImg, cleanroomImg, mediaVialsImg, catheterImg, labwareImg, cryoImg, registerImg } from '../data/defaultData';
 import { BrandIcon, AVAILABLE_ICONS } from '../components/BrandIcon';
@@ -91,6 +93,12 @@ export const AdminPage: React.FC = () => {
     viewProduct,
     showToast,
     openWhatsApp,
+    isSyncing,
+    lastSyncedAt,
+    dbStatus,
+    publishFullStateToProduction,
+    refreshFromProduction,
+    uploadMedia,
   } = useSite();
 
   // Authentication form states
@@ -179,7 +187,7 @@ export const AdminPage: React.FC = () => {
   const [settingsForm, setSettingsForm] = useState<ThemeSettings>(themeSettings);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
-  const handleSaveAllCMS = () => {
+  const handleSaveAllCMS = async () => {
     updateWebsiteContent('header', contentForm.header);
     updateWebsiteContent('hero', contentForm.hero);
     updateWebsiteContent('about', contentForm.about);
@@ -187,16 +195,18 @@ export const AdminPage: React.FC = () => {
     updateWebsiteContent('footer', contentForm.footer);
     updateThemeSettings(settingsForm);
     setHasUnsavedChanges(false);
-    showToast('All CMS changes, texts, links, and icons saved successfully to website!', 'success');
+    await publishFullStateToProduction();
+    showToast('All CMS changes, texts, links, and icons saved to production database!', 'success');
   };
 
-  const handleSaveHeaderFooter = () => {
+  const handleSaveHeaderFooter = async () => {
     updateWebsiteContent('header', contentForm.header);
     updateWebsiteContent('footer', contentForm.footer);
     updateWebsiteContent('contact', contentForm.contact);
     updateThemeSettings(settingsForm);
     setHasUnsavedChanges(false);
-    showToast('Header, Footer, logo, and link numbers saved successfully!', 'success');
+    await publishFullStateToProduction();
+    showToast('Header, Footer, logo, and link numbers saved to production database!', 'success');
   };
 
   const handleExportBackup = () => {
@@ -396,7 +406,7 @@ export const AdminPage: React.FC = () => {
     if (e.target) e.target.value = '';
   };
 
-  const handleConfirmBulkImport = () => {
+  const handleConfirmBulkImport = async () => {
     if (importedPreview.length === 0) return;
     setIsImporting(true);
 
@@ -407,7 +417,8 @@ export const AdminPage: React.FC = () => {
       addProduct(p);
     });
 
-    showToast(`Successfully added ${importedPreview.length} products to inventory!`, 'success');
+    showToast(`Added ${importedPreview.length} products to inventory! Syncing to production database...`, 'info');
+    await publishFullStateToProduction();
     setIsBulkImportModalOpen(false);
     setImportedPreview([]);
     setIsImporting(false);
@@ -482,21 +493,26 @@ export const AdminPage: React.FC = () => {
     setIsGalleryModalOpen(false);
   };
 
-  // Image Upload helper (FileReader to base64)
-  const handleFileUpload = (
+  // Media & Image Upload helper (Uploads directly to production storage)
+  const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    onSuccess: (base64: string) => void
+    onSuccess: (urlOrBase64: string) => void
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64 = event.target?.result as string;
-      onSuccess(base64);
-      showToast('Image uploaded successfully!');
-    };
-    reader.readAsDataURL(file);
+    showToast(`Uploading ${file.name} to production storage...`, 'info');
+    try {
+      const result = await uploadMedia(file);
+      if (result.url) {
+        onSuccess(result.url);
+        showToast('Uploaded to production storage successfully!', 'success');
+      } else {
+        showToast('Upload failed, please try again.', 'error');
+      }
+    } catch (err: any) {
+      showToast('Upload error: ' + err.message, 'error');
+    }
   };
 
   // JSON Import & Export
@@ -713,6 +729,49 @@ export const AdminPage: React.FC = () => {
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Log Out</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Live Production Database Sync Bar */}
+        <div className="max-w-7xl mx-auto mt-4 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <Database className="w-3.5 h-3.5" />
+              <span className="font-semibold">{dbStatus?.provider || 'Production Database Connected'}</span>
+            </div>
+            {lastSyncedAt && (
+              <span className="text-slate-400 text-[11px]">
+                Last Synced: <span className="font-mono text-slate-300">{lastSyncedAt}</span>
+              </span>
+            )}
+            {isSyncing && (
+              <span className="flex items-center gap-1 text-teal-400 text-[11px] font-medium">
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                Syncing with Production API...
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => refreshFromProduction()}
+              disabled={isSyncing}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition-colors disabled:opacity-50"
+              title="Fetch latest data from production database"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>Pull Latest from Database</span>
+            </button>
+            <button
+              onClick={() => publishFullStateToProduction()}
+              disabled={isSyncing}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold shadow-xs transition-colors disabled:opacity-50"
+              title="Push all local CMS and inventory data to production cloud database"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Publish All to Production</span>
             </button>
           </div>
         </div>

@@ -137,11 +137,11 @@ export const HomePage: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={() => openWhatsApp('Hello ART Solution, I would like to inquire about your product pricing and quotation estimates.')}
+                  onClick={() => openWhatsApp('Hello ART MEDICAL, I would like to inquire about your product pricing and quotation estimates.')}
                   className="px-5 py-3.5 rounded-xl font-semibold text-sm bg-emerald-600 text-white hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-sm"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp 9330951039</span>
+                  <span>WhatsApp +91 98754 06943</span>
                 </button>
 
                 <button
@@ -392,10 +392,10 @@ export const HomePage: React.FC = () => {
                 Commercials & Dispatch Guarantee
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                ART Solution — Offering Full Solution
+                ART MEDICAL — Offering Full Solution
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
-                Registered Office: C/o- Modhumita Singh. Ground Floor, Village - Kirtankhola, PO - Bakhrahat, PS - Bishnupur, District - 24 Parganas(S), Pin - 743377.
+                Office: 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Landmark: Near kalua aboitonic school).
               </p>
             </div>
             <div className="shrink-0 p-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm text-right">
@@ -425,19 +425,27 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
-            <div className="text-xs text-slate-300">
-              <span className="font-semibold text-white">Direct Helpline:</span>{' '}
-              <a href="tel:9330951039" className="font-mono text-teal-300 hover:underline">9330951039</a>
-              {' '}|{' '}
-              <a href="mailto:artmedical4560@gmail.com" className="text-slate-300 hover:text-white underline">artmedical4560@gmail.com</a>
+            <div className="text-xs text-slate-300 space-y-1">
+              <div>
+                <span className="font-semibold text-white">Direct Numbers:</span>{' '}
+                <a href="tel:+919875406943" className="font-mono text-teal-300 hover:underline font-bold">+91 98754 06943</a>
+                {' '}|{' '}
+                <a href="tel:+917439688406" className="font-mono text-slate-300 hover:underline">7439688406</a>
+                {' '}|{' '}
+                <a href="tel:+919593076979" className="font-mono text-slate-300 hover:underline">9593076979</a>
+              </div>
+              <div>
+                <span className="font-semibold text-white">Email:</span>{' '}
+                <a href="mailto:artmedical4560@gmail.com" className="text-slate-300 hover:text-white underline">artmedical4560@gmail.com</a>
+              </div>
             </div>
 
             <button
-              onClick={() => openWhatsApp('Hello ART Solution, please send the official FY 25-26 commercials PDF and proforma invoice.')}
+              onClick={() => openWhatsApp('Hello ART MEDICAL, please send the official FY 25-26 commercials PDF and proforma invoice.')}
               className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Connect on WhatsApp</span>
+              <span>Connect on WhatsApp (+91 98754 06943)</span>
             </button>
           </div>
         </div>

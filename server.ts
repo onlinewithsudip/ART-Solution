@@ -10,7 +10,32 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '20mb' }));
+  app.use(express.urlencoded({ limit: '20mb', extended: true }));
+
+  // Static uploads directory
+  app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
+  // Production Storage & Database API routes
+  const syncHandler = (await import('./api/sync')).default;
+  const productsHandler = (await import('./api/products')).default;
+  const contentHandler = (await import('./api/content')).default;
+  const settingsHandler = (await import('./api/settings')).default;
+  const galleryHandler = (await import('./api/gallery')).default;
+  const categoriesHandler = (await import('./api/categories')).default;
+  const uploadHandler = (await import('./api/upload')).default;
+  const mediaHandler = (await import('./api/media')).default;
+  const dbStatusHandler = (await import('./api/db-status')).default;
+
+  app.all('/api/sync', (req, res) => syncHandler(req, res));
+  app.all('/api/products', (req, res) => productsHandler(req, res));
+  app.all('/api/content', (req, res) => contentHandler(req, res));
+  app.all('/api/settings', (req, res) => settingsHandler(req, res));
+  app.all('/api/gallery', (req, res) => galleryHandler(req, res));
+  app.all('/api/categories', (req, res) => categoriesHandler(req, res));
+  app.all('/api/upload', (req, res) => uploadHandler(req, res));
+  app.all('/api/media', (req, res) => mediaHandler(req, res));
+  app.all('/api/db-status', (req, res) => dbStatusHandler(req, res));
 
   // API endpoint for lead notifications
   app.post('/api/notify-lead', (req: Request, res: Response) => {
