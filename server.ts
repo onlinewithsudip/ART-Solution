@@ -87,7 +87,7 @@ async function startServer() {
 
   // Health check
   app.get('/api/health', (_req: Request, res: Response) => {
-    res.json({ status: 'ok', service: 'ART Solution API' });
+    res.json({ status: 'ok', service: 'ART Medical API' });
   });
 
   // Vite middleware in dev
@@ -98,7 +98,7 @@ async function startServer() {
   app.use(vite.middlewares);
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`ART Solution Server running at http://0.0.0.0:${PORT}`);
+    console.log(`ART Medical Server running at http://0.0.0.0:${PORT}`);
   });
 }
 

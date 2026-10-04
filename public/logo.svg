@@ -24,12 +24,12 @@
     <circle cx="62" cy="20" r="3" fill="#00A8CC"/>
   </g>
 
-  <!-- Brand Typography: ART Solution -->
+  <!-- Brand Typography: ART Medical -->
   <text x="110" y="55" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" letter-spacing="-0.5" fill="#0F2C59">
     ART
   </text>
   <text x="216" y="55" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="44" font-weight="700" letter-spacing="0.5" fill="#00838F">
-    Solution
+    Medical
   </text>
 
   <!-- Tagline: OFFERING FULL SOLUTION -->

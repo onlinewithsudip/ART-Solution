@@ -32,7 +32,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <div className="relative flex items-center justify-center shrink-0">
         <img
           src={effectiveLogoUrl}
-          alt={themeSettings.logoText || 'ART Solution'}
+          alt={themeSettings.logoText || 'ART Medical'}
           style={{ height: `${height}px` }}
           className={`w-auto object-contain transition-transform duration-200 ${
             onClick ? 'group-hover:scale-105' : ''
@@ -56,7 +56,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
                 : 'text-white group-hover:text-teal-300'
             }`}
           >
-            {themeSettings.logoText || 'ART Solution'}
+            {themeSettings.logoText || 'ART Medical'}
           </span>
           <span
             className={`text-[11px] font-semibold tracking-wider uppercase mt-0.5 ${

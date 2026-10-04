@@ -1,6 +1,6 @@
 {
-  "name": "A to Z Fertility Solutions - IVF & Laboratory Equipment",
-  "description": "Comprehensive turnkey solutions, medical equipment, embryology workstations, and clinic setups for IVF and fertility centers.",
+  "name": "ART Medical - Comprehensive Embryology & IVF Solutions",
+  "description": "Comprehensive Embryology & IVF Solutions for fertility clinics, culture media, consumables, equipment, frozen semen support, and senior embryologist backup.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

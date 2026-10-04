@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSite } from '../context/SiteContext';
+import { Product } from '../types';
+import { ServicesSection } from '../components/ServicesSection';
+import { resolveProductImage } from '../utils/productImages';
+import { formatProductQuoteWhatsApp, ART_MEDICAL_CONFIG } from '../config/contact';
 import {
   ArrowRight,
   ShieldCheck,
@@ -34,7 +38,27 @@ export const HomePage: React.FC = () => {
     openWhatsApp,
   } = useSite();
 
-  const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 6);
+  const [homeProductFilter, setHomeProductFilter] = useState<string>('All');
+
+  const homeDisplayProducts: Product[] = useMemo(() => {
+    // If filter is specific category, return matching products
+    if (homeProductFilter !== 'All') {
+      return products.filter((p) => p.category === homeProductFilter).slice(0, 9);
+    }
+    // Otherwise return featured products, with diverse fallbacks
+    const featured = products.filter((p) => p.isFeatured);
+    if (featured.length >= 6) {
+      return featured.slice(0, 9);
+    }
+    const combined: typeof products = [...featured];
+    for (const p of products) {
+      if (combined.length >= 9) break;
+      if (!combined.some((item) => item.id === p.id)) {
+        combined.push(p);
+      }
+    }
+    return combined.slice(0, 9);
+  }, [products, homeProductFilter]);
 
   const homeCategories = [
     {
@@ -123,36 +147,41 @@ export const HomePage: React.FC = () => {
               {/* Actions */}
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <button
-                  onClick={() => {
-                    setPage('products');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
+                  onClick={() =>
+                    openWhatsApp(
+                      'Hello ART Medical, I would like to request an official quotation for IVF consumables, culture media, and laboratory solutions.'
+                    )
+                  }
                   style={{
                     backgroundColor: themeSettings.ctaColor,
                     color: themeSettings.ctaTextColor,
                   }}
-                  className="px-6 py-3.5 rounded-xl font-semibold text-sm shadow-lg hover:brightness-110 active:scale-98 transition-all flex items-center gap-2"
+                  className="px-6 py-3.5 rounded-xl font-semibold text-sm shadow-lg hover:brightness-110 active:scale-98 transition-all flex items-center gap-2 cursor-pointer"
                 >
-                  <span>{websiteContent.hero.primaryCtaText}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 text-white" />
+                  <span>{websiteContent.hero.primaryCtaText || 'Request Quotation (WhatsApp)'}</span>
                 </button>
 
                 <button
-                  onClick={() => openWhatsApp('Hello ART MEDICAL, I would like to inquire about your product pricing and quotation estimates.')}
-                  className="px-5 py-3.5 rounded-xl font-semibold text-sm bg-emerald-600 text-white hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-sm"
+                  onClick={() =>
+                    openWhatsApp(
+                      'Hello ART MEDICAL, I would like to inquire about your comprehensive IVF laboratory products and services.'
+                    )
+                  }
+                  className="px-5 py-3.5 rounded-xl font-semibold text-sm bg-emerald-600 text-white hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp +91 98754 06943</span>
+                  <span>Chat WhatsApp {ART_MEDICAL_CONFIG.whatsappDisplay}</span>
                 </button>
 
                 <button
                   onClick={() => {
-                    setPage('about');
+                    setPage('products');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="px-5 py-3.5 rounded-xl font-medium text-sm text-slate-200 bg-white/10 hover:bg-white/15 transition-colors border border-white/20 backdrop-blur-sm"
+                  className="px-5 py-3.5 rounded-xl font-medium text-sm text-slate-200 bg-white/10 hover:bg-white/15 transition-colors border border-white/20 backdrop-blur-sm cursor-pointer"
                 >
-                  About ART Solution
+                  Explore 150+ Products
                 </button>
               </div>
 
@@ -187,7 +216,7 @@ export const HomePage: React.FC = () => {
                 <div className="absolute bottom-4 left-4 right-4 bg-slate-950/85 backdrop-blur-md p-4 rounded-xl border border-white/10 text-xs">
                   <div className="flex items-center justify-between text-slate-300 mb-1">
                     <span className="font-semibold text-white">
-                      ART Solution — Offering Full Solution
+                      ART Medical — Offering Full Solution
                     </span>
                     <span className="text-emerald-400 font-mono text-[11px]">FY 25-26</span>
                   </div>
@@ -200,6 +229,9 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Comprehensive Embryology & IVF Solutions Services Section */}
+      <ServicesSection showHeading={true} />
 
       {/* Equipment Categories */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,34 +304,65 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+      {/* Featured Products Showcase */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <span
               className="text-xs font-bold uppercase tracking-wider block mb-1"
               style={{ color: themeSettings.primaryColor }}
             >
-              Customer Favorites & Essentials
+              Essential Clinical Inventory & Supplies
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Featured Clinical Supplies & Equipment
             </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Sterility certified, MEA tested, and ready for immediate dispatch across India.
+            </p>
           </div>
           <button
             onClick={() => {
+              setProductCategoryFilter('All');
               setPage('products');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 group"
+            className="text-xs font-bold text-teal-700 hover:text-teal-800 flex items-center gap-1 group shrink-0"
           >
-            <span>Browse Full Catalog</span>
+            <span>Explore All 150+ Products</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
 
+        {/* Category Pills for quick discovery */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {[
+            { label: 'All Essentials', value: 'All' },
+            { label: 'IUI & IVF Media', value: 'IUI & IVF Media' },
+            { label: 'Catheters & Needles', value: 'Needles, Catheters & Cannulas' },
+            { label: 'Cryo & Vitrification', value: 'Cryopreservation & Vitrification' },
+            { label: 'Disposables & Labware', value: 'Disposables & Labware' },
+            { label: 'Oils & Gradients', value: 'Oils & Density Gradients' },
+          ].map((tab) => {
+            const isActive = homeProductFilter === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setHomeProductFilter(tab.value)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {featuredProducts.map((prod) => (
+          {homeDisplayProducts.map((prod) => (
             <div
               key={prod.id}
               className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-all duration-200 group"
@@ -310,15 +373,18 @@ export const HomePage: React.FC = () => {
                 className="relative h-56 bg-slate-100 overflow-hidden cursor-pointer"
               >
                 <img
-                  src={prod.image}
+                  src={resolveProductImage(prod)}
                   alt={prod.name}
                   className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/assets/art_media_vials_1790759397048.jpg';
+                  }}
                 />
                 <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-700 shadow-xs">
                   {prod.category}
                 </div>
                 {prod.makeImporter && (
-                  <div className="absolute top-3 right-3 bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded text-[10px] font-semibold">
+                  <div className="absolute top-3 right-3 bg-teal-50 text-teal-800 border border-teal-200 px-2 py-0.5 rounded text-[10px] font-semibold">
                     {prod.makeImporter}
                   </div>
                 )}
@@ -329,7 +395,11 @@ export const HomePage: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
                     <span>Code: {prod.modelNumber}</span>
-                    {prod.packSize && <span className="text-slate-500 font-sans truncate max-w-[140px]">{prod.packSize}</span>}
+                    {prod.packSize && (
+                      <span className="text-slate-500 font-sans truncate max-w-[140px]">
+                        {prod.packSize}
+                      </span>
+                    )}
                   </div>
                   <h3
                     onClick={() => viewProduct(prod.id)}
@@ -342,45 +412,73 @@ export const HomePage: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Pricing and Action */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase text-slate-400 font-bold block">
-                      Supply Rate (₹)
-                    </span>
-                    <span className="text-base font-bold font-mono text-slate-900 tabular-nums">
-                      {prod.price}
+                {/* Price Status & Action */}
+                <div className="pt-4 border-t border-slate-100 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase text-slate-400 font-bold block">
+                        Clinical Supply
+                      </span>
+                      <span className="inline-block text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">
+                        Quotation on Request
+                      </span>
+                    </div>
+
+                    <span className="text-[11px] text-emerald-600 font-medium">
+                      In Stock • Rapid Dispatch
                     </span>
                   </div>
 
+                  {/* Primary CTA: Enquire via WhatsApp */}
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() =>
                         openWhatsApp(
-                          `Hello ART Solution, I want to inquire about "${prod.name}" (Rate: ${prod.price}).`
+                          formatProductQuoteWhatsApp(prod.name, prod.makeImporter, prod.packSize)
                         )
                       }
-                      title="WhatsApp Inquiry"
-                      className="p-2.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                      title="Request Quotation via WhatsApp"
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
                     >
                       <MessageCircle className="w-4 h-4" />
+                      <span>Enquire via WhatsApp</span>
                     </button>
 
                     <button
                       onClick={() => viewProduct(prod.id)}
-                      style={{
-                        backgroundColor: themeSettings.ctaColor,
-                        color: themeSettings.ctaTextColor,
-                      }}
-                      className="px-3.5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all"
+                      title="View Full Specifications"
+                      className="p-2.5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer shrink-0"
                     >
-                      View Details
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* WhatsApp Fast Catalog Quote Card */}
+        <div className="rounded-2xl bg-gradient-to-r from-teal-50 via-cyan-50 to-emerald-50 border border-teal-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="space-y-1 text-center sm:text-left">
+            <h4 className="text-sm font-bold text-slate-900">
+              Need Institutional Pricing or Monthly Standing Orders?
+            </h4>
+            <p className="text-xs text-slate-600">
+              Share your laboratory consumables requirement list directly on WhatsApp for instant proforma invoice and volume discount rates.
+            </p>
+          </div>
+          <button
+            onClick={() =>
+              openWhatsApp(
+                'Hello ART Medical, I would like to request an institutional quotation and standing order rate contract for our IVF laboratory.'
+              )
+            }
+            className="px-5 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 font-semibold text-xs flex items-center gap-2 shrink-0 shadow-xs cursor-pointer"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Request Bulk Quotation (WhatsApp)</span>
+          </button>
         </div>
       </section>
 

@@ -13,7 +13,15 @@ import {
   Globe,
   HelpCircle,
   ChevronDown,
+  Award,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
+import {
+  ART_MEDICAL_CONFIG,
+  buildWhatsAppUrl,
+  formatGeneralEnquiryWhatsApp,
+} from '../config/contact';
 
 export const ContactPage: React.FC = () => {
   const { websiteContent, themeSettings, openWhatsApp, submitInquiry, setPage } =
@@ -24,8 +32,8 @@ export const ContactPage: React.FC = () => {
     clinicName: '',
     email: '',
     phone: '',
-    country: '',
-    inquiryType: 'Turnkey Lab Setup' as const,
+    country: 'India',
+    inquiryType: 'Comprehensive Embryology Laboratory Support',
     message: '',
   });
 
@@ -34,19 +42,31 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
+    if (!formData.name || !formData.phone) return;
 
+    // 1. Build complete WhatsApp message with all submitted details
+    const waMessage = formatGeneralEnquiryWhatsApp(formData);
+    const waUrl = buildWhatsAppUrl(waMessage);
+
+    // 2. Submit to local/production inquiry record
     submitInquiry({
       name: formData.name,
       clinicName: formData.clinicName || 'Not specified',
-      email: formData.email,
+      email: formData.email || 'Not specified',
       phone: formData.phone || 'Not specified',
-      country: formData.country || 'Global',
+      country: formData.country || 'India',
       inquiryType: formData.inquiryType,
       message:
         formData.message ||
-        `General inquiry regarding ${formData.inquiryType} for ${formData.clinicName || 'clinic'}.`,
+        `Inquiry regarding ${formData.inquiryType} for ${formData.clinicName || 'clinic'}.`,
     });
+
+    // 3. Open WhatsApp directly to configured ART Medical number (safe inside iframe)
+    try {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    } catch {
+      window.location.href = waUrl;
+    }
 
     setSubmitted(true);
   };
@@ -145,7 +165,7 @@ export const ContactPage: React.FC = () => {
                 <div className="flex items-center">
                   <img
                     src={themeSettings.logoUrl || '/logo.svg'}
-                    alt={themeSettings.logoText || 'ART Solution'}
+                    alt={themeSettings.logoText || 'ART Medical'}
                     style={{ height: '44px' }}
                     className="w-auto object-contain"
                     onError={(e) => {
@@ -271,38 +291,76 @@ export const ContactPage: React.FC = () => {
               </div>
 
               {submitted ? (
-                <div className="p-8 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-4">
-                  <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-                  <h4 className="text-base font-bold text-emerald-900">
-                    Inquiry Received Successfully
-                  </h4>
-                  <p className="text-xs text-emerald-700 max-w-md mx-auto leading-relaxed">
-                    Thank you, {formData.name}. Our laboratory specialists have logged your request and will contact you via email ({formData.email}) or phone shortly.
-                  </p>
-                  <div className="max-w-md mx-auto text-[11px] text-emerald-800 bg-emerald-100/60 py-2 px-3.5 rounded-xl flex items-center justify-center gap-2 font-mono">
-                    <Mail className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                    <span>Lead notification routed to {themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}</span>
+                <div className="p-8 rounded-2xl bg-emerald-50 border border-emerald-300 text-center space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm">
+                    <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <button
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({
-                        name: '',
-                        clinicName: '',
-                        email: '',
-                        phone: '',
-                        country: '',
-                        inquiryType: 'Turnkey Lab Setup',
-                        message: '',
-                      });
-                    }}
-                    className="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-semibold hover:bg-emerald-800"
-                  >
-                    Submit Another Query
-                  </button>
+                  <h4 className="text-base font-bold text-emerald-950">
+                    Enquiry Dispatched to ART Medical WhatsApp
+                  </h4>
+                  <p className="text-xs text-emerald-800 max-w-md mx-auto leading-relaxed">
+                    Thank you, {formData.name}. Your complete enquiry details have been prepared and dispatched directly to the official ART Medical WhatsApp number ({ART_MEDICAL_CONFIG.whatsappDisplay}).
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                    <button
+                      onClick={() => {
+                        const waMessage = formatGeneralEnquiryWhatsApp(formData);
+                        window.open(buildWhatsAppUrl(waMessage), '_blank', 'noopener,noreferrer');
+                      }}
+                      className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-xs"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Re-Open WhatsApp Message</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData({
+                          name: '',
+                          clinicName: '',
+                          email: '',
+                          phone: '',
+                          country: 'India',
+                          inquiryType: 'Comprehensive Embryology Laboratory Support',
+                          message: '',
+                        });
+                      }}
+                      className="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-colors"
+                    >
+                      Submit Another Query
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Embryologist Support Dedicated Routing Banner */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-teal-50 border border-amber-300/70 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0">
+                        <Award className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-slate-900">
+                          Looking for Senior Embryologist Support?
+                        </div>
+                        <div className="text-[11px] text-slate-600">
+                          For freelance cycle leadership & emergency backup, use our dedicated desk.
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPage('embryologist-support');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all shrink-0 flex items-center gap-1 shadow-xs cursor-pointer"
+                    >
+                      <span>Embryologist Desk</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
@@ -345,13 +403,12 @@ export const ContactPage: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Email Address *
+                        Email Address
                       </label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="email"
-                          required
                           value={formData.email}
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
@@ -364,18 +421,19 @@ export const ContactPage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Phone / WhatsApp
+                        Phone / WhatsApp *
                       </label>
                       <div className="relative">
                         <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="tel"
+                          required
                           value={formData.phone}
                           onChange={(e) =>
                             setFormData({ ...formData, phone: e.target.value })
                           }
-                          placeholder="+1 / +91 ..."
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                          placeholder="+91 98300 00000"
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
                         />
                       </div>
                     </div>
@@ -384,7 +442,7 @@ export const ContactPage: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Country / Territory
+                        City / Country
                       </label>
                       <div className="relative">
                         <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -394,7 +452,7 @@ export const ContactPage: React.FC = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, country: e.target.value })
                           }
-                          placeholder="e.g. India, UAE, UK"
+                          placeholder="e.g. Kolkata, West Bengal"
                           className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                         />
                       </div>
@@ -402,23 +460,36 @@ export const ContactPage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Primary Area of Interest
+                        Primary Area of Interest *
                       </label>
                       <select
                         value={formData.inquiryType}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            inquiryType: e.target.value as any,
+                            inquiryType: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white"
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white font-medium"
                       >
-                        <option value="Turnkey Lab Setup">Turnkey Lab Setup</option>
-                        <option value="Equipment Purchase">Equipment Purchase</option>
-                        <option value="Service & Maintenance">Service & Maintenance</option>
-                        <option value="Consumables Supply">Consumables Supply</option>
-                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Comprehensive Embryology Laboratory Support">
+                          1. Comprehensive Embryology Laboratory Support
+                        </option>
+                        <option value="IVF Consumables & Culture Media">
+                          2. IVF Consumables & Culture Media
+                        </option>
+                        <option value="Complete Instrumentation Solutions">
+                          3. Complete Instrumentation Solutions
+                        </option>
+                        <option value="Frozen Semen Sample Support">
+                          4. Frozen Semen Sample Support
+                        </option>
+                        <option value="IVF & IUI Laboratory Setup Support">
+                          5. IVF & IUI Laboratory Setup Support
+                        </option>
+                        <option value="General Inquiry">
+                          General Product / Commercial Inquiry
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -433,7 +504,7 @@ export const ContactPage: React.FC = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      placeholder="Please specify lab dimensions, equipment requirements, or questions..."
+                      placeholder="Please specify lab requirements, product quantities, or questions..."
                       className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none resize-none"
                     />
                   </div>
@@ -446,8 +517,8 @@ export const ContactPage: React.FC = () => {
                     }}
                     className="w-full py-3.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Transmit Official Inquiry</span>
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Send Complete Details to ART Medical WhatsApp</span>
                   </button>
                 </form>
               )}

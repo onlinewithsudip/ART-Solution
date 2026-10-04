@@ -98,7 +98,7 @@ const SiteContext = createContext<SiteContextType | undefined>(undefined);
 const STORAGE_KEYS = {
   theme: 'art_solution_theme_v2',
   content: 'art_medical_content_v4',
-  products: 'art_medical_products_v6',
+  products: 'art_medical_products_v7',
   gallery: 'art_medical_gallery_v4',
   inquiries: 'art_solution_inquiries_v2',
   categories: 'art_solution_categories_v4',
@@ -827,7 +827,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({
           lead: {
             name: 'System Verification Test',
-            clinicName: 'ART Solution HQ Kolkata',
+            clinicName: 'ART Medical HQ Kolkata',
             email: 'artmedical4560@gmail.com',
             phone: '+91 98712 34567',
             country: 'Corporate Office',
@@ -931,18 +931,26 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
           finalUrl += (finalUrl.includes('?') ? '&' : '?') + `text=${encodeURIComponent(customMessage)}`;
         }
       }
-      window.open(finalUrl, '_blank', 'noopener,noreferrer');
+      try {
+        window.open(finalUrl, '_blank', 'noopener,noreferrer');
+      } catch {
+        window.location.href = finalUrl;
+      }
       return;
     }
 
     // Default: construct from phone number
-    const rawNumber = websiteContent.contact.whatsapp.replace(/\D/g, '');
+    const rawNumber = (websiteContent.contact.whatsapp || '919875406943').replace(/\D/g, '');
     const defaultMsg =
       websiteContent.contact.whatsappMessage ||
       `Hello ${websiteContent.contact.companyName}, I would like to inquire about your IVF laboratory equipment, media, and turnkey solutions.`;
     const message = customMessage || defaultMsg;
     const url = `https://wa.me/${rawNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    try {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch {
+      window.location.href = url;
+    }
   };
 
   return (

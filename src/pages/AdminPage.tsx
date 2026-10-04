@@ -164,7 +164,7 @@ export const AdminPage: React.FC = () => {
     image: '',
     features: ['Sterility certified', 'MEA batch tested for high viability'],
     specs: [
-      { key: 'Make / Importer', value: 'ART Solution' },
+      { key: 'Make / Importer', value: 'ART Medical' },
       { key: 'Pack Size', value: 'Single Sterile' },
       { key: 'FY 25-26 Cust Supply Rate', value: '₹550' }
     ],
@@ -266,7 +266,7 @@ export const AdminPage: React.FC = () => {
       name: '',
       category: categories[0] || 'IUI & IVF Media',
       modelNumber: 'ART-' + Math.floor(100 + Math.random() * 900),
-      makeImporter: 'ART Solution',
+      makeImporter: 'ART Medical',
       packSize: 'Single Sterile',
       rate: 550,
       shortDesc: '',
@@ -278,7 +278,7 @@ export const AdminPage: React.FC = () => {
       image: mediaVialsImg || products[0]?.image || '',
       features: ['Sterility certified', 'MEA batch tested for clinical compliance'],
       specs: [
-        { key: 'Make / Importer', value: 'ART Solution' },
+        { key: 'Make / Importer', value: 'ART Medical' },
         { key: 'Pack Size', value: 'Single Sterile' },
         { key: 'FY 25-26 Cust Supply Rate', value: '₹550' },
       ],
@@ -329,7 +329,7 @@ export const AdminPage: React.FC = () => {
 
         const parsedProducts: Omit<Product, 'id'>[] = rows.map((row, idx) => {
           const desc = row['Description'] || row['description'] || row['Item'] || row['Product'] || row['Name'] || `Product ${idx + 1}`;
-          const make = row['Make/Importer'] || row['Make'] || row['Importer'] || row['Manufacturer'] || row['Brand'] || 'ART Solution';
+          const make = row['Make/Importer'] || row['Make'] || row['Importer'] || row['Manufacturer'] || row['Brand'] || 'ART Medical';
           const pack = row['Pack Size in ml/pice'] || row['Pack Size'] || row['Pack'] || row['Size'] || 'Single Sterile';
           const rawRate = row['FY 25-26 Cust Supply Rate'] || row['Supply Rate'] || row['Rate'] || row['Price'] || row['Rate (₹)'] || '550';
           const numericRate = typeof rawRate === 'number' ? rawRate : parseFloat(String(rawRate).replace(/[^0-9.]/g, '')) || 550;
@@ -428,9 +428,9 @@ export const AdminPage: React.FC = () => {
     const headers = ['Description', 'Make/Importer', 'Pack Size', 'FY 25-26 Cust Supply Rate', 'Category', 'Code'];
     const rows = products.map((p) => [
       `"${p.name.replace(/"/g, '""')}"`,
-      `"${(p.makeImporter || 'ART Solution').replace(/"/g, '""')}"`,
+      `"${(p.makeImporter || 'ART Medical').replace(/"/g, '""')}"`,
       `"${(p.packSize || 'Single Sterile').replace(/"/g, '""')}"`,
-      `"${p.price.replace(/"/g, '""')}"`,
+      `"${(p.price || 'Price on Request').replace(/"/g, '""')}"`,
       `"${p.category.replace(/"/g, '""')}"`,
       `"${p.modelNumber.replace(/"/g, '""')}"`
     ]);
@@ -953,7 +953,7 @@ export const AdminPage: React.FC = () => {
                     {settingsForm.logoType !== 'image' && (
                       <div>
                         <div className="font-bold text-slate-900 leading-tight">
-                          {settingsForm.logoText || 'ART Solution'}
+                          {settingsForm.logoText || 'ART Medical'}
                         </div>
                         <div className="text-[11px] text-slate-500">
                           {settingsForm.logoTagline || 'Offering Full Solution'}
@@ -1245,7 +1245,7 @@ export const AdminPage: React.FC = () => {
                       setSettingsForm({ ...settingsForm, logoText: e.target.value });
                       setHasUnsavedChanges(true);
                     }}
-                    placeholder="ART Solution"
+                    placeholder="ART Medical"
                     className="w-full p-2.5 rounded-xl border border-slate-200 font-semibold text-sm"
                   />
                 </div>
@@ -1409,7 +1409,7 @@ export const AdminPage: React.FC = () => {
                       });
                       setHasUnsavedChanges(true);
                     }}
-                    placeholder="© 2026 ART Solution. All rights reserved."
+                    placeholder="© 2026 ART Medical. All rights reserved."
                     className="w-full p-2.5 rounded-xl border border-slate-200"
                   />
                 </div>
@@ -2903,7 +2903,7 @@ export const AdminPage: React.FC = () => {
                             </div>
                           </td>
                           <td className="py-3.5 px-4 font-semibold text-sky-800">
-                            {prod.makeImporter || 'ART Solution'}
+                            {prod.makeImporter || 'ART Medical'}
                           </td>
                           <td className="py-3.5 px-4 text-slate-600 font-mono text-[11px]">
                             {prod.packSize || 'Single Sterile'}
@@ -3866,7 +3866,7 @@ export const AdminPage: React.FC = () => {
                     <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
                       <span className="text-slate-500">Contact Details:</span>
                       <a
-                        href={`mailto:${inq.email}?subject=RE: Inquiry with ART Solution&body=Dear ${encodeURIComponent(inq.name)},%0D%0A%0D%0AThank you for contacting ART Solution regarding ${encodeURIComponent(inq.productName || inq.inquiryType)}.`}
+                        href={`mailto:${inq.email}?subject=RE: Inquiry with ART Medical&body=Dear ${encodeURIComponent(inq.name)},%0D%0A%0D%0AThank you for contacting ART Medical regarding ${encodeURIComponent(inq.productName || inq.inquiryType)}.`}
                         className="font-mono text-sky-600 hover:underline flex items-center gap-1"
                         title="Click to email customer"
                       >
@@ -3898,7 +3898,7 @@ export const AdminPage: React.FC = () => {
                           onClick={() => {
                             const cleanPhone = inq.phone.replace(/\D/g, '');
                             const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
-                              `Hello ${inq.name}, this is ART Solution regarding your inquiry about ${
+                              `Hello ${inq.name}, this is ART Medical regarding your inquiry about ${
                                 inq.productName || 'our IVF and laboratory equipment solutions'
                               }.`
                             )}`;
@@ -4161,7 +4161,7 @@ export const AdminPage: React.FC = () => {
 
                 <div>
                   <label className="block font-bold uppercase text-slate-600 mb-1">
-                    FY 25-26 Cust Supply Rate (₹) *
+                    Internal Reference Price (₹) (Not displayed publicly)
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-500 text-sm">
@@ -4169,16 +4169,15 @@ export const AdminPage: React.FC = () => {
                     </span>
                     <input
                       type="text"
-                      required
-                      value={productForm.price.replace(/^₹\s*/, '')}
+                      value={(productForm.price || '').replace(/^₹\s*/, '')}
                       onChange={(e) => {
                         const val = e.target.value.trim();
                         setProductForm({
                           ...productForm,
-                          price: val.startsWith('₹') ? val : `₹${val}`,
+                          price: val ? (val.startsWith('₹') ? val : `₹${val}`) : '',
                         });
                       }}
-                      placeholder="550, 1,000, 8,500"
+                      placeholder="e.g. 1,000 (Optional)"
                       className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 font-mono font-bold text-slate-900"
                     />
                   </div>

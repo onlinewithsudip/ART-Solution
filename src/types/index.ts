@@ -1,4 +1,13 @@
-export type Page = 'home' | 'about' | 'products' | 'product-details' | 'gallery' | 'contact' | 'admin';
+export type Page =
+  | 'home'
+  | 'services'
+  | 'embryologist-support'
+  | 'about'
+  | 'products'
+  | 'product-details'
+  | 'gallery'
+  | 'contact'
+  | 'admin';
 
 export interface ProductSpec {
   key: string;
@@ -12,8 +21,8 @@ export interface Product {
   modelNumber: string;
   shortDesc: string;
   fullDesc: string;
-  price: string;
-  priceType: 'fixed' | 'range' | 'inquire';
+  price?: string;
+  priceType?: 'fixed' | 'range' | 'inquire';
   inStock: boolean;
   isFeatured: boolean;
   image: string;
@@ -133,7 +142,19 @@ export interface Inquiry {
   email: string;
   phone: string;
   country: string;
-  inquiryType: 'Turnkey Lab Setup' | 'Equipment Purchase' | 'Service & Maintenance' | 'Consumables Supply' | 'General Inquiry';
+  inquiryType:
+    | 'Senior Embryologist – Freelance & Backup Support'
+    | 'Comprehensive Embryology Laboratory Support'
+    | 'IVF Consumables & Culture Media'
+    | 'Complete Instrumentation Solutions'
+    | 'Frozen Semen Sample Support'
+    | 'IVF & IUI Laboratory Setup Support'
+    | 'Turnkey Lab Setup'
+    | 'Equipment Purchase'
+    | 'Service & Maintenance'
+    | 'Consumables Supply'
+    | 'General Inquiry'
+    | string;
   message: string;
   productId?: string;
   productName?: string;

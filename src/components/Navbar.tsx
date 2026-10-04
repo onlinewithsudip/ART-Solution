@@ -8,6 +8,7 @@ import {
   X,
   ChevronRight,
   Layers,
+  Award,
 } from 'lucide-react';
 import { BrandIcon } from './BrandIcon';
 
@@ -24,9 +25,10 @@ export const Navbar: React.FC = () => {
 
   const navItems: { label: string; page: Page }[] = [
     { label: 'Home', page: 'home' },
-    { label: 'About Us', page: 'about' },
+    { label: 'Our Services', page: 'services' },
     { label: 'Products & Equipment', page: 'products' },
     { label: 'Gallery', page: 'gallery' },
+    { label: 'About Us', page: 'about' },
     { label: 'Contact', page: 'contact' },
   ];
 
@@ -48,7 +50,7 @@ export const Navbar: React.FC = () => {
             </span>
             <span className="hidden sm:inline text-slate-500">|</span>
             <span className="hidden sm:inline text-slate-400">
-              {websiteContent.header?.topRibbonSubtitle || 'Turnkey IVF Labs & Clinical Embryology Solutions'}
+              {websiteContent.header?.topRibbonSubtitle || 'Comprehensive Embryology & IVF Solutions'}
             </span>
           </div>
 
@@ -78,7 +80,7 @@ export const Navbar: React.FC = () => {
               {themeSettings.logoUrl ? (
                 <img
                   src={themeSettings.logoUrl}
-                  alt={themeSettings.logoText || 'ART Solution'}
+                  alt={themeSettings.logoText || 'ART Medical'}
                   style={{ height: `${themeSettings.logoHeight || 42}px` }}
                   className="w-auto object-contain transition-transform group-hover:scale-102"
                   onError={(e) => {
@@ -104,7 +106,7 @@ export const Navbar: React.FC = () => {
               {themeSettings.logoType !== 'image' && (
                 <div className="flex flex-col">
                   <span className="font-bold text-lg sm:text-xl text-slate-900 tracking-tight leading-none group-hover:text-slate-700 transition-colors">
-                    {themeSettings.logoText || 'ART Solution'}
+                    {themeSettings.logoText || 'ART Medical'}
                   </span>
                   <span className="text-[11px] font-medium text-slate-500 tracking-wide mt-1">
                     {themeSettings.logoTagline || 'Offering Full Solution'}
@@ -115,7 +117,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-7 text-sm font-medium">
             {navItems.map((item) => {
               const isActive = page === item.page;
               return (
@@ -141,25 +143,37 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Zone 3: Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5">
             <button
-              onClick={() => openWhatsApp('Hello, I would like to request an equipment quotation.')}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap"
+              onClick={() => handleNavClick('embryologist-support')}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-amber-950 bg-amber-400 hover:bg-amber-300 transition-colors shadow-xs whitespace-nowrap cursor-pointer"
             >
-              <MessageCircle className="w-4 h-4 text-emerald-600" />
-              <span>WhatsApp Inquire</span>
+              <Award className="w-3.5 h-3.5 text-amber-950" />
+              <span>Embryologist Support</span>
             </button>
 
             <button
-              onClick={() => handleNavClick('contact')}
+              onClick={() => openWhatsApp('Hello ART Medical, I would like to request an equipment and consumables quotation.')}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap"
+            >
+              <MessageCircle className="w-4 h-4 text-emerald-600" />
+              <span>WhatsApp</span>
+            </button>
+
+            <button
+              onClick={() =>
+                openWhatsApp(
+                  'Hello ART Medical, I would like to request an official quotation for IVF consumables, culture media, and laboratory solutions.'
+                )
+              }
               style={{
                 backgroundColor: themeSettings.ctaColor,
                 color: themeSettings.ctaTextColor,
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all whitespace-nowrap cursor-pointer"
             >
+              <MessageCircle className="w-3.5 h-3.5 text-white" />
               <span>{websiteContent.header?.ctaButtonText || 'Request Quotation'}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -206,14 +220,20 @@ export const Navbar: React.FC = () => {
                 <span>Chat via WhatsApp</span>
               </button>
               <button
-                onClick={() => handleNavClick('contact')}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openWhatsApp(
+                    'Hello ART Medical, I would like to request an official quotation for IVF consumables, culture media, and laboratory solutions.'
+                  );
+                }}
                 style={{
                   backgroundColor: themeSettings.ctaColor,
                   color: themeSettings.ctaTextColor,
                 }}
-                className="w-full py-2.5 rounded-lg text-sm font-semibold shadow-xs text-center"
+                className="w-full py-2.5 rounded-lg text-sm font-semibold shadow-xs text-center flex items-center justify-center gap-2"
               >
-                Request Quotation
+                <MessageCircle className="w-4 h-4 text-white" />
+                <span>Request Quotation (WhatsApp)</span>
               </button>
             </div>
           </div>

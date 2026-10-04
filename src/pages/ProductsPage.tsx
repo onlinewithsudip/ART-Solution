@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSite } from '../context/SiteContext';
+import { resolveProductImage } from '../utils/productImages';
+import { formatProductQuoteWhatsApp, ART_MEDICAL_CONFIG } from '../config/contact';
 import {
   Search,
   SlidersHorizontal,
@@ -11,7 +13,6 @@ import {
   Tag,
   Building2,
   Box,
-  IndianRupee,
 } from 'lucide-react';
 
 export const ProductsPage: React.FC = () => {
@@ -87,19 +88,19 @@ export const ProductsPage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30 mb-2">
-                FY 25-26 Official Commercials & Rates (₹)
+                Official Clinical Products Catalog
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
                 Clinical Equipment, Media & Disposables
               </h1>
               <p className="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed mt-1">
-                Authentic embryology solutions from Hitech, Fertipro, Origio, Wallace, Falcon, Cryotech, and ART Solution. All customer supply rates quoted in Indian Rupees (₹).
+                Authentic embryology solutions from Hitech, Fertipro, Origio, Wallace, Falcon, Cryotech, and ART Medical. Official certified distribution with clinical quotations provided on request.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm shrink-0 text-right">
               <span className="text-xs text-slate-400 block font-mono">Catalog Status</span>
-              <span className="text-sm font-bold text-emerald-400 font-mono">Valid: 31st March 2026</span>
+              <span className="text-sm font-bold text-emerald-400 font-mono">Active & Ready Stock</span>
               <span className="text-[11px] text-slate-300 block mt-0.5">Prompt 24-hr Dispatch</span>
             </div>
           </div>
@@ -198,9 +199,12 @@ export const ProductsPage: React.FC = () => {
                   className="relative h-56 bg-slate-100 overflow-hidden cursor-pointer"
                 >
                   <img
-                    src={prod.image}
+                    src={resolveProductImage(prod)}
                     alt={prod.name}
                     className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/assets/art_media_vials_1790759397048.jpg';
+                    }}
                   />
                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-700 shadow-xs">
                     {prod.category}
@@ -251,14 +255,20 @@ export const ProductsPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Pricing and Actions */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-                    <div>
-                      <span className="text-[10px] uppercase text-slate-400 font-bold block">
-                        Supply Rate (FY 25-26)
-                      </span>
-                      <span className="text-base font-bold font-mono text-slate-900 tabular-nums">
-                        {prod.price}
+                  {/* Pricing Removed - Request Quote Action */}
+                  <div className="pt-4 border-t border-slate-100 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] uppercase text-slate-400 font-bold block">
+                          Clinical Supply
+                        </span>
+                        <span className="inline-block text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">
+                          Price on Request
+                        </span>
+                      </div>
+
+                      <span className="text-[11px] text-emerald-600 font-medium">
+                        Immediate Dispatch
                       </span>
                     </div>
 
@@ -266,24 +276,22 @@ export const ProductsPage: React.FC = () => {
                       <button
                         onClick={() =>
                           openWhatsApp(
-                            `Hello ART Solution, I would like to inquire about pricing and supply for "${prod.name}" (Make: ${prod.makeImporter || 'N/A'}, Pack: ${prod.packSize || 'N/A'}, Price: ${prod.price}).`
+                            formatProductQuoteWhatsApp(prod.name, prod.makeImporter, prod.packSize)
                           )
                         }
-                        title="Inquire on WhatsApp"
-                        className="p-2.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                        title="Request Quotation via WhatsApp"
+                        className="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                       >
-                        <MessageCircle className="w-4 h-4" />
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>Enquire via WhatsApp</span>
                       </button>
 
                       <button
                         onClick={() => viewProduct(prod.id)}
-                        style={{
-                          backgroundColor: themeSettings.ctaColor,
-                          color: themeSettings.ctaTextColor,
-                        }}
-                        className="px-3.5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all"
+                        title="View Full Specifications"
+                        className="p-2 rounded-lg border border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer shrink-0"
                       >
-                        View Details
+                        <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
                   </div>

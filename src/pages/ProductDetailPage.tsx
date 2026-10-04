@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 import { useSite } from '../context/SiteContext';
+import { resolveProductImage } from '../utils/productImages';
+import {
+  ART_MEDICAL_CONFIG,
+  buildWhatsAppUrl,
+  formatProductQuoteWhatsApp,
+  formatGeneralEnquiryWhatsApp,
+} from '../config/contact';
 import {
   ArrowLeft,
   MessageCircle,
@@ -36,8 +43,8 @@ export const ProductDetailPage: React.FC = () => {
     clinicName: '',
     email: '',
     phone: '',
-    country: '',
-    message: `Hello, please provide official quotation, technical datasheet, and delivery timeline for the ${product?.name} (Model: ${product?.modelNumber}).`,
+    country: 'India',
+    message: `Hello, please provide official quotation, batch certification, and delivery timeline for ${product?.name} (Model: ${product?.modelNumber}).`,
   });
 
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -57,26 +64,48 @@ export const ProductDetailPage: React.FC = () => {
   }
 
   const handleWhatsAppClick = () => {
-    const text = `Hello ${websiteContent.contact.companyName}, I would like to inquire about the ${product.name} (Model: ${product.modelNumber}). Please share pricing and technical specifications.`;
+    const text = formatProductQuoteWhatsApp(
+      product.name,
+      product.makeImporter,
+      product.packSize
+    );
     openWhatsApp(text);
   };
 
-  const handleInquirySubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
+    if (!formData.name || !formData.phone) return;
+
+    // Send complete submitted details to configured ART Medical WhatsApp
+    const waMessage = formatGeneralEnquiryWhatsApp({
+      name: formData.name,
+      clinicName: formData.clinicName,
+      phone: formData.phone,
+      email: formData.email,
+      country: formData.country,
+      inquiryType: 'Clinical Product Quotation',
+      productName: `${product.name} (Code: ${product.modelNumber}, Make: ${product.makeImporter || 'N/A'}, Pack: ${product.packSize || 'N/A'})`,
+      message: formData.message,
+    });
+    const waUrl = buildWhatsAppUrl(waMessage);
 
     submitInquiry({
       name: formData.name,
       clinicName: formData.clinicName || 'Not specified',
-      email: formData.email,
-      phone: formData.phone || 'Not specified',
-      country: formData.country || 'Global',
-      inquiryType: 'Equipment Purchase',
+      email: formData.email || 'Not specified',
+      phone: formData.phone,
+      country: formData.country || 'India',
+      inquiryType: 'Consumables Supply',
       message: formData.message,
       productId: product.id,
       productName: product.name,
     });
 
+    try {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    } catch {
+      window.location.href = waUrl;
+    }
     setFormSubmitted(true);
   };
 
@@ -127,9 +156,12 @@ export const ProductDetailPage: React.FC = () => {
             <div className="rounded-2xl overflow-hidden border border-slate-200 bg-white p-2 shadow-sm">
               <div className="relative h-[360px] sm:h-[420px] bg-slate-50 rounded-xl overflow-hidden">
                 <img
-                  src={product.image}
+                  src={resolveProductImage(product)}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/assets/art_media_vials_1790759397048.jpg';
+                  }}
                 />
                 <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-lg text-xs font-semibold text-slate-800 shadow-xs">
                   {product.category}
@@ -197,40 +229,40 @@ export const ProductDetailPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Price Box */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Price Box Replaced with Official Quotation Status */}
+            <div className="p-4 rounded-xl bg-teal-50/70 border border-teal-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                  FY 25-26 Customer Supply Rate
+                <span className="text-[10px] uppercase font-bold tracking-wider text-teal-800 block">
+                  Commercial & Clinical Supply
                 </span>
-                <span className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tabular-nums">
-                  {product.price}
+                <span className="text-xl sm:text-2xl font-extrabold text-slate-900 block mt-0.5">
+                  Quotation on Request
                 </span>
-                <span className="text-[11px] text-slate-500 block mt-0.5">
-                  Exclusive of all taxes; forwarding extra on actuals
+                <span className="text-[11px] text-slate-600 block mt-0.5">
+                  Official distributor supply with lot certificates & batch compliance
                 </span>
               </div>
-              <div className="text-left sm:text-right text-xs text-slate-500">
-                <span className="font-semibold text-emerald-700 block">1% Prompt Payment Credit</span>
-                <span>if paid within 7 days of delivery</span>
+              <div className="text-left sm:text-right text-xs text-slate-600">
+                <span className="font-semibold text-emerald-700 block">Prompt 24h Dispatch</span>
+                <span>Priority courier & cold-chain</span>
               </div>
             </div>
 
-            {/* WhatsApp Connect Button (Requested by User) */}
+            {/* WhatsApp Connect Button */}
             <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-3">
               <div className="flex items-center gap-2 text-emerald-800 text-xs font-bold uppercase tracking-wider">
                 <MessageCircle className="w-4 h-4 text-emerald-600" />
                 <span>Instant WhatsApp Specialist Connect</span>
               </div>
               <p className="text-xs text-emerald-700">
-                Need instant pricing, customized options, or installation lead times? Chat directly with our biomedical engineering desk.
+                Need immediate quotation, availability confirmation, or delivery timelines? Chat directly with our ART Medical technical desk.
               </p>
               <button
                 onClick={handleWhatsAppClick}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm bg-[#25D366] text-white hover:bg-[#20ba5a] active:scale-98 transition-all shadow-sm"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm bg-[#25D366] text-white hover:bg-[#20ba5a] active:scale-98 transition-all shadow-sm cursor-pointer"
               >
                 <MessageCircle className="w-5 h-5 fill-current stroke-none" />
-                <span>Inquire on WhatsApp (+91 98754 06943)</span>
+                <span>Request Quotation on WhatsApp ({ART_MEDICAL_CONFIG.whatsappDisplay})</span>
               </button>
             </div>
 
@@ -301,7 +333,7 @@ export const ProductDetailPage: React.FC = () => {
                 <div className="flex items-center">
                   <img
                     src={themeSettings.logoUrl || '/logo.svg'}
-                    alt={themeSettings.logoText || 'ART Solution'}
+                    alt={themeSettings.logoText || 'ART Medical'}
                     style={{ height: '40px' }}
                     className="w-auto object-contain"
                     onError={(e) => {
@@ -313,7 +345,7 @@ export const ProductDetailPage: React.FC = () => {
                   />
                 </div>
                 <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-teal-50 text-teal-700 font-semibold border border-teal-200">
-                  Direct Supply (₹)
+                  Official Distributor Supply
                 </span>
               </div>
 
@@ -325,46 +357,59 @@ export const ProductDetailPage: React.FC = () => {
                   Direct RFP & Quotation
                 </span>
                 <h3 className="text-xl font-bold text-slate-900">
-                  Request Equipment Proposal
+                  Request Commercial Quotation
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Fill in your clinic requirements. Our bio-medical engineer will respond within 2 hours.
+                  Fill in your clinic requirements. Details will be formatted and dispatched directly to ART Medical WhatsApp.
                 </p>
               </div>
 
               {formSubmitted ? (
-                <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-                  <h4 className="text-sm font-bold text-emerald-900">
-                    Inquiry Submitted Successfully
-                  </h4>
-                  <p className="text-xs text-emerald-700">
-                    Thank you, {formData.name}. Our commercial team will deliver a formal quotation for the{' '}
-                    <span className="font-semibold">{product.name}</span> to {formData.email}.
-                  </p>
-                  <div className="text-[11px] text-emerald-800 bg-emerald-100/60 py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 font-mono">
-                    <Mail className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Lead notification dispatched to {themeSettings.leadNotificationEmail || 'onlinewithsudip@gmail.com'}</span>
+                <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-300 text-center space-y-4">
+                  <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm">
+                    <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <button
-                    onClick={() => {
-                      setFormSubmitted(false);
-                      setFormData({
-                        name: '',
-                        clinicName: '',
-                        email: '',
-                        phone: '',
-                        country: '',
-                        message: '',
-                      });
-                    }}
-                    className="text-xs font-semibold text-emerald-800 underline hover:text-emerald-900"
-                  >
-                    Send another inquiry
-                  </button>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold text-emerald-950">
+                      Quotation Request Dispatched to WhatsApp
+                    </h4>
+                    <p className="text-xs text-emerald-800">
+                      Thank you, {formData.name}. Your quotation request for{' '}
+                      <span className="font-semibold">{product.name}</span> has been dispatched to ART Medical ({ART_MEDICAL_CONFIG.whatsappDisplay}).
+                    </p>
+                  </div>
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                    <button
+                      onClick={() => {
+                        const waMessage = formatGeneralEnquiryWhatsApp({
+                          name: formData.name,
+                          clinicName: formData.clinicName,
+                          phone: formData.phone,
+                          email: formData.email,
+                          country: formData.country,
+                          inquiryType: 'Clinical Product Quotation',
+                          productName: `${product.name} (Code: ${product.modelNumber}, Make: ${product.makeImporter || 'N/A'}, Pack: ${product.packSize || 'N/A'})`,
+                          message: formData.message,
+                        });
+                        window.open(buildWhatsAppUrl(waMessage), '_blank', 'noopener,noreferrer');
+                      }}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors flex items-center gap-1.5 shadow-xs"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>Re-Open WhatsApp Message</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setFormSubmitted(false);
+                      }}
+                      className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-colors"
+                    >
+                      Edit Request
+                    </button>
+                  </div>
                 </div>
               ) : (
-                <form onSubmit={handleInquirySubmit} className="space-y-4">
+                <form onSubmit={handleFormSubmit} className="space-y-4">
                   <div>
                     <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
                       Your Full Name *
@@ -405,13 +450,12 @@ export const ProductDetailPage: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Email Address *
+                        Email Address
                       </label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="email"
-                          required
                           value={formData.email}
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
@@ -424,18 +468,19 @@ export const ProductDetailPage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Phone / WhatsApp
+                        Phone / WhatsApp *
                       </label>
                       <div className="relative">
                         <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="tel"
+                          required
                           value={formData.phone}
                           onChange={(e) =>
                             setFormData({ ...formData, phone: e.target.value })
                           }
-                          placeholder="+1 / +91 ..."
-                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                          placeholder="+91 98300 00000"
+                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
                         />
                       </div>
                     </div>
@@ -443,7 +488,7 @@ export const ProductDetailPage: React.FC = () => {
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Country / City
+                      City / Location
                     </label>
                     <div className="relative">
                       <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -453,7 +498,7 @@ export const ProductDetailPage: React.FC = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, country: e.target.value })
                         }
-                        placeholder="e.g. United Kingdom / India / UAE"
+                        placeholder="e.g. Kolkata, West Bengal"
                         className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       />
                     </div>
@@ -461,7 +506,7 @@ export const ProductDetailPage: React.FC = () => {
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Project Notes / Specifics
+                      Project Notes / Desired Quantities
                     </label>
                     <textarea
                       rows={3}
@@ -479,10 +524,10 @@ export const ProductDetailPage: React.FC = () => {
                       backgroundColor: themeSettings.ctaColor,
                       color: themeSettings.ctaTextColor,
                     }}
-                    className="w-full py-3 rounded-xl text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Submit Official Quotation Request</span>
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Send Quotation Request to ART Medical WhatsApp</span>
                   </button>
                 </form>
               )}

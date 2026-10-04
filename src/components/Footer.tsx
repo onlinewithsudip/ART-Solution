@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
                 <div className="bg-white/95 px-3 py-1.5 rounded-xl shadow-xs inline-flex items-center">
                   <img
                     src={themeSettings.logoUrl}
-                    alt={themeSettings.logoText || 'ART Solution'}
+                    alt={themeSettings.logoText || 'ART Medical'}
                     style={{ height: '38px' }}
                     className="w-auto object-contain"
                     onError={(e) => {
@@ -72,7 +72,7 @@ export const Footer: React.FC = () => {
               {themeSettings.logoType !== 'image' && (
                 <div>
                   <span className="font-bold text-lg text-white tracking-tight block">
-                    {themeSettings.logoText || 'ART Solution'}
+                    {themeSettings.logoText || 'ART Medical'}
                   </span>
                   <span className="text-[11px] text-teal-400 font-semibold tracking-wider uppercase">
                     {themeSettings.logoTagline || 'Offering Full Solution'}
@@ -152,10 +152,18 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <button
-                  onClick={() => handleNav('about')}
-                  className="hover:text-white transition-colors"
+                  onClick={() => handleNav('services')}
+                  className="hover:text-teal-400 font-medium text-teal-300 transition-colors"
                 >
-                  About Us
+                  Our Services
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNav('embryologist-support')}
+                  className="hover:text-amber-300 font-semibold text-amber-400 transition-colors"
+                >
+                  Senior Embryologist Support ⭐
                 </button>
               </li>
               <li>
@@ -172,6 +180,14 @@ export const Footer: React.FC = () => {
                   className="hover:text-white transition-colors"
                 >
                   Facility & Lab Gallery
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNav('about')}
+                  className="hover:text-white transition-colors"
+                >
+                  About Us
                 </button>
               </li>
               <li>

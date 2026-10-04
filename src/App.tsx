@@ -5,6 +5,8 @@ import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { ToastContainer } from './components/ToastContainer';
 import { HomePage } from './pages/HomePage';
+import { ServicesPage } from './pages/ServicesPage';
+import { EmbryologistSupportPage } from './pages/EmbryologistSupportPage';
 import { AboutPage } from './pages/AboutPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
@@ -22,6 +24,8 @@ const AppContent: React.FC = () => {
 
       <main className="flex-1">
         {page === 'home' && <HomePage />}
+        {page === 'services' && <ServicesPage />}
+        {page === 'embryologist-support' && <EmbryologistSupportPage />}
         {page === 'about' && <AboutPage />}
         {page === 'products' && <ProductsPage />}
         {page === 'product-details' && <ProductDetailPage />}

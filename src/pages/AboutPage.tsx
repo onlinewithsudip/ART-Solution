@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import cleanroomFacilityImg from '../assets/images/gallery_cleanroom_setup_1790663877901.jpg';
 import labHeroImg from '../assets/images/fertility_hero_lab_1790663824905.jpg';
+import { ART_MEDICAL_CONFIG } from '../config/contact';
 
 export const AboutPage: React.FC = () => {
   const { websiteContent, themeSettings, setPage, openWhatsApp } = useSite();
@@ -69,14 +70,26 @@ export const AboutPage: React.FC = () => {
                 <span>Speak with Turnkey Lead</span>
               </button>
               <button
-                onClick={() => setPage('products')}
+                onClick={() => {
+                  setPage('services');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-xs cursor-pointer"
+              >
+                <span>Our Services (6 Solutions)</span>
+              </button>
+              <button
+                onClick={() => {
+                  setPage('products');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 style={{
                   backgroundColor: themeSettings.ctaColor,
                   color: themeSettings.ctaTextColor,
                 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold shadow-xs hover:brightness-110 transition-all cursor-pointer"
               >
-                <span>Browse Lab Equipment</span>
+                <span>Browse Products & Equipment</span>
               </button>
             </div>
           </div>
@@ -188,6 +201,34 @@ export const AboutPage: React.FC = () => {
               <span>{cert}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Direct WhatsApp Consultation CTA */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-sky-950 to-slate-900 text-white p-8 sm:p-10 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center sm:text-left">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-400 block">
+              Direct Clinical Consultation
+            </span>
+            <h3 className="text-2xl font-extrabold text-white">
+              Partner with ART Medical for Your IVF Center
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+              From batch media standing orders to turnkey ISO Class 5 cleanrooms and freelance Senior Embryologist backup, get in touch directly on WhatsApp.
+            </p>
+          </div>
+          <button
+            onClick={() =>
+              openWhatsApp(
+                'Hello ART Medical, I would like to schedule a consultation regarding our fertility clinic equipment, media, and lab setup requirements.'
+              )
+            }
+            className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition-all shrink-0 cursor-pointer"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Connect on WhatsApp ({ART_MEDICAL_CONFIG.whatsappDisplay})</span>
+          </button>
         </div>
       </section>
     </div>
