@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSite } from '../context/SiteContext';
 import { resolveProductImage } from '../utils/productImages';
 import {
   ART_MEDICAL_CONFIG,
-  buildWhatsAppUrl,
   formatProductQuoteWhatsApp,
-  formatGeneralEnquiryWhatsApp,
 } from '../config/contact';
 import {
   ArrowLeft,
@@ -15,11 +13,13 @@ import {
   FileText,
   Mail,
   Building,
-  User,
   Phone,
-  Globe,
-  Send,
-  HelpCircle,
+  Clock,
+  Truck,
+  Receipt,
+  FileCheck,
+  PackageCheck,
+  Sparkles,
 } from 'lucide-react';
 
 export const ProductDetailPage: React.FC = () => {
@@ -29,25 +29,12 @@ export const ProductDetailPage: React.FC = () => {
     setPage,
     themeSettings,
     openWhatsApp,
-    submitInquiry,
     websiteContent,
   } = useSite();
 
   // Find selected product or default to first
   const product =
     products.find((p) => p.id === selectedProductId) || products[0];
-
-  // Inquiry form local state
-  const [formData, setFormData] = useState({
-    name: '',
-    clinicName: '',
-    email: '',
-    phone: '',
-    country: 'India',
-    message: `Hello, please provide official quotation, batch certification, and delivery timeline for ${product?.name} (Model: ${product?.modelNumber}).`,
-  });
-
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   if (!product) {
     return (
@@ -63,7 +50,7 @@ export const ProductDetailPage: React.FC = () => {
     );
   }
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppQuote = () => {
     const text = formatProductQuoteWhatsApp(
       product.name,
       product.makeImporter,
@@ -71,43 +58,7 @@ export const ProductDetailPage: React.FC = () => {
     );
     openWhatsApp(text);
   };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.phone) return;
-
-    // Send complete submitted details to configured ART Medical WhatsApp
-    const waMessage = formatGeneralEnquiryWhatsApp({
-      name: formData.name,
-      clinicName: formData.clinicName,
-      phone: formData.phone,
-      email: formData.email,
-      country: formData.country,
-      inquiryType: 'Clinical Product Quotation',
-      productName: `${product.name} (Code: ${product.modelNumber}, Make: ${product.makeImporter || 'N/A'}, Pack: ${product.packSize || 'N/A'})`,
-      message: formData.message,
-    });
-    const waUrl = buildWhatsAppUrl(waMessage);
-
-    submitInquiry({
-      name: formData.name,
-      clinicName: formData.clinicName || 'Not specified',
-      email: formData.email || 'Not specified',
-      phone: formData.phone,
-      country: formData.country || 'India',
-      inquiryType: 'Consumables Supply',
-      message: formData.message,
-      productId: product.id,
-      productName: product.name,
-    });
-
-    try {
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
-    } catch {
-      window.location.href = waUrl;
-    }
-    setFormSubmitted(true);
-  };
+  const handleWhatsAppClick = handleWhatsAppQuote;
 
   return (
     <div className="space-y-12 pb-24">
@@ -326,9 +277,9 @@ export const ProductDetailPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Direct Product Inquiry Form (Requested by User) */}
+          {/* Direct Product WhatsApp Quotation Desk (Zero Forms) */}
           <div className="lg:col-span-5">
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center">
                   <img
@@ -345,192 +296,90 @@ export const ProductDetailPage: React.FC = () => {
                   />
                 </div>
                 <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-teal-50 text-teal-700 font-semibold border border-teal-200">
-                  Official Distributor Supply
+                  Official Clinical Supply
                 </span>
               </div>
 
               <div>
-                <span
-                  className="text-xs font-bold uppercase tracking-wider block mb-1"
-                  style={{ color: themeSettings.primaryColor }}
-                >
-                  Direct RFP & Quotation
+                <span className="text-xs font-bold uppercase tracking-wider block mb-1 text-emerald-600">
+                  Instant WhatsApp Quotation
                 </span>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Request Commercial Quotation
+                <h3 className="text-xl font-extrabold text-slate-900">
+                  Request Official Quotation
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Fill in your clinic requirements. Details will be formatted and dispatched directly to ART Medical WhatsApp.
+                  No forms required. Click below to connect directly with ART Medical on WhatsApp for immediate institutional pricing and batch availability.
                 </p>
               </div>
 
-              {formSubmitted ? (
-                <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-300 text-center space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-emerald-950">
-                      Quotation Request Dispatched to WhatsApp
-                    </h4>
-                    <p className="text-xs text-emerald-800">
-                      Thank you, {formData.name}. Your quotation request for{' '}
-                      <span className="font-semibold">{product.name}</span> has been dispatched to ART Medical ({ART_MEDICAL_CONFIG.whatsappDisplay}).
-                    </p>
-                  </div>
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
-                    <button
-                      onClick={() => {
-                        const waMessage = formatGeneralEnquiryWhatsApp({
-                          name: formData.name,
-                          clinicName: formData.clinicName,
-                          phone: formData.phone,
-                          email: formData.email,
-                          country: formData.country,
-                          inquiryType: 'Clinical Product Quotation',
-                          productName: `${product.name} (Code: ${product.modelNumber}, Make: ${product.makeImporter || 'N/A'}, Pack: ${product.packSize || 'N/A'})`,
-                          message: formData.message,
-                        });
-                        window.open(buildWhatsAppUrl(waMessage), '_blank', 'noopener,noreferrer');
-                      }}
-                      className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors flex items-center gap-1.5 shadow-xs"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>Re-Open WhatsApp Message</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setFormSubmitted(false);
-                      }}
-                      className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-colors"
-                    >
-                      Edit Request
-                    </button>
-                  </div>
+              {/* Product Inquired Summary Box */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                <div className="font-bold text-slate-900">
+                  {product.name}
                 </div>
-              ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Your Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        placeholder="Dr. / Specialist Name"
-                        className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
+                <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-600">
+                  <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200">
+                    Ref: {product.modelNumber}
+                  </span>
+                  {product.makeImporter && (
+                    <span className="font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                      {product.makeImporter}
+                    </span>
+                  )}
+                  {product.packSize && (
+                    <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200">
+                      Pack: {product.packSize}
+                    </span>
+                  )}
+                </div>
+              </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Clinic / Hospital Name
-                    </label>
-                    <div className="relative">
-                      <Building className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={formData.clinicName}
-                        onChange={(e) =>
-                          setFormData({ ...formData, clinicName: e.target.value })
-                        }
-                        placeholder="Center for Reproductive Health"
-                        className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
+              {/* Primary Direct WhatsApp CTA */}
+              <button
+                onClick={handleWhatsAppQuote}
+                className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg hover:shadow-emerald-600/25 active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+              >
+                <MessageCircle className="w-5 h-5 text-white" />
+                <span>Request Quotation on WhatsApp</span>
+              </button>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Email Address
-                      </label>
-                      <div className="relative">
-                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          placeholder="doctor@clinic.com"
-                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
+              {/* Fast Direct Action Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <a
+                  href={`tel:${ART_MEDICAL_CONFIG.phonePrimary.replace(/\s+/g, '')}`}
+                  className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Call {ART_MEDICAL_CONFIG.phonePrimary}</span>
+                </a>
+                <a
+                  href={`mailto:${ART_MEDICAL_CONFIG.primaryEmail}?subject=Quotation Request: ${encodeURIComponent(product.name)}&body=Hello ART Medical,%0D%0A%0D%0APlease share official commercial quotation and batch certification for:%0D%0AProduct: ${encodeURIComponent(product.name)}%0D%0ACode: ${encodeURIComponent(product.modelNumber)}%0D%0APack Size: ${encodeURIComponent(product.packSize || 'N/A')}`}
+                  className="py-2.5 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+                >
+                  <Mail className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Email Inquiry</span>
+                </a>
+              </div>
 
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Phone / WhatsApp *
-                      </label>
-                      <div className="relative">
-                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          placeholder="+91 98300 00000"
-                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      City / Location
-                    </label>
-                    <div className="relative">
-                      <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={formData.country}
-                        onChange={(e) =>
-                          setFormData({ ...formData, country: e.target.value })
-                        }
-                        placeholder="e.g. Kolkata, West Bengal"
-                        className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Project Notes / Desired Quantities
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
-                      className="w-full p-3 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    style={{
-                      backgroundColor: themeSettings.ctaColor,
-                      color: themeSettings.ctaTextColor,
-                    }}
-                    className="w-full py-3 rounded-xl text-xs font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Send Quotation Request to ART Medical WhatsApp</span>
-                  </button>
-                </form>
-              )}
+              {/* Supply Assurances */}
+              <div className="pt-2 border-t border-slate-100 space-y-2.5 text-xs text-slate-600">
+                <div className="flex items-center gap-2.5 text-[11px]">
+                  <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Rapid 24-hr order dispatch with cold chain logistics</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px]">
+                  <FileCheck className="w-4 h-4 text-sky-600 shrink-0" />
+                  <span>Batch-specific MEA & Sterility Quality Certificates</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px]">
+                  <Receipt className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Official GST Tax Invoice (GSTIN: 19ACLFA5383R1ZF)</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px]">
+                  <Clock className="w-4 h-4 text-teal-600 shrink-0" />
+                  <span>Fast WhatsApp quote response within 15–30 minutes</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

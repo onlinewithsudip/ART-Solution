@@ -6,70 +6,23 @@ import {
   Mail,
   Clock,
   MessageCircle,
-  Send,
-  CheckCircle2,
+  ShieldCheck,
   Building,
-  User,
-  Globe,
-  HelpCircle,
-  ChevronDown,
   Award,
-  Sparkles,
   ArrowRight,
+  ChevronDown,
+  Sparkles,
+  PackageCheck,
+  FlaskConical,
+  Snowflake,
+  FileCheck2,
 } from 'lucide-react';
-import {
-  ART_MEDICAL_CONFIG,
-  buildWhatsAppUrl,
-  formatGeneralEnquiryWhatsApp,
-} from '../config/contact';
+import { ART_MEDICAL_CONFIG } from '../config/contact';
 
 export const ContactPage: React.FC = () => {
-  const { websiteContent, themeSettings, openWhatsApp, submitInquiry, setPage } =
-    useSite();
+  const { websiteContent, themeSettings, openWhatsApp, setPage } = useSite();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    clinicName: '',
-    email: '',
-    phone: '',
-    country: 'India',
-    inquiryType: 'Comprehensive Embryology Laboratory Support',
-    message: '',
-  });
-
-  const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.phone) return;
-
-    // 1. Build complete WhatsApp message with all submitted details
-    const waMessage = formatGeneralEnquiryWhatsApp(formData);
-    const waUrl = buildWhatsAppUrl(waMessage);
-
-    // 2. Submit to local/production inquiry record
-    submitInquiry({
-      name: formData.name,
-      clinicName: formData.clinicName || 'Not specified',
-      email: formData.email || 'Not specified',
-      phone: formData.phone || 'Not specified',
-      country: formData.country || 'India',
-      inquiryType: formData.inquiryType,
-      message:
-        formData.message ||
-        `Inquiry regarding ${formData.inquiryType} for ${formData.clinicName || 'clinic'}.`,
-    });
-
-    // 3. Open WhatsApp directly to configured ART Medical number (safe inside iframe)
-    try {
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
-    } catch {
-      window.location.href = waUrl;
-    }
-
-    setSubmitted(true);
-  };
 
   const faqs = [
     {
@@ -272,256 +225,198 @@ export const ContactPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Contact & RFP Form */}
+          {/* Right Column: Direct Instant WhatsApp & Rapid Clinical Response Hub (Zero Forms) */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm space-y-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
               <div>
-                <span
-                  className="text-xs font-bold uppercase tracking-wider block mb-1"
-                  style={{ color: themeSettings.primaryColor }}
-                >
-                  Send an Inquiry
+                <span className="text-xs font-bold uppercase tracking-wider block mb-1 text-emerald-600">
+                  Instant WhatsApp Connect
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  Request Information or Turnkey Proposal
+                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                  Direct Clinical & Supply Inquiry Desk
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Fill in your details below and our team will get in touch with you promptly.
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  No lengthy forms to fill out. Choose your requirement below to start a direct WhatsApp chat with our clinical embryology coordinators, or contact our direct phone desks.
                 </p>
               </div>
 
-              {submitted ? (
-                <div className="p-8 rounded-2xl bg-emerald-50 border border-emerald-300 text-center space-y-4">
-                  <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm">
-                    <CheckCircle2 className="w-7 h-7" />
+              {/* Dedicated Senior Embryologist Routing Card */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-teal-50 border border-amber-300/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 shadow-xs">
+                    <Award className="w-5 h-5" />
                   </div>
-                  <h4 className="text-base font-bold text-emerald-950">
-                    Enquiry Dispatched to ART Medical WhatsApp
-                  </h4>
-                  <p className="text-xs text-emerald-800 max-w-md mx-auto leading-relaxed">
-                    Thank you, {formData.name}. Your complete enquiry details have been prepared and dispatched directly to the official ART Medical WhatsApp number ({ART_MEDICAL_CONFIG.whatsappDisplay}).
-                  </p>
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                    <button
-                      onClick={() => {
-                        const waMessage = formatGeneralEnquiryWhatsApp(formData);
-                        window.open(buildWhatsAppUrl(waMessage), '_blank', 'noopener,noreferrer');
-                      }}
-                      className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors flex items-center gap-2 shadow-xs"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Re-Open WhatsApp Message</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSubmitted(false);
-                        setFormData({
-                          name: '',
-                          clinicName: '',
-                          email: '',
-                          phone: '',
-                          country: 'India',
-                          inquiryType: 'Comprehensive Embryology Laboratory Support',
-                          message: '',
-                        });
-                      }}
-                      className="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-colors"
-                    >
-                      Submit Another Query
-                    </button>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900">
+                      Need Senior Embryologist Support?
+                    </div>
+                    <div className="text-[11px] text-slate-600">
+                      Emergency freelance backup, batch cycles, and PGT biopsy standby.
+                    </div>
                   </div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Embryologist Support Dedicated Routing Banner */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-teal-50 border border-amber-300/70 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0">
-                        <Award className="w-5 h-5" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPage('embryologist-support');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all shrink-0 flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <span>Embryologist Desk</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Direct Fast-Track Inquiry Action Cards */}
+              <div className="space-y-3">
+                {/* Option 1: Consumables & Culture Media */}
+                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-emerald-300 transition-all space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 mt-0.5">
+                        <FlaskConical className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-900">
-                          Looking for Senior Embryologist Support?
-                        </div>
-                        <div className="text-[11px] text-slate-600">
-                          For freelance cycle leadership & emergency backup, use our dedicated desk.
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPage('embryologist-support');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 transition-all shrink-0 flex items-center gap-1 shadow-xs cursor-pointer"
-                    >
-                      <span>Embryologist Desk</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Your Full Name *
-                      </label>
-                      <div className="relative">
-                        <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Dr. / Specialist Name"
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Clinic / Organization Name
-                      </label>
-                      <div className="relative">
-                        <Building className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="text"
-                          value={formData.clinicName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, clinicName: e.target.value })
-                          }
-                          placeholder="IVF & Fertility Hospital"
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        />
+                        <h4 className="text-xs font-bold text-slate-900">
+                          IVF Consumables & Culture Media Quotation
+                        </h4>
+                        <p className="text-[11px] text-slate-500 leading-snug">
+                          Fertipro, Hitech, Origio media, Wallace & Allwin needles, Cryotech vitrification, and labware.
+                        </p>
                       </div>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Email Address
-                      </label>
-                      <div className="relative">
-                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          placeholder="doctor@hospital.org"
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Phone / WhatsApp *
-                      </label>
-                      <div className="relative">
-                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          placeholder="+91 98300 00000"
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        City / Country
-                      </label>
-                      <div className="relative">
-                        <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="text"
-                          value={formData.country}
-                          onChange={(e) =>
-                            setFormData({ ...formData, country: e.target.value })
-                          }
-                          placeholder="e.g. Kolkata, West Bengal"
-                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                        Primary Area of Interest *
-                      </label>
-                      <select
-                        value={formData.inquiryType}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            inquiryType: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white font-medium"
-                      >
-                        <option value="Comprehensive Embryology Laboratory Support">
-                          1. Comprehensive Embryology Laboratory Support
-                        </option>
-                        <option value="IVF Consumables & Culture Media">
-                          2. IVF Consumables & Culture Media
-                        </option>
-                        <option value="Complete Instrumentation Solutions">
-                          3. Complete Instrumentation Solutions
-                        </option>
-                        <option value="Frozen Semen Sample Support">
-                          4. Frozen Semen Sample Support
-                        </option>
-                        <option value="IVF & IUI Laboratory Setup Support">
-                          5. IVF & IUI Laboratory Setup Support
-                        </option>
-                        <option value="General Inquiry">
-                          General Product / Commercial Inquiry
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                      Project Scope & Message
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
-                      placeholder="Please specify lab requirements, product quantities, or questions..."
-                      className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none resize-none"
-                    />
-                  </div>
-
                   <button
-                    type="submit"
-                    style={{
-                      backgroundColor: themeSettings.ctaColor,
-                      color: themeSettings.ctaTextColor,
-                    }}
-                    className="w-full py-3.5 rounded-xl text-xs sm:text-sm font-semibold shadow-xs hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2"
+                    onClick={() =>
+                      openWhatsApp(
+                        'Hello ART Medical, I would like to request an official quotation for IVF consumables, culture media, and labware supplies.'
+                      )
+                    }
+                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Send Complete Details to ART Medical WhatsApp</span>
+                    <span>Chat on WhatsApp for Media & Consumables</span>
                   </button>
-                </form>
-              )}
+                </div>
+
+                {/* Option 2: Turnkey Cleanroom Setup */}
+                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-emerald-300 transition-all space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center shrink-0 mt-0.5">
+                        <Building className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-900">
+                          Turnkey IVF & IUI Cleanroom Laboratory Setup
+                        </h4>
+                        <p className="text-[11px] text-slate-500 leading-snug">
+                          ISO Class 5 modular cleanroom suites, laminar airflow workstations, gas manifold, and equipment fitment.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() =>
+                      openWhatsApp(
+                        'Hello ART Medical, I would like to schedule a consultation for Turnkey IVF & IUI Cleanroom Laboratory Setup & Instrumentation.'
+                      )
+                    }
+                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Request Setup Consultation (WhatsApp)</span>
+                  </button>
+                </div>
+
+                {/* Option 3: Cryo Logistics & Semen Support */}
+                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-emerald-300 transition-all space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center shrink-0 mt-0.5">
+                        <Snowflake className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-900">
+                          Frozen Semen Sample Support & Cryo Logistics
+                        </h4>
+                        <p className="text-[11px] text-slate-500 leading-snug">
+                          Quality-certified donor semen samples, liquid nitrogen vapor shipper transport, and safety validation.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() =>
+                      openWhatsApp(
+                        'Hello ART Medical, I would like to inquire about Frozen Semen Sample Support and cryogenic sample logistics.'
+                      )
+                    }
+                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Inquire Cryo Logistics (WhatsApp)</span>
+                  </button>
+                </div>
+
+                {/* Option 4: General Commercials & Orders */}
+                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-emerald-300 transition-all space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                        <FileCheck2 className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-900">
+                          Standing Orders, Rate Contracts & GST Invoicing
+                        </h4>
+                        <p className="text-[11px] text-slate-500 leading-snug">
+                          21-day credit terms, 1% prompt settlement discount, institutional GST invoice (GSTIN: 19ACLFA5383R1ZF).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() =>
+                      openWhatsApp(
+                        'Hello ART Medical, please share commercial rate contracts, GST tax invoice terms, and standing order details.'
+                      )
+                    }
+                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Chat with Commercial Desk (WhatsApp)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Direct Quick Dial & Email Action Row */}
+              <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span className="text-slate-500">Direct Helpline:</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <a
+                    href="tel:+919875406943"
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold font-mono transition-colors flex items-center gap-1.5"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-teal-600" />
+                    <span>+91 98754 06943</span>
+                  </a>
+                  <a
+                    href="tel:+917439688406"
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-mono transition-colors"
+                  >
+                    +91 74396 88406
+                  </a>
+                  <a
+                    href={`mailto:${websiteContent.contact.email}`}
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1.5"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Email Us</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

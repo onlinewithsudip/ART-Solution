@@ -124,7 +124,7 @@ export const AdminPage: React.FC = () => {
   const [isTestingEmail, setIsTestingEmail] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  // Local state for forwarding/resending lead email modal
+  // Local state for forwarding lead email modal
   const [forwardingInquiry, setForwardingInquiry] = useState<Inquiry | null>(null);
   const [forwardEmailInput, setForwardEmailInput] = useState('');
   const [isForwarding, setIsForwarding] = useState(false);
@@ -3850,7 +3850,7 @@ export const AdminPage: React.FC = () => {
                         className="text-[11px] font-semibold text-teal-700 hover:text-teal-900 underline flex items-center gap-1"
                       >
                         <SendHorizontal className="w-3 h-3" />
-                        <span>Forward / Resend Email</span>
+                        <span>Forward Lead Email</span>
                       </button>
                     </div>
 
@@ -3924,7 +3924,7 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* ============================================================== */}
-      {/* FORWARD / RESEND LEAD EMAIL MODAL */}
+      {/* FORWARD LEAD EMAIL MODAL */}
       {/* ============================================================== */}
       {forwardingInquiry && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
@@ -3933,7 +3933,7 @@ export const AdminPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-teal-600" />
                 <h3 className="text-sm font-bold text-slate-900">
-                  Forward / Resend Lead Email
+                  Forward Lead Email Notification
                 </h3>
               </div>
               <button

@@ -250,6 +250,34 @@ export const GalleryPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Bottom WhatsApp Consultation Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-sky-950 to-slate-900 text-white p-8 sm:p-10 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center sm:text-left">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-400 block">
+              Turnkey Cleanrooms & Instrumentation
+            </span>
+            <h3 className="text-2xl font-extrabold text-white">
+              Planning an IVF Laboratory Setup or Equipment Upgrade?
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+              From modular Class 1000/100 IVF cleanrooms to micromanipulator workstations and gas manifolds, connect directly on WhatsApp with our clinical setup specialists.
+            </p>
+          </div>
+          <button
+            onClick={() =>
+              openWhatsApp(
+                'Hello ART Medical, I would like to consult with your turnkey specialist regarding an IVF / IUI cleanroom laboratory setup and equipment installation.'
+              )
+            }
+            className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition-all shrink-0 cursor-pointer"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Connect on WhatsApp (+91 98754 06943)</span>
+          </button>
+        </div>
+      </section>
     </div>
   );
 };
