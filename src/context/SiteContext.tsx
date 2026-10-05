@@ -98,7 +98,7 @@ const SiteContext = createContext<SiteContextType | undefined>(undefined);
 const STORAGE_KEYS = {
   theme: 'art_solution_theme_v2',
   content: 'art_medical_content_v4',
-  products: 'art_medical_products_v7',
+  products: 'art_medical_products_v8',
   gallery: 'art_medical_gallery_v4',
   inquiries: 'art_solution_inquiries_v2',
   categories: 'art_solution_categories_v4',
@@ -197,6 +197,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('art_solution_products_v3');
         localStorage.removeItem('art_solution_products_v4');
         localStorage.removeItem('art_solution_products_v5');
+        localStorage.removeItem('art_medical_products_v6');
+        localStorage.removeItem('art_medical_products_v7');
       }
       const saved = localStorage.getItem(STORAGE_KEYS.products);
       if (saved) {
