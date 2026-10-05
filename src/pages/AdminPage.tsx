@@ -188,6 +188,19 @@ export const AdminPage: React.FC = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
   const handleSaveAllCMS = async () => {
+    const updatedContent: WebsiteContent = {
+      ...websiteContent,
+      header: contentForm.header,
+      hero: contentForm.hero,
+      about: contentForm.about,
+      contact: contentForm.contact,
+      footer: contentForm.footer,
+    };
+    const updatedSettings: ThemeSettings = {
+      ...themeSettings,
+      ...settingsForm,
+    };
+
     updateWebsiteContent('header', contentForm.header);
     updateWebsiteContent('hero', contentForm.hero);
     updateWebsiteContent('about', contentForm.about);
@@ -195,18 +208,29 @@ export const AdminPage: React.FC = () => {
     updateWebsiteContent('footer', contentForm.footer);
     updateThemeSettings(settingsForm);
     setHasUnsavedChanges(false);
-    await publishFullStateToProduction();
-    showToast('All CMS changes, texts, links, and icons saved to production database!', 'success');
+
+    await publishFullStateToProduction(updatedContent, updatedSettings);
   };
 
   const handleSaveHeaderFooter = async () => {
+    const updatedContent: WebsiteContent = {
+      ...websiteContent,
+      header: contentForm.header,
+      footer: contentForm.footer,
+      contact: contentForm.contact,
+    };
+    const updatedSettings: ThemeSettings = {
+      ...themeSettings,
+      ...settingsForm,
+    };
+
     updateWebsiteContent('header', contentForm.header);
     updateWebsiteContent('footer', contentForm.footer);
     updateWebsiteContent('contact', contentForm.contact);
     updateThemeSettings(settingsForm);
     setHasUnsavedChanges(false);
-    await publishFullStateToProduction();
-    showToast('Header, Footer, logo, and link numbers saved to production database!', 'success');
+
+    await publishFullStateToProduction(updatedContent, updatedSettings);
   };
 
   const handleExportBackup = () => {

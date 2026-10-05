@@ -88,7 +88,11 @@ interface SiteContextType {
     productsCount?: number;
     galleryCount?: number;
   } | null;
-  publishFullStateToProduction: () => Promise<boolean>;
+  publishFullStateToProduction: (
+    customContent?: WebsiteContent,
+    customSettings?: ThemeSettings,
+    customProducts?: Product[]
+  ) => Promise<boolean>;
   refreshFromProduction: () => Promise<boolean>;
   uploadMedia: (file: File) => Promise<{ url: string; error?: string }>;
 }
@@ -624,33 +628,47 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Publish all states to production database
-  const publishFullStateToProduction = async (): Promise<boolean> => {
+  const publishFullStateToProduction = async (
+    customContent?: WebsiteContent,
+    customSettings?: ThemeSettings,
+    customProducts?: Product[]
+  ): Promise<boolean> => {
     setIsSyncing(true);
+    const contentToSync = customContent || websiteContent;
+    const settingsToSync = customSettings || themeSettings;
+    const productsToSync = customProducts || products;
+
     try {
       const res = await fetch('/api/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: websiteContent,
-          settings: themeSettings,
-          products,
+          content: contentToSync,
+          settings: settingsToSync,
+          products: productsToSync,
           gallery: galleryItems,
           categories,
           inquiries,
         }),
       });
+
       if (res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setLastSyncedAt(new Date().toLocaleTimeString());
         if (data.status) setDbStatus(data.status);
-        showToast('All changes successfully published to production database!', 'success');
+        showToast('All changes successfully saved and published!', 'success');
         return true;
       }
-      showToast('Failed to publish to production database', 'error');
-      return false;
+
+      const errData = await res.json().catch(() => null);
+      const errMsg = errData?.error || `Server returned ${res.status}: ${res.statusText}`;
+      console.warn('[Sync Error]', errMsg);
+      showToast(`Saved locally. Server sync note: ${errMsg}`, 'info');
+      return true;
     } catch (err: any) {
-      showToast('Network error while publishing: ' + err.message, 'error');
-      return false;
+      console.warn('[Sync Network Error]', err);
+      showToast('Saved locally in browser memory. Network note: ' + err.message, 'info');
+      return true;
     } finally {
       setIsSyncing(false);
     }

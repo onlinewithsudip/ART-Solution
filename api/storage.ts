@@ -54,7 +54,13 @@ function getStorageFilePath(): string {
 function getKvConfig() {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (url && token) {
+  if (
+    url &&
+    token &&
+    !url.includes('your-kv-db.upstash.io') &&
+    !url.includes('example.com') &&
+    token !== 'your-kv-token'
+  ) {
     return { url: url.replace(/\/$/, ''), token };
   }
   return null;
@@ -66,7 +72,8 @@ async function fetchFromKv(): Promise<SiteDatabase | null> {
   if (!kv) return null;
   try {
     const res = await fetch(`${kv.url}/get/art_medical_site_db`, {
-      headers: { Authorization: `Bearer ${kv.token}` }
+      headers: { Authorization: `Bearer ${kv.token}` },
+      signal: AbortSignal.timeout(2000),
     });
     if (res.ok) {
       const data: any = await res.json();
@@ -102,7 +109,8 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
         Authorization: `Bearer ${kv.token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(['SET', 'art_medical_site_db', rawJson])
+      body: JSON.stringify(['SET', 'art_medical_site_db', rawJson]),
+      signal: AbortSignal.timeout(2500),
     });
     if (res.ok) return true;
 
@@ -113,7 +121,8 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
         Authorization: `Bearer ${kv.token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(rawJson)
+      body: JSON.stringify(rawJson),
+      signal: AbortSignal.timeout(2500),
     });
     return fallbackRes.ok;
   } catch (err) {
@@ -181,29 +190,44 @@ export async function getDatabase(): Promise<SiteDatabase> {
   return memoryDb;
 }
 
-// Save database to all available stores
+// Sequential write queue to guarantee atomic persistence without concurrency collisions
+let writeQueue: Promise<void> = Promise.resolve();
+
+// Save database to all available stores safely
 export async function saveDatabase(db: SiteDatabase): Promise<void> {
-  db.lastUpdated = new Date().toISOString();
-  db.version = (db.version || 0) + 1;
-  memoryDb = db;
-  isLoaded = true;
+  return new Promise<void>((resolve, reject) => {
+    writeQueue = writeQueue
+      .then(async () => {
+        db.lastUpdated = new Date().toISOString();
+        db.version = (db.version || 0) + 1;
+        memoryDb = db;
+        isLoaded = true;
 
-  // 1. Save to Cloud KV if available
-  await saveToKv(db);
+        // 1. Save to Cloud KV if a real KV store is configured
+        try {
+          await saveToKv(db);
+        } catch (kvErr) {
+          console.warn('[STORAGE] KV save non-fatal error:', kvErr);
+        }
 
-  // 2. Save to local disk file
-  try {
-    const filePath = getStorageFilePath();
-    const dir = path.dirname(filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    const tempPath = `${filePath}.tmp.${Date.now()}`;
-    fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf8');
-    fs.renameSync(tempPath, filePath);
-  } catch (err) {
-    console.warn('[STORAGE] File write error:', err);
-  }
+        // 2. Save to local disk file atomically
+        try {
+          const filePath = getStorageFilePath();
+          const dir = path.dirname(filePath);
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+          }
+          const uniqueSuffix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+          const tempPath = `${filePath}.tmp.${uniqueSuffix}`;
+          fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf8');
+          fs.renameSync(tempPath, filePath);
+        } catch (fileErr) {
+          console.warn('[STORAGE] File write error:', fileErr);
+        }
+      })
+      .then(resolve)
+      .catch(reject);
+  });
 }
 
 // Helpers for CORS and Cache-Control

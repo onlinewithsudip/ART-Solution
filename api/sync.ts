@@ -1,5 +1,13 @@
 import { applyApiHeaders, getDatabase, saveDatabase, getDbStatus } from './storage';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '25mb',
+    },
+  },
+};
+
 export default async function handler(req: any, res: any) {
   applyApiHeaders(res);
 
@@ -26,7 +34,14 @@ export default async function handler(req: any, res: any) {
 
     if (req.method === 'POST') {
       const db = await getDatabase();
-      const body = req.body || {};
+      let body = req.body || {};
+      if (typeof body === 'string') {
+        try {
+          body = JSON.parse(body);
+        } catch {
+          // fallback
+        }
+      }
 
       if (body.content) db.content = body.content;
       if (body.settings) db.settings = body.settings;
