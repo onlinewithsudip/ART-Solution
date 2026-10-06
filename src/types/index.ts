@@ -164,4 +164,12 @@ export interface Inquiry {
   emailDeliveryStatus?: 'delivered' | 'pending' | 'failed';
 }
 
-export type AdminTab = 'content' | 'header-footer' | 'images' | 'products' | 'gallery' | 'settings' | 'inquiries';
+export type AdminTab =
+  | 'content'
+  | 'header-footer'
+  | 'images'
+  | 'products'
+  | 'gallery'
+  | 'settings'
+  | 'inquiries'
+  | 'ai-studio';

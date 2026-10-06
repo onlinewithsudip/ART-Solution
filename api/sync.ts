@@ -43,7 +43,17 @@ export default async function handler(req: any, res: any) {
         }
       }
 
-      if (body.content) db.content = body.content;
+      if (body.content) {
+        db.content = {
+          ...db.content,
+          ...body.content,
+          header: { ...db.content?.header, ...(body.content.header || {}) },
+          hero: { ...db.content?.hero, ...(body.content.hero || {}) },
+          about: { ...db.content?.about, ...(body.content.about || {}) },
+          contact: { ...db.content?.contact, ...(body.content.contact || {}) },
+          footer: { ...db.content?.footer, ...(body.content.footer || {}) },
+        };
+      }
       if (body.settings) db.settings = body.settings;
       if (Array.isArray(body.products) && body.products.length > 0) db.products = body.products;
       if (Array.isArray(body.gallery)) db.gallery = body.gallery;

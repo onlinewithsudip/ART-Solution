@@ -101,7 +101,17 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
   const kv = getKvConfig();
   if (!kv) return false;
   try {
-    const rawJson = JSON.stringify(db);
+    // Strip large base64 payload to ensure Redis payload stays under provider limits
+    const kvDb = { ...db };
+    if (kvDb.media) {
+      const sanitizedMedia: typeof kvDb.media = {};
+      for (const [k, v] of Object.entries(kvDb.media)) {
+        sanitizedMedia[k] = { ...v, data: undefined };
+      }
+      kvDb.media = sanitizedMedia;
+    }
+    const rawJson = JSON.stringify(kvDb);
+
     // 1. Try standard Upstash / Vercel KV REST command payload
     const res = await fetch(`${kv.url}`, {
       method: 'POST',
@@ -110,7 +120,7 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(['SET', 'art_medical_site_db', rawJson]),
-      signal: AbortSignal.timeout(2500),
+      signal: AbortSignal.timeout(5000),
     });
     if (res.ok) return true;
 
@@ -122,11 +132,11 @@ async function saveToKv(db: SiteDatabase): Promise<boolean> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(rawJson),
-      signal: AbortSignal.timeout(2500),
+      signal: AbortSignal.timeout(5000),
     });
     return fallbackRes.ok;
   } catch (err) {
-    console.warn('[STORAGE] KV write failed:', err);
+    console.warn('[STORAGE] KV write non-fatal warning:', err);
     return false;
   }
 }
@@ -146,15 +156,40 @@ export function createInitialDatabase(): SiteDatabase {
   };
 }
 
+// Helper to guarantee all content sections and fields exist
+function normalizeContent(raw: any): WebsiteContent {
+  const base = JSON.parse(JSON.stringify(defaultWebsiteContent));
+  if (!raw || typeof raw !== 'object') return base;
+  return {
+    ...base,
+    ...raw,
+    header: { ...base.header, ...(raw.header || {}) },
+    hero: { ...base.hero, ...(raw.hero || {}) },
+    about: { ...base.about, ...(raw.about || {}) },
+    contact: { ...base.contact, ...(raw.contact || {}) },
+    footer: { ...base.footer, ...(raw.footer || {}) },
+  };
+}
+
 // Load database from KV or file or defaults
 export async function getDatabase(): Promise<SiteDatabase> {
   if (memoryDb && isLoaded) {
+    if (!memoryDb.media) memoryDb.media = {};
+    if (!memoryDb.categories) memoryDb.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
+    if (!memoryDb.gallery) memoryDb.gallery = [];
+    if (!memoryDb.inquiries) memoryDb.inquiries = [];
+    memoryDb.content = normalizeContent(memoryDb.content);
     return memoryDb;
   }
 
   // 1. Try Cloud KV
   const kvData = await fetchFromKv();
   if (kvData) {
+    if (!kvData.media) kvData.media = {};
+    if (!kvData.categories) kvData.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
+    if (!kvData.gallery) kvData.gallery = [];
+    if (!kvData.inquiries) kvData.inquiries = [];
+    kvData.content = normalizeContent(kvData.content);
     memoryDb = kvData;
     isLoaded = true;
     return memoryDb;
@@ -167,6 +202,11 @@ export async function getDatabase(): Promise<SiteDatabase> {
       const content = fs.readFileSync(filePath, 'utf8');
       const parsed = JSON.parse(content);
       if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+        if (!parsed.media) parsed.media = {};
+        if (!parsed.categories) parsed.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
+        if (!parsed.gallery) parsed.gallery = [];
+        if (!parsed.inquiries) parsed.inquiries = [];
+        parsed.content = normalizeContent(parsed.content);
         memoryDb = parsed as SiteDatabase;
         isLoaded = true;
         return memoryDb;
@@ -195,22 +235,19 @@ let writeQueue: Promise<void> = Promise.resolve();
 
 // Save database to all available stores safely
 export async function saveDatabase(db: SiteDatabase): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<void>((resolve) => {
     writeQueue = writeQueue
+      .catch((prevErr) => {
+        console.warn('[STORAGE] Recovering write queue from prior error:', prevErr);
+      })
       .then(async () => {
         db.lastUpdated = new Date().toISOString();
         db.version = (db.version || 0) + 1;
+        if (!db.media) db.media = {};
         memoryDb = db;
         isLoaded = true;
 
-        // 1. Save to Cloud KV if a real KV store is configured
-        try {
-          await saveToKv(db);
-        } catch (kvErr) {
-          console.warn('[STORAGE] KV save non-fatal error:', kvErr);
-        }
-
-        // 2. Save to local disk file atomically
+        // 1. Save to local disk file atomically
         try {
           const filePath = getStorageFilePath();
           const dir = path.dirname(filePath);
@@ -222,11 +259,22 @@ export async function saveDatabase(db: SiteDatabase): Promise<void> {
           fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf8');
           fs.renameSync(tempPath, filePath);
         } catch (fileErr) {
-          console.warn('[STORAGE] File write error:', fileErr);
+          console.warn('[STORAGE] Local file write error:', fileErr);
+        }
+
+        // 2. Save to Cloud KV asynchronously (non-fatal, safe timeout)
+        try {
+          await saveToKv(db);
+        } catch (kvErr) {
+          console.warn('[STORAGE] KV save non-fatal error:', kvErr);
         }
       })
       .then(resolve)
-      .catch(reject);
+      .catch((err) => {
+        console.error('[STORAGE] Unexpected error in saveDatabase queue:', err);
+        memoryDb = db;
+        resolve();
+      });
   });
 }
 
@@ -401,6 +449,7 @@ export async function saveMediaFile(fileInfo: {
   }
 
   // Register in database media index
+  if (!db.media) db.media = {};
   db.media[id] = {
     id,
     filename: fileInfo.filename,

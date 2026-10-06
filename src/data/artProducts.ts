@@ -675,7 +675,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/ovum_pickup_needle.jpg',
     shortDesc: "Wallace ONS 1733 Single Lumen by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace ONS 1733 Single Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -703,7 +703,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: true,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/ovum_pickup_needle.jpg',
     shortDesc: "Wallace DNS 1733 Double Lumen by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace DNS 1733 Double Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -731,7 +731,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/embryo_transfer_catheter.jpg',
     shortDesc: "Wallace PEB 623 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace PEB 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -759,7 +759,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/embryo_transfer_catheter.jpg',
     shortDesc: "Wallace PES 623 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace PES 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -787,7 +787,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/embryo_transfer_catheter.jpg',
     shortDesc: "Wallace CE 123 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace CE 123 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -815,7 +815,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/embryo_transfer_catheter.jpg',
     shortDesc: "Wallace CE 18 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace CE 18 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -843,7 +843,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/embryo_transfer_catheter.jpg',
     shortDesc: "Wallace 1816N by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Wallace 1816N is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -871,7 +871,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/needles_opu_aspiration.jpg',
+    image: '/images/products/ovum_pickup_needle.jpg',
     shortDesc: "Allwin OPU Single lumen by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Allwin OPU Single lumen is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -899,7 +899,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/catheter_transfer_set.jpg',
     shortDesc: "Allwin BT ETC UP by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Allwin BT ETC UP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [
@@ -927,7 +927,7 @@ export const artProducts: Product[] = [
     priceType: 'inquire',
     inStock: true,
     isFeatured: false,
-    image: '/images/products/catheter_embryo_transfer.jpg',
+    image: '/images/products/catheter_transfer_set.jpg',
     shortDesc: "Allwin BT ETC USP by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
     fullDesc: "Allwin BT ETC USP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
     features: [

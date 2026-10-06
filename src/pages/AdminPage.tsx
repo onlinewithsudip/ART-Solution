@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { useSite } from '../context/SiteContext';
 import {
@@ -53,8 +53,12 @@ import {
   FileSpreadsheet,
   Database,
   RefreshCw,
+  Sparkles,
+  Bot,
+  Wand2,
+  Lightbulb,
 } from 'lucide-react';
-import { heroImg, cleanroomImg, mediaVialsImg, catheterImg, labwareImg, cryoImg, registerImg } from '../data/defaultData';
+import { defaultWebsiteContent, heroImg, cleanroomImg, mediaVialsImg, catheterImg, labwareImg, cryoImg, registerImg } from '../data/defaultData';
 import { BrandIcon, AVAILABLE_ICONS } from '../components/BrandIcon';
 
 export const AdminPage: React.FC = () => {
@@ -63,6 +67,7 @@ export const AdminPage: React.FC = () => {
     setAdminTab,
     websiteContent,
     updateWebsiteContent,
+    updateEntireContent,
     products,
     addProduct,
     updateProduct,
@@ -115,7 +120,29 @@ export const AdminPage: React.FC = () => {
   const [showAccountPass, setShowAccountPass] = useState(false);
 
   // Local state for Content editing form
-  const [contentForm, setContentForm] = useState<WebsiteContent>(websiteContent);
+  const [contentForm, setContentForm] = useState<WebsiteContent>(() => ({
+    ...defaultWebsiteContent,
+    ...websiteContent,
+    header: { ...defaultWebsiteContent.header, ...(websiteContent?.header || {}) },
+    hero: { ...defaultWebsiteContent.hero, ...(websiteContent?.hero || {}) },
+    about: { ...defaultWebsiteContent.about, ...(websiteContent?.about || {}) },
+    contact: { ...defaultWebsiteContent.contact, ...(websiteContent?.contact || {}) },
+    footer: { ...defaultWebsiteContent.footer, ...(websiteContent?.footer || {}) },
+  }));
+
+  useEffect(() => {
+    if (websiteContent) {
+      setContentForm((prev) => ({
+        ...defaultWebsiteContent,
+        ...websiteContent,
+        header: { ...defaultWebsiteContent.header, ...(websiteContent?.header || {}) },
+        hero: { ...defaultWebsiteContent.hero, ...(websiteContent?.hero || {}) },
+        about: { ...defaultWebsiteContent.about, ...(websiteContent?.about || {}) },
+        contact: { ...defaultWebsiteContent.contact, ...(websiteContent?.contact || {}) },
+        footer: { ...defaultWebsiteContent.footer, ...(websiteContent?.footer || {}) },
+      }));
+    }
+  }, [websiteContent]);
 
   // Local state for lead email test
   const [testEmailAddress, setTestEmailAddress] = useState(
@@ -187,6 +214,226 @@ export const AdminPage: React.FC = () => {
   const [settingsForm, setSettingsForm] = useState<ThemeSettings>(themeSettings);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
+  // Gemini AI Assistant State
+  const [geminiStatus, setGeminiStatus] = useState<{
+    configured: boolean;
+    model: string;
+    message: string;
+    checked: boolean;
+  }>({
+    configured: false,
+    model: 'gemini-3.8-flash',
+    message: 'Checking status...',
+    checked: false,
+  });
+  const [isGeneratingAiDesc, setIsGeneratingAiDesc] = useState(false);
+  const [isGeneratingAiSpecs, setIsGeneratingAiSpecs] = useState(false);
+  const [aiStudioMode, setAiStudioMode] = useState<
+    'product-copy' | 'cms-polisher' | 'faq-generator' | 'seo-generator' | 'custom-chat'
+  >('product-copy');
+  const [aiSelectedProductId, setAiSelectedProductId] = useState<string>('');
+  const [aiCustomPrompt, setAiCustomPrompt] = useState('');
+  const [aiCmsTarget, setAiCmsTarget] = useState<'hero-title' | 'hero-subtitle' | 'about-story' | 'mission' | 'announcement'>('hero-subtitle');
+  const [aiFaqTopic, setAiFaqTopic] = useState('Embryology culture media storage and pH stability standards');
+  const [aiSeoPage, setAiSeoPage] = useState('Home Page - ART Medical IVF Equipment');
+  const [aiOutput, setAiOutput] = useState('');
+  const [isCallingAi, setIsCallingAi] = useState(false);
+  const [aiError, setAiError] = useState('');
+  const [aiCopied, setAiCopied] = useState(false);
+
+  // Check Gemini status on mount
+  useEffect(() => {
+    fetch('/api/gemini')
+      .then((r) => r.json())
+      .then((data) => {
+        setGeminiStatus({
+          configured: !!data.configured,
+          model: data.model || 'gemini-3.8-flash',
+          message: data.message || '',
+          checked: true,
+        });
+      })
+      .catch(() => {
+        setGeminiStatus({
+          configured: false,
+          model: 'gemini-3.8-flash',
+          message: 'Unable to reach /api/gemini route',
+          checked: true,
+        });
+      });
+  }, []);
+
+  const callGeminiApi = async (payload: any) => {
+    const res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return await res.json();
+  };
+
+  const handleAiGenerateProductDesc = async () => {
+    if (!productForm.name) {
+      showToast('Please enter an equipment name first to generate a description.', 'error');
+      return;
+    }
+    setIsGeneratingAiDesc(true);
+    try {
+      const data = await callGeminiApi({
+        action: 'generate-description',
+        productName: productForm.name,
+        category: productForm.category,
+        makeImporter: productForm.makeImporter,
+        modelNumber: productForm.modelNumber,
+        currentText: productForm.fullDesc,
+      });
+      if (data.success && data.text) {
+        setProductForm((prev) => ({
+          ...prev,
+          fullDesc: data.text,
+          shortDesc: prev.shortDesc || data.text.split('\n')[0].replace(/^[#*\s]+/, '').substring(0, 160),
+        }));
+        showToast(`AI description generated with Gemini (${data.model || 'gemini-3.8-flash'})!`);
+      } else {
+        showToast(data.error || 'Failed to generate with Gemini', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Error communicating with Gemini server', 'error');
+    } finally {
+      setIsGeneratingAiDesc(false);
+    }
+  };
+
+  const handleAiGenerateProductSpecs = async () => {
+    if (!productForm.name) {
+      showToast('Please enter an equipment name first to generate specifications.', 'error');
+      return;
+    }
+    setIsGeneratingAiSpecs(true);
+    try {
+      const data = await callGeminiApi({
+        action: 'generate-specs',
+        productName: productForm.name,
+        category: productForm.category,
+        makeImporter: productForm.makeImporter,
+      });
+      if (data.success && data.text) {
+        const lines = data.text
+          .split('\n')
+          .map((l: string) => l.replace(/^[-*•0-9.)\s]+/, '').trim())
+          .filter((l: string) => l.length > 5 && !l.toLowerCase().includes('technical specification'))
+          .slice(0, 6);
+        if (lines.length > 0) {
+          setProductForm((prev) => ({
+            ...prev,
+            features: [...new Set([...prev.features, ...lines])],
+          }));
+          showToast(`Added ${lines.length} specifications generated with Gemini!`);
+        }
+      } else {
+        showToast(data.error || 'Failed to generate specs with Gemini', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Error communicating with Gemini server', 'error');
+    } finally {
+      setIsGeneratingAiSpecs(false);
+    }
+  };
+
+  const handleRunAiStudio = async () => {
+    setIsCallingAi(true);
+    setAiError('');
+    setAiOutput('');
+
+    try {
+      let payload: any = {};
+      if (aiStudioMode === 'product-copy') {
+        const selProd = products.find((p) => p.id === aiSelectedProductId);
+        payload = {
+          action: 'generate-description',
+          productName: selProd?.name || 'IVF Laboratory Equipment',
+          category: selProd?.category || 'IUI & IVF Media',
+          makeImporter: selProd?.makeImporter || 'ART Medical',
+          modelNumber: selProd?.modelNumber || '',
+          currentText: selProd?.fullDesc || '',
+        };
+      } else if (aiStudioMode === 'cms-polisher') {
+        let current = '';
+        if (aiCmsTarget === 'hero-title') current = contentForm.hero.title;
+        else if (aiCmsTarget === 'hero-subtitle') current = contentForm.hero.subtitle;
+        else if (aiCmsTarget === 'about-story') current = contentForm.about.storyParagraph1;
+        else if (aiCmsTarget === 'mission') current = contentForm.about.mission;
+        else if (aiCmsTarget === 'announcement') current = contentForm.header.topRibbonSubtitle;
+
+        payload = {
+          action: 'improve-text',
+          currentText: current,
+          context: `ART Medical Website section: ${aiCmsTarget}`,
+        };
+      } else if (aiStudioMode === 'faq-generator') {
+        payload = {
+          action: 'generate-faq',
+          prompt: aiFaqTopic,
+        };
+      } else if (aiStudioMode === 'seo-generator') {
+        payload = {
+          action: 'generate-seo',
+          prompt: aiSeoPage,
+        };
+      } else {
+        payload = {
+          action: 'custom-prompt',
+          prompt: aiCustomPrompt,
+        };
+      }
+
+      const res = await callGeminiApi(payload);
+      if (res.success && res.text) {
+        setAiOutput(res.text);
+        showToast(`Gemini generation completed (${res.model || 'gemini-3.8-flash'})!`);
+      } else {
+        setAiError(res.error || 'Gemini request could not be processed.');
+        showToast(res.error || 'Gemini error', 'error');
+      }
+    } catch (err: any) {
+      setAiError(err?.message || 'Error contacting Gemini API server');
+      showToast(err?.message || 'Network error with Gemini route', 'error');
+    } finally {
+      setIsCallingAi(false);
+    }
+  };
+
+  const handleApplyAiOutputToProduct = async () => {
+    if (!aiOutput || !aiSelectedProductId) return;
+    const target = products.find((p) => p.id === aiSelectedProductId);
+    if (!target) return;
+    const updated = {
+      fullDesc: aiOutput,
+      shortDesc: aiOutput.split('\n')[0].replace(/^[#*\s]+/, '').substring(0, 160),
+    };
+    updateProduct(target.id, updated);
+    showToast(`Applied Gemini description to "${target.name}" and saved to database!`);
+  };
+
+  const handleApplyAiOutputToCms = async () => {
+    if (!aiOutput) return;
+    const updated = { ...contentForm };
+    if (aiCmsTarget === 'hero-title') {
+      updated.hero = { ...updated.hero, title: aiOutput.trim().replace(/^"/, '').replace(/"$/, '') };
+    } else if (aiCmsTarget === 'hero-subtitle') {
+      updated.hero = { ...updated.hero, subtitle: aiOutput.trim() };
+    } else if (aiCmsTarget === 'about-story') {
+      updated.about = { ...updated.about, storyParagraph1: aiOutput.trim() };
+    } else if (aiCmsTarget === 'mission') {
+      updated.about = { ...updated.about, mission: aiOutput.trim() };
+    } else if (aiCmsTarget === 'announcement') {
+      updated.header = { ...updated.header, topRibbonSubtitle: aiOutput.trim() };
+    }
+    setContentForm(updated);
+    updateEntireContent(updated);
+    showToast(`Applied AI text to ${aiCmsTarget} and updated website!`);
+  };
+
   const handleSaveAllCMS = async () => {
     const updatedContent: WebsiteContent = {
       ...websiteContent,
@@ -201,12 +448,7 @@ export const AdminPage: React.FC = () => {
       ...settingsForm,
     };
 
-    updateWebsiteContent('header', contentForm.header);
-    updateWebsiteContent('hero', contentForm.hero);
-    updateWebsiteContent('about', contentForm.about);
-    updateWebsiteContent('contact', contentForm.contact);
-    updateWebsiteContent('footer', contentForm.footer);
-    updateThemeSettings(settingsForm);
+    updateEntireContent(updatedContent);
     setHasUnsavedChanges(false);
 
     await publishFullStateToProduction(updatedContent, updatedSettings);
@@ -224,10 +466,7 @@ export const AdminPage: React.FC = () => {
       ...settingsForm,
     };
 
-    updateWebsiteContent('header', contentForm.header);
-    updateWebsiteContent('footer', contentForm.footer);
-    updateWebsiteContent('contact', contentForm.contact);
-    updateThemeSettings(settingsForm);
+    updateEntireContent(updatedContent);
     setHasUnsavedChanges(false);
 
     await publishFullStateToProduction(updatedContent, updatedSettings);
@@ -844,6 +1083,7 @@ export const AdminPage: React.FC = () => {
             { id: 'gallery', label: 'Photo Gallery', icon: Layers, badge: galleryItems.length },
             { id: 'settings', label: 'Theme & Brand Icon', icon: Palette },
             { id: 'inquiries', label: 'Inquiries & Leads', icon: Mail, badge: inquiries.length },
+            { id: 'ai-studio', label: 'Gemini AI Assistant', icon: Sparkles, badge: 'AI' },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = adminTab === tab.id;
@@ -948,7 +1188,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-1 text-slate-300 font-mono text-xs">
                     <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{contentForm.header?.topRibbonPhone || contentForm.contact.phone1}</span>
+                    <span>{contentForm.header?.topRibbonPhone || contentForm.contact?.phone1 || '+91 98754 06943'}</span>
                   </div>
                 </div>
 
@@ -1068,12 +1308,12 @@ export const AdminPage: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={contentForm.header?.topRibbonPhone || contentForm.contact.phone1}
+                    value={contentForm.header?.topRibbonPhone || contentForm.contact?.phone1 || ''}
                     onChange={(e) => {
                       setContentForm({
                         ...contentForm,
                         header: { ...contentForm.header, topRibbonPhone: e.target.value },
-                        contact: { ...contentForm.contact, phone1: e.target.value },
+                        contact: { ...(contentForm.contact || defaultWebsiteContent.contact), phone1: e.target.value },
                       });
                       setHasUnsavedChanges(true);
                     }}
@@ -1474,11 +1714,11 @@ export const AdminPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={contentForm.contact.phone1}
+                      value={contentForm.contact?.phone1 || ''}
                       onChange={(e) => {
                         setContentForm({
                           ...contentForm,
-                          contact: { ...contentForm.contact, phone1: e.target.value },
+                          contact: { ...(contentForm.contact || defaultWebsiteContent.contact), phone1: e.target.value },
                         });
                         setHasUnsavedChanges(true);
                       }}
@@ -2127,11 +2367,11 @@ export const AdminPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={contentForm.contact.phone1}
+                      value={contentForm.contact?.phone1 || ''}
                       onChange={(e) =>
                         setContentForm({
                           ...contentForm,
-                          contact: { ...contentForm.contact, phone1: e.target.value },
+                          contact: { ...(contentForm.contact || defaultWebsiteContent.contact), phone1: e.target.value },
                         })
                       }
                       placeholder="+91 98712 34567"
@@ -3945,6 +4185,366 @@ export const AdminPage: React.FC = () => {
             )}
           </div>
         )}
+
+        {/* ============================================================== */}
+        {/* TAB 8: GEMINI AI ASSISTANT (Secure Server-Side AI Studio) */}
+        {/* ============================================================== */}
+        {adminTab === 'ai-studio' && (
+          <div className="space-y-6 pb-20">
+            {/* Header Card with Security & Status */}
+            <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl border border-indigo-900/40 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Google AI Studio Gemini Integration</span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                    Gemini AI Medical Content Studio
+                  </h2>
+                  <p className="text-xs text-indigo-200/80 max-w-2xl leading-relaxed">
+                    Generate clinically accurate product descriptions, optimize IVF equipment specifications, rewrite website copy, and create technical FAQs using Google's next-generation Gemini models.
+                  </p>
+                </div>
+
+                {/* Status Indicator */}
+                <div className="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-white/10 flex flex-col gap-1.5 shrink-0 min-w-56">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-indigo-200 font-medium">Server API Status:</span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        geminiStatus.configured
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
+                          : 'bg-amber-500/20 text-amber-300 border border-amber-400/30'
+                      }`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${geminiStatus.configured ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
+                      {geminiStatus.configured ? 'Connected & Active' : 'Key Needed'}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-300 font-mono">
+                    Model: <span className="text-indigo-300 font-semibold">{geminiStatus.model}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 leading-tight pt-1 border-t border-white/10">
+                    {geminiStatus.configured
+                      ? 'Securely authenticated via server process.env.GEMINI_API_KEY'
+                      : 'Set GEMINI_API_KEY in Vercel environment variables'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Security info banner */}
+              <div className="bg-indigo-950/60 rounded-xl p-3 text-xs text-indigo-200/90 border border-indigo-800/40 flex items-start gap-2.5">
+                <Shield className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="font-semibold text-white">Vercel Deployment Security Architecture:</span>
+                  <p className="text-[11px] text-indigo-200/80 leading-relaxed">
+                    All AI operations route through the secure serverless backend route <code className="bg-indigo-900/60 px-1 py-0.5 rounded font-mono text-indigo-300">/api/gemini</code>. Your Google AI Studio API key is accessed strictly on the server and is never exposed in browser bundles. After deploying to Vercel, simply supply <code className="bg-indigo-900/60 px-1 py-0.5 rounded font-mono text-indigo-300">GEMINI_API_KEY</code> in project environment variables.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Studio Workspace */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+              {/* Studio Subtabs */}
+              <div className="flex border-b border-slate-200 bg-slate-50 overflow-x-auto scrollbar-none px-4 pt-2">
+                {[
+                  { id: 'product-copy', label: 'Equipment Copywriter', icon: Package },
+                  { id: 'cms-polisher', label: 'Website CMS Polisher', icon: FileText },
+                  { id: 'faq-generator', label: 'IVF Technical FAQs', icon: Lightbulb },
+                  { id: 'seo-generator', label: 'SEO Meta Generator', icon: Globe },
+                  { id: 'custom-chat', label: 'Custom Prompt', icon: Wand2 },
+                ].map((mode) => {
+                  const Icon = mode.icon;
+                  const isActive = aiStudioMode === mode.id;
+                  return (
+                    <button
+                      key={mode.id}
+                      onClick={() => {
+                        setAiStudioMode(mode.id as any);
+                        setAiOutput('');
+                        setAiError('');
+                      }}
+                      className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors ${
+                        isActive
+                          ? 'border-indigo-600 text-indigo-600 bg-white font-bold'
+                          : 'border-transparent text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{mode.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Workspace Content */}
+              <div className="p-6 sm:p-8 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Left Column: Configuration & Controls */}
+                  <div className="space-y-4">
+                    {/* Mode 1: Product Copy */}
+                    {aiStudioMode === 'product-copy' && (
+                      <div className="space-y-4 text-xs">
+                        <div>
+                          <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                            Select Equipment from Inventory ({products.length} Products)
+                          </label>
+                          <select
+                            value={aiSelectedProductId}
+                            onChange={(e) => {
+                              setAiSelectedProductId(e.target.value);
+                              const selected = products.find((p) => p.id === e.target.value);
+                              if (selected?.fullDesc) setAiOutput(selected.fullDesc);
+                            }}
+                            className="w-full p-3 rounded-xl border border-slate-300 bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          >
+                            <option value="">-- Choose a product to generate or enhance description --</option>
+                            {products.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                [{p.category}] {p.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {aiSelectedProductId && (
+                          <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-[11px]">
+                            {(() => {
+                              const sel = products.find((p) => p.id === aiSelectedProductId);
+                              if (!sel) return null;
+                              return (
+                                <>
+                                  <div className="font-semibold text-slate-800">{sel.name}</div>
+                                  <div className="text-slate-500">
+                                    Category: <span className="text-slate-700 font-medium">{sel.category}</span> | Make: <span className="text-slate-700 font-medium">{sel.makeImporter || 'ART Medical'}</span>
+                                  </div>
+                                  <div className="text-slate-500 truncate">
+                                    Current Description: {sel.fullDesc ? sel.fullDesc.substring(0, 90) + '...' : '(None yet)'}
+                                  </div>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
+
+                        <div className="text-[11px] text-slate-500 leading-relaxed bg-indigo-50/50 p-3 rounded-xl border border-indigo-100">
+                          Gemini will generate a clinically sound medical equipment description including clinical indication, quality testing (MEA tested, endotoxin levels), and technical highlights for IVF laboratories.
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mode 2: CMS Polisher */}
+                    {aiStudioMode === 'cms-polisher' && (
+                      <div className="space-y-4 text-xs">
+                        <div>
+                          <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                            Target Website CMS Section
+                          </label>
+                          <select
+                            value={aiCmsTarget}
+                            onChange={(e) => setAiCmsTarget(e.target.value as any)}
+                            className="w-full p-3 rounded-xl border border-slate-300 bg-white text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          >
+                            <option value="hero-title">Home Hero Main Headline</option>
+                            <option value="hero-subtitle">Home Hero Subtitle / Overview</option>
+                            <option value="about-story">About Us Main Story Paragraph</option>
+                            <option value="mission">Company Mission Statement</option>
+                            <option value="announcement">Header Ribbon Announcement Bar</option>
+                          </select>
+                        </div>
+
+                        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-[11px]">
+                          <span className="font-bold text-slate-700 block">Current Live Text:</span>
+                          <p className="text-slate-600 italic">
+                            {aiCmsTarget === 'hero-title' && contentForm.hero.title}
+                            {aiCmsTarget === 'hero-subtitle' && contentForm.hero.subtitle}
+                            {aiCmsTarget === 'about-story' && contentForm.about.storyParagraph1}
+                            {aiCmsTarget === 'mission' && contentForm.about.mission}
+                            {aiCmsTarget === 'announcement' && contentForm.header.topRibbonSubtitle}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mode 3: FAQ Generator */}
+                    {aiStudioMode === 'faq-generator' && (
+                      <div className="space-y-4 text-xs">
+                        <div>
+                          <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                            IVF Equipment / Media Clinical Topic
+                          </label>
+                          <input
+                            type="text"
+                            value={aiFaqTopic}
+                            onChange={(e) => setAiFaqTopic(e.target.value)}
+                            className="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            placeholder="e.g. Media storage protocols, Micropipette angle selection, Vitrification recovery..."
+                          />
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            'Culture media temperature & pH stability',
+                            'Cryotech vitrification survival protocols',
+                            'Wallace embryo transfer catheter handling',
+                            'Senior embryologist backup support',
+                            'Cleanroom air quality and VOC filtration',
+                          ].map((suggested) => (
+                            <button
+                              key={suggested}
+                              type="button"
+                              onClick={() => setAiFaqTopic(suggested)}
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] transition-colors"
+                            >
+                              {suggested}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mode 4: SEO Generator */}
+                    {aiStudioMode === 'seo-generator' && (
+                      <div className="space-y-4 text-xs">
+                        <div>
+                          <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                            Page or Product Subject
+                          </label>
+                          <input
+                            type="text"
+                            value={aiSeoPage}
+                            onChange={(e) => setAiSeoPage(e.target.value)}
+                            className="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            placeholder="e.g. IVF Consumables & Labware, Cryopreservation Supplies..."
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mode 5: Custom Chat / Prompt */}
+                    {aiStudioMode === 'custom-chat' && (
+                      <div className="space-y-4 text-xs">
+                        <div>
+                          <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                            Custom Prompt to Gemini AI
+                          </label>
+                          <textarea
+                            rows={4}
+                            value={aiCustomPrompt}
+                            onChange={(e) => setAiCustomPrompt(e.target.value)}
+                            className="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y"
+                            placeholder="Ask Gemini to draft an email to an embryologist, summarize product features, or write marketing copy..."
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Submit Action Button */}
+                    <button
+                      type="button"
+                      onClick={handleRunAiStudio}
+                      disabled={isCallingAi || (aiStudioMode === 'product-copy' && !aiSelectedProductId)}
+                      className="w-full py-3 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                    >
+                      <Sparkles className="w-4 h-4 text-indigo-200" />
+                      <span>
+                        {isCallingAi
+                          ? 'Generating with Google AI Studio Gemini...'
+                          : 'Generate with Gemini AI'}
+                      </span>
+                    </button>
+
+                    {aiError && (
+                      <div className="p-3 bg-red-50 text-red-700 rounded-xl border border-red-200 text-xs flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="font-bold">Error:</span> {aiError}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column: AI Generation Output & Application */}
+                  <div className="space-y-4 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 pt-6 lg:pt-0 lg:pl-8">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="block font-bold text-slate-700 uppercase text-xs">
+                          Gemini Generated Result
+                        </label>
+                        {aiOutput && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(aiOutput);
+                              setAiCopied(true);
+                              setTimeout(() => setAiCopied(false), 2000);
+                            }}
+                            className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-semibold"
+                          >
+                            {aiCopied ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <span className="text-emerald-600">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>Copy Text</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="relative">
+                        <textarea
+                          rows={12}
+                          value={aiOutput}
+                          onChange={(e) => setAiOutput(e.target.value)}
+                          placeholder="Gemini generated output will appear here. You can freely review, edit, or copy the content before applying it to your website..."
+                          className="w-full p-4 rounded-xl border border-slate-200 bg-slate-50/70 text-xs text-slate-800 leading-relaxed font-sans focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Quick Apply Actions */}
+                    {aiOutput && (
+                      <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-200 space-y-3">
+                        <div className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-indigo-600" />
+                          <span>Direct One-Click Application:</span>
+                        </div>
+
+                        {aiStudioMode === 'product-copy' && aiSelectedProductId && (
+                          <button
+                            type="button"
+                            onClick={handleApplyAiOutputToProduct}
+                            className="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-2 transition-colors"
+                          >
+                            <Save className="w-4 h-4" />
+                            <span>Apply this Description to Selected Product & Save</span>
+                          </button>
+                        )}
+
+                        {aiStudioMode === 'cms-polisher' && (
+                          <button
+                            type="button"
+                            onClick={handleApplyAiOutputToCms}
+                            className="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-2 transition-colors"
+                          >
+                            <Save className="w-4 h-4" />
+                            <span>Apply to Website {aiCmsTarget} & Update Live Site</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ============================================================== */}
@@ -4261,17 +4861,108 @@ export const AdminPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold uppercase text-slate-600 mb-1">
-                  Full Detailed Description (Product Detail Page)
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold uppercase text-slate-600">
+                    Full Detailed Description (Product Detail Page)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAiGenerateProductDesc}
+                    disabled={isGeneratingAiDesc || !productForm.name}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>{isGeneratingAiDesc ? 'Generating with Gemini...' : 'AI Generate with Gemini'}</span>
+                  </button>
+                </div>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={productForm.fullDesc}
                   onChange={(e) =>
                     setProductForm({ ...productForm, fullDesc: e.target.value })
                   }
-                  className="w-full p-2.5 rounded-xl border border-slate-200 resize-none"
+                  placeholder="Enter or auto-generate medical equipment description..."
+                  className="w-full p-2.5 rounded-xl border border-slate-200 resize-y"
                 />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block font-bold uppercase text-slate-600">
+                    Key Features & Clinical Highlights
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAiGenerateProductSpecs}
+                    disabled={isGeneratingAiSpecs || !productForm.name}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>{isGeneratingAiSpecs ? 'Generating Features...' : 'AI Suggest Features'}</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newFeatureText}
+                      onChange={(e) => setNewFeatureText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (newFeatureText.trim()) {
+                            setProductForm({
+                              ...productForm,
+                              features: [...productForm.features, newFeatureText.trim()],
+                            });
+                            setNewFeatureText('');
+                          }
+                        }
+                      }}
+                      placeholder="Add key feature (e.g. MEA batch tested, endotoxin <0.03 EU/mL)..."
+                      className="flex-1 p-2 rounded-xl border border-slate-200 text-xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newFeatureText.trim()) {
+                          setProductForm({
+                            ...productForm,
+                            features: [...productForm.features, newFeatureText.trim()],
+                          });
+                          setNewFeatureText('');
+                        }
+                      }}
+                      className="px-3 py-2 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800"
+                    >
+                      Add
+                    </button>
+                  </div>
+
+                  {productForm.features.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {productForm.features.map((feat, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs border border-slate-200"
+                        >
+                          <span>{feat}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = productForm.features.filter((_, i) => i !== idx);
+                              setProductForm({ ...productForm, features: updated });
+                            }}
+                            className="text-slate-400 hover:text-red-500"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Status toggles */}

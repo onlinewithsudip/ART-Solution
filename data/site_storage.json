@@ -2,117 +2,60 @@
   "content": {
     "header": {
       "topRibbonKicker": "GSTIN: 19ACLFA5383R1ZF",
-      "topRibbonSubtitle": "Offering Full Solution — IVF Labs, Media & Clinical Disposables",
+      "topRibbonSubtitle": "Offering Full Solution — IVF Labs, Media & Clinical Consumables",
+      "topRibbonBadge": "AUTHENTIC CLINICAL SUPPLY",
       "topRibbonPhone": "+91 98754 06943",
-      "ctaButtonText": "Request Quotation"
+      "actionButtonText": "Instant WhatsApp Desk",
+      "actionButtonPhone": "+91 98754 06943"
     },
     "hero": {
-      "kicker": "Complete Assisted Reproductive Technology Solutions",
-      "title": "Precision IVF Equipment, Clinical Media & Disposables",
+      "kicker": "Comprehensive Assisted Reproductive Technology Infrastructure",
+      "title": "Offering Full Solution for Modern IVF Laboratories & Fertility Clinics",
       "subtitle": "From world-class embryology workstations and multi-chamber incubators to genuine culture media, catheters, vitrification kits, and laboratory disposables — offering full end-to-end solutions for reproductive centers.",
-      "primaryCtaText": "Browse Product Catalog",
-      "secondaryCtaText": "Contact Specialist on WhatsApp",
-      "highlightBadge": "Offering Full Solution | GST Registered & Validated",
-      "stats": [
-        {
-          "label": "Clinical Products",
-          "value": "147 Items",
-          "detail": "Authentic media, kits & devices"
-        },
-        {
-          "label": "Delivery Turnaround",
-          "value": "Within 24h",
-          "detail": "Rapid dispatch protocol"
-        },
-        {
-          "label": "Direct Helpline",
-          "value": "+91 98754 06943",
-          "detail": "Kolkata & Pan-India support"
-        },
-        {
-          "label": "GST Certified",
-          "value": "19ACLFA5383R1ZF",
-          "detail": "100% Tax compliant billing"
-        }
-      ],
-      "heroImage": "/images/assets/fertility_hero_lab_1790663824905.jpg"
+      "primaryCtaText": "Request Official Commercial Quotation",
+      "secondaryCtaText": "Download Full FY 25-26 Product Master"
     },
     "about": {
-      "title": "Empowering Reproductive Medicine, Offering Full Solution",
-      "subtitle": "ART MEDICAL is your premier partner for assisted reproduction technologies, high-yield culture media, disposables, precision equipment, and turnkey laboratory installations.",
-      "storyParagraph1": "ART MEDICAL operates with a clear mandate: offering full, dependable solutions for IVF laboratories, clinical embryologists, and reproductive medicine centers. We supply certified culture media, sperm washing formulations, vitrification systems, micropipettes, and laboratory plasticware from globally recognized manufacturers including Fertipro, Origio, Wallace, Allwin Medical, Falcon, Cryotech, and more.",
-      "storyParagraph2": "Headquartered at 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104 (Near kalua aboitonic school), we provide end-to-end equipment supply, maintenance, clinical registers, and priority delivery within 24 hours of order placement. Every product adheres to rigorous quality control standards, ensuring zero environmental variability and optimal embryology outcomes.",
-      "mission": "To provide comprehensive, reliable, and cost-effective reproductive technology solutions that empower fertility clinics and embryologists to achieve peak clinical pregnancy rates.",
-      "vision": "To be the most trusted distributor and turnkey infrastructure partner in assisted reproductive technology across India, renowned for product authenticity and rapid support.",
-      "values": [
+      "title": "Dedicated Partner in Reproductive Technology Excellence",
+      "subtitle": "Supplying certified media, precision instrumentation, and turnkey IVF lab fitments across Eastern India and nationwide.",
+      "mission": "To elevate clinical pregnancy rates and embryology lab reliability by delivering rigorously tested, temperature-monitored, and batch-certified ART equipment and consumables.",
+      "vision": "To be the most trusted end-to-end clinical infrastructure partner for fertility clinics, hospital IVF units, and standalone ART facilities.",
+      "stats": [
         {
-          "title": "Authenticity & Batch Testing",
-          "desc": "All media, catheters, and disposables are sourced from authorized manufacturers with sterility certificates and MEA validation."
+          "label": "Clinical SKUs Stocked",
+          "value": "140+"
         },
         {
-          "title": "Rapid 24-Hour Dispatch",
-          "desc": "Immediate dispatch within 24 hours of order placement, with expedited courier handling for temperature-sensitive media."
+          "label": "IVF Centers Supported",
+          "value": "85+"
         },
         {
-          "title": "Full Turnkey Commitment",
-          "desc": "Complete technical backing from lab equipment specification and registers to consumable replenishment and AMC support."
+          "label": "Batch Sterility Validated",
+          "value": "100%"
         },
         {
-          "title": "Transparent Commercials",
-          "desc": "Direct customer supply rates in ₹ with transparent GST billing and prompt payment credit incentives."
+          "label": "Emergency Dispatch Window",
+          "value": "< 24 Hrs"
         }
-      ],
-      "certifications": [
-        "GSTIN: 19ACLFA5383R1ZF Registered Commercial Entity",
-        "Authorized Distributor for Leading International & Indian Brands",
-        "MEA Tested & Endotoxin Screened Clinical Formulations",
-        "Temperature-Controlled Cold Chain Logistics Compliance"
-      ],
-      "aboutImage": "/images/assets/gallery_cleanroom_setup_1790663877901.jpg"
+      ]
     },
     "contact": {
-      "companyName": "ART MEDICAL",
-      "address": "17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104",
-      "landmark": "Near kalua aboitonic school",
+      "address": "BF 28, Ground Floor, BF Block, Sector 1, Bidhannagar, Kolkata, West Bengal 700064",
+      "landmark": "Near Bidhannagar Central Park & Swimming Pool",
       "phone1": "+91 98754 06943",
       "phone2": "+91 74396 88406",
       "phone3": "+91 95930 76979",
-      "email": "artmedical4560@gmail.com",
-      "whatsapp": "+91 98754 06943",
-      "whatsappLink": "https://wa.me/919875406943",
-      "whatsappMessage": "Hello ART MEDICAL, I would like to inquire about your IVF laboratory products, media, and quotation estimates.",
-      "workingHours": "Monday – Saturday: 9:00 AM – 7:00 PM (IST) | 24/7 Priority Emergency Support",
-      "supportEmail": "artmedical4560@gmail.com",
-      "googleMapsUrl": "https://maps.google.com"
+      "email": "onlinewithsudip@gmail.com",
+      "workingHours": "Monday - Saturday: 09:30 AM – 07:30 PM (IST)",
+      "gstin": "19ACLFA5383R1ZF"
     },
     "footer": {
-      "tagline": "Offering Full Solution — High-Precision IVF Equipment, Culture Media, Disposables, and Turnkey Lab Infrastructure.",
-      "certificationBadge": "GSTIN: 19ACLFA5383R1ZF | UCO Bank Verified Partner",
-      "copyrightText": "© 2026 ART MEDICAL. All rights reserved. 17 No Pal Para, Badamtala, Mg Road, Thakurpukur, Kolkata - 700104.",
-      "disclaimer": "Official clinical supplies and equipment intended for assisted reproductive medicine facilities, embryologists, and accredited healthcare practitioners. Quotations available on request.",
-      "linkedinUrl": "",
-      "twitterUrl": "",
-      "facebookUrl": "",
-      "youtubeUrl": ""
+      "tagline": "Empowering reproductive science with authentic equipment, genuine media, and dedicated embryologist support.",
+      "copyright": "© 2026 ART MEDICAL. All rights reserved."
     }
   },
   "settings": {
-    "primaryColor": "#0284c7",
-    "ctaColor": "#0d9488",
-    "ctaTextColor": "#ffffff",
-    "logoType": "image",
-    "logoUrl": "/logo.svg",
-    "logoIcon": "Activity",
-    "customIconUrl": "",
-    "logoText": "ART Medical",
-    "logoTagline": "Offering Full Solution",
-    "logoHeight": 48,
-    "leadNotificationEmail": "onlinewithsudip@gmail.com",
-    "ccNotificationEmail": "",
-    "enableEmailAlerts": true,
-    "adminEmail": "onlinewithsudip@gmail.com",
-    "adminPassword": "admin123",
-    "heroBgStyle": "sapphire-teal"
+    "siteName": "ART Medical"
   },
   "products": [
     {
@@ -1115,7 +1058,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/needles_opu_aspiration.jpg",
+      "image": "/images/products/ovum_pickup_needle.jpg",
       "shortDesc": "Wallace ONS 1733 Single Lumen by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace ONS 1733 Single Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1158,7 +1101,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/needles_opu_aspiration.jpg",
+      "image": "/images/products/ovum_pickup_needle.jpg",
       "shortDesc": "Wallace DNS 1733 Double Lumen by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace DNS 1733 Double Lumen is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1201,7 +1144,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Wallace PEB 623 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace PEB 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1244,7 +1187,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Wallace PES 623 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace PES 623 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1287,7 +1230,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Wallace CE 123 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace CE 123 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1330,7 +1273,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Wallace CE 18 by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace CE 18 is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1373,7 +1316,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Wallace 1816N by Wallace. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Wallace 1816N is an authentic clinical-grade product manufactured/imported by Wallace. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1416,7 +1359,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/needles_opu_aspiration.jpg",
+      "image": "/images/products/ovum_pickup_needle.jpg",
       "shortDesc": "Allwin OPU Single lumen by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Allwin OPU Single lumen is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1459,7 +1402,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/catheter_transfer_set.jpg",
       "shortDesc": "Allwin BT ETC UP by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Allwin BT ETC UP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -1502,7 +1445,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/catheter_embryo_transfer.jpg",
+      "image": "/images/products/catheter_transfer_set.jpg",
       "shortDesc": "Allwin BT ETC USP by Allwin Medical. Pack size: Single Sterile. Official commercial supply quotation available on request.",
       "fullDesc": "Allwin BT ETC USP is an authentic clinical-grade product manufactured/imported by Allwin Medical. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: Single Sterile. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -5802,7 +5745,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/media_culture_liquid.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Global Total Flushing Media With HEPES & HSA by Life Global. Pack size: 50. Official commercial supply quotation available on request.",
       "fullDesc": "Global Total Flushing Media With HEPES & HSA is an authentic clinical-grade product manufactured/imported by Life Global. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 50. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -5974,7 +5917,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/media_culture_liquid.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Profert Flushing Media with HEPES and HSA by Profert. Pack size: 100. Official commercial supply quotation available on request.",
       "fullDesc": "Profert Flushing Media with HEPES and HSA is an authentic clinical-grade product manufactured/imported by Profert. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -6189,7 +6132,7 @@
       "priceType": "inquire",
       "inStock": true,
       "isFeatured": false,
-      "image": "/images/products/media_culture_liquid.jpg",
+      "image": "/images/products/embryo_transfer_catheter.jpg",
       "shortDesc": "Invitrcare Flushing Media with HEPES by Invitrocare. Pack size: 100. Official commercial supply quotation available on request.",
       "fullDesc": "Invitrcare Flushing Media with HEPES is an authentic clinical-grade product manufactured/imported by Invitrocare. Specifically validated for assisted reproduction technology (ART) and clinical embryology laboratory procedures. Available in official pack configuration: 100. All batches are sterility certified and MEA tested for clinical compliance.",
       "features": [
@@ -6674,6 +6617,6 @@
     }
   ],
   "media": {},
-  "lastUpdated": "2026-10-05T10:41:27.727Z",
-  "version": 6
+  "lastUpdated": "2026-10-06T11:16:57.753Z",
+  "version": 20
 }

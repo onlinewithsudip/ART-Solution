@@ -96,7 +96,7 @@ export const ContactPage: React.FC = () => {
                     Direct WhatsApp Channel
                   </h3>
                   <span className="text-xs text-emerald-700 font-mono">
-                    {websiteContent.contact.phone1}
+                    {websiteContent.contact?.phone1 || '+91 98754 06943'}
                   </span>
                 </div>
               </div>
@@ -144,9 +144,9 @@ export const ContactPage: React.FC = () => {
                     ART MEDICAL
                   </p>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    {websiteContent.contact.address}
+                    {websiteContent.contact?.address || 'BF 28, Ground Floor, BF Block, Sector 1, Bidhannagar, Kolkata, West Bengal 700064'}
                   </p>
-                  {websiteContent.contact.landmark && (
+                  {websiteContent.contact?.landmark && (
                     <p className="text-xs text-teal-700 font-medium pt-1">
                       Landmark: {websiteContent.contact.landmark}
                     </p>
@@ -191,10 +191,10 @@ export const ContactPage: React.FC = () => {
                   </span>
                   <div>
                     <a
-                      href={`mailto:${websiteContent.contact.email}`}
+                      href={`mailto:${websiteContent.contact?.email || 'onlinewithsudip@gmail.com'}`}
                       className="text-slate-700 hover:text-slate-900 font-medium block"
                     >
-                      {websiteContent.contact.email}
+                      {websiteContent.contact?.email || 'onlinewithsudip@gmail.com'}
                     </a>
                   </div>
                 </div>
@@ -207,7 +207,7 @@ export const ContactPage: React.FC = () => {
                     Operating Schedule
                   </span>
                   <p className="text-slate-600">
-                    {websiteContent.contact.workingHours}
+                    {websiteContent.contact?.workingHours || 'Monday - Saturday: 09:30 AM – 07:30 PM (IST)'}
                   </p>
                 </div>
               </div>

@@ -13,9 +13,12 @@ export const CLINICAL_IMAGE_MAP = {
   enzymeHyaluronidase: '/images/products/hyaluronidase_enzyme_vial.jpg',
 
   // Catheters, Needles & Cannulas
-  catheterEmbryoTransfer: '/images/products/catheter_embryo_transfer.jpg',
+  catheterEmbryoTransfer: '/images/products/catheter_transfer_set.jpg',
+  embryoTransferCatheter: '/images/products/embryo_transfer_catheter.jpg',
+  catheterTransferSet: '/images/products/catheter_transfer_set.jpg',
   catheterIUI: '/images/products/iui_catheter_flexible.jpg',
-  needlesOPU: '/images/products/needles_opu_aspiration.jpg',
+  needlesOPU: '/images/products/ovum_pickup_needle.jpg',
+  ovumPickupNeedle: '/images/products/ovum_pickup_needle.jpg',
   cathetersGeneric: '/images/assets/art_catheters_cannula_1790759417050.jpg',
 
   // Micropipettes & Stripper Tips
@@ -76,12 +79,15 @@ export function resolveProductImage(product: {
     return CLINICAL_IMAGE_MAP.enzymeHyaluronidase;
   }
 
-  if (name.includes('opu') || name.includes('aspiration needle') || name.includes('single lumen') || name.includes('double lumen') || name.includes('wallace ons') || name.includes('wallace dns')) {
-    return CLINICAL_IMAGE_MAP.needlesOPU;
+  if (name.includes('ovum') || name.includes('opu') || name.includes('aspiration needle') || name.includes('single lumen') || name.includes('double lumen') || name.includes('wallace ons') || name.includes('wallace dns')) {
+    return CLINICAL_IMAGE_MAP.ovumPickupNeedle;
   }
 
-  if (name.includes('embryo transfer') || name.includes('etc') || name.includes('allwin') || name.includes('wallace classic') || name.includes('sureview') || name.includes('echogenic')) {
-    return CLINICAL_IMAGE_MAP.catheterEmbryoTransfer;
+  if (name.includes('embryo transfer') || name.includes('etc') || name.includes('allwin bt etc') || name.includes('wallace peb') || name.includes('wallace pes') || name.includes('wallace ce') || name.includes('sureview') || name.includes('echogenic')) {
+    if (name.includes('peb') || name.includes('pes') || name.includes('ce 123') || name.includes('ce 18') || name.includes('cannula')) {
+      return CLINICAL_IMAGE_MAP.embryoTransferCatheter;
+    }
+    return CLINICAL_IMAGE_MAP.catheterTransferSet;
   }
 
   if (name.includes('iui catheter') || name.includes('surelife') || name.includes('intrauterine cannula') || name.includes('insemination cannula')) {

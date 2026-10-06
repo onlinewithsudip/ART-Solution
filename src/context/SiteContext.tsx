@@ -43,6 +43,7 @@ interface SiteContextType {
   
   websiteContent: WebsiteContent;
   updateWebsiteContent: <K extends keyof WebsiteContent>(section: K, data: WebsiteContent[K]) => void;
+  updateEntireContent: (content: WebsiteContent) => void;
   
   products: Product[];
   addProduct: (product: Omit<Product, 'id'>) => Product;
@@ -121,6 +122,19 @@ const getInitialPage = (): Page => {
   return 'home';
 };
 
+const mergeContentWithDefaults = (incoming: any): WebsiteContent => {
+  if (!incoming || typeof incoming !== 'object') return defaultWebsiteContent;
+  return {
+    ...defaultWebsiteContent,
+    ...incoming,
+    header: { ...defaultWebsiteContent.header, ...(incoming.header || {}) },
+    hero: { ...defaultWebsiteContent.hero, ...(incoming.hero || {}) },
+    about: { ...defaultWebsiteContent.about, ...(incoming.about || {}) },
+    contact: { ...defaultWebsiteContent.contact, ...(incoming.contact || {}) },
+    footer: { ...defaultWebsiteContent.footer, ...(incoming.footer || {}) },
+  };
+};
+
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [page, setPageState] = useState<Page>(getInitialPage);
 
@@ -188,7 +202,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('art_solution_content_v3');
       }
       const saved = localStorage.getItem(STORAGE_KEYS.content);
-      return saved ? { ...defaultWebsiteContent, ...JSON.parse(saved) } : defaultWebsiteContent;
+      return saved ? mergeContentWithDefaults(JSON.parse(saved)) : defaultWebsiteContent;
     } catch {
       return defaultWebsiteContent;
     }
@@ -280,9 +294,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const data = await res.json();
           if (!isCancelled && data) {
             if (data.content) {
-              setWebsiteContent(data.content);
+              const safeContent = mergeContentWithDefaults(data.content);
+              setWebsiteContent(safeContent);
               try {
-                localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(data.content));
+                localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(safeContent));
               } catch {}
             }
             if (data.settings) {
@@ -488,30 +503,28 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Theme settings
   const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
-    setThemeSettings((prev) => {
-      const merged = { ...prev, ...newSettings };
-      fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
-        body: JSON.stringify(newSettings),
-      }).catch((err) => console.warn('[API settings error]', err));
-      return merged;
-    });
+    setThemeSettings((prev) => ({ ...prev, ...newSettings }));
+    fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify(newSettings),
+    }).catch((err) => console.warn('[API settings error]', err));
     showToast('Theme & branding settings updated in production database!');
   };
 
   // Website content
   const updateWebsiteContent = <K extends keyof WebsiteContent>(section: K, data: WebsiteContent[K]) => {
-    setWebsiteContent((prev) => {
-      const merged = { ...prev, [section]: data };
-      fetch('/api/content', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
-        body: JSON.stringify({ section, data }),
-      }).catch((err) => console.warn('[API content error]', err));
-      return merged;
-    });
+    setWebsiteContent((prev) => mergeContentWithDefaults({ ...prev, [section]: data }));
+    fetch('/api/content', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ section, data }),
+    }).catch((err) => console.warn('[API content error]', err));
     showToast(`Content for "${String(section).toUpperCase()}" updated in production database!`);
+  };
+
+  const updateEntireContent = (content: WebsiteContent) => {
+    setWebsiteContent(mergeContentWithDefaults(content));
   };
 
   // Products CRUD
@@ -638,6 +651,11 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const settingsToSync = customSettings || themeSettings;
     const productsToSync = customProducts || products;
 
+    // Immediately reflect any custom state in React memory
+    if (customContent) setWebsiteContent(mergeContentWithDefaults(customContent));
+    if (customSettings) setThemeSettings(customSettings);
+    if (customProducts) setProducts(customProducts);
+
     try {
       const res = await fetch('/api/sync', {
         method: 'POST',
@@ -660,8 +678,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return true;
       }
 
-      const errData = await res.json().catch(() => null);
-      const errMsg = errData?.error || `Server returned ${res.status}: ${res.statusText}`;
+      const errText = await res.text().catch(() => '');
+      let errMsg = `Server returned ${res.status}`;
+      try {
+        const errJson = JSON.parse(errText);
+        if (errJson?.error) errMsg = errJson.error;
+      } catch {
+        if (errText && errText.length < 150) errMsg = `${errMsg}: ${errText}`;
+      }
       console.warn('[Sync Error]', errMsg);
       showToast(`Saved locally. Server sync note: ${errMsg}`, 'info');
       return true;
@@ -686,7 +710,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.content) setWebsiteContent(data.content);
+        if (data.content) setWebsiteContent(mergeContentWithDefaults(data.content));
         if (data.settings) setThemeSettings(data.settings);
         if (Array.isArray(data.products) && data.products.length > 0) setProducts(data.products);
         if (Array.isArray(data.gallery)) setGalleryItems(data.gallery);
@@ -992,6 +1016,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateThemeSettings,
         websiteContent,
         updateWebsiteContent,
+        updateEntireContent,
         products,
         addProduct,
         updateProduct,

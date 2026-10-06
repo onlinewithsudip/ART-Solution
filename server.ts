@@ -42,16 +42,27 @@ async function startServer() {
   const uploadHandler = (await import('./api/upload')).default;
   const mediaHandler = (await import('./api/media')).default;
   const dbStatusHandler = (await import('./api/db-status')).default;
+  const geminiHandler = (await import('./api/gemini')).default;
 
-  app.all('/api/sync', (req, res) => syncHandler(req, res));
-  app.all('/api/products', (req, res) => productsHandler(req, res));
-  app.all('/api/content', (req, res) => contentHandler(req, res));
-  app.all('/api/settings', (req, res) => settingsHandler(req, res));
-  app.all('/api/gallery', (req, res) => galleryHandler(req, res));
-  app.all('/api/categories', (req, res) => categoriesHandler(req, res));
-  app.all('/api/upload', (req, res) => uploadHandler(req, res));
-  app.all('/api/media', (req, res) => mediaHandler(req, res));
-  app.all('/api/db-status', (req, res) => dbStatusHandler(req, res));
+  // Helper to safely execute async API handlers and forward unhandled errors
+  const handleApi = (fn: (req: any, res: any) => Promise<any>) => async (req: Request, res: Response, next: express.NextFunction) => {
+    try {
+      await fn(req, res);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  app.all('/api/sync', handleApi(syncHandler));
+  app.all('/api/products', handleApi(productsHandler));
+  app.all('/api/content', handleApi(contentHandler));
+  app.all('/api/settings', handleApi(settingsHandler));
+  app.all('/api/gallery', handleApi(galleryHandler));
+  app.all('/api/categories', handleApi(categoriesHandler));
+  app.all('/api/upload', handleApi(uploadHandler));
+  app.all('/api/media', handleApi(mediaHandler));
+  app.all('/api/db-status', handleApi(dbStatusHandler));
+  app.all('/api/gemini', handleApi(geminiHandler));
 
   // API endpoint for lead notifications
   app.post('/api/notify-lead', (req: Request, res: Response) => {
@@ -88,6 +99,15 @@ async function startServer() {
   // Health check
   app.get('/api/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'ART Medical API' });
+  });
+
+  // Global API error handler ensuring JSON responses
+  app.use('/api', (err: any, _req: Request, res: Response, _next: express.NextFunction) => {
+    console.error('[API Error caught in middleware]:', err);
+    res.status(500).json({
+      success: false,
+      error: err?.message || 'Server encountered an error processing request',
+    });
   });
 
   // Vite middleware in dev

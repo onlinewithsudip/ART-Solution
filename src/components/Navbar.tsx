@@ -61,7 +61,7 @@ export const Navbar: React.FC = () => {
             >
               <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
               <span className="font-mono">
-                {websiteContent.header?.topRibbonPhone || websiteContent.contact.phone1}
+                {websiteContent.header?.topRibbonPhone || websiteContent.contact?.phone1 || '+91 98754 06943'}
               </span>
             </button>
           </div>

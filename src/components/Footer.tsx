@@ -268,8 +268,8 @@ export const Footer: React.FC = () => {
                 <MapPin className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-300 font-medium block">ART MEDICAL</span>
-                  <span>{websiteContent.contact.address}</span>
-                  {websiteContent.contact.landmark && (
+                  <span>{websiteContent.contact?.address || 'BF 28, Ground Floor, BF Block, Sector 1, Bidhannagar, Kolkata, West Bengal 700064'}</span>
+                  {websiteContent.contact?.landmark && (
                     <span className="text-teal-400 block text-[11px] pt-0.5">
                       Landmark: {websiteContent.contact.landmark}
                     </span>
@@ -280,37 +280,41 @@ export const Footer: React.FC = () => {
                 <Phone className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
                 <div className="space-y-0.5 font-mono">
                   <a
-                    href="tel:+919875406943"
+                    href={`tel:${(websiteContent.contact?.phone1 || '+91 98754 06943').replace(/\s+/g, '')}`}
                     className="hover:text-white transition-colors font-bold text-slate-200 block"
                   >
-                    +91 98754 06943
+                    {websiteContent.contact?.phone1 || '+91 98754 06943'}
                   </a>
-                  <a
-                    href="tel:+917439688406"
-                    className="hover:text-white transition-colors text-slate-400 block"
-                  >
-                    +91 74396 88406
-                  </a>
-                  <a
-                    href="tel:+919593076979"
-                    className="hover:text-white transition-colors text-slate-400 block"
-                  >
-                    +91 95930 76979
-                  </a>
+                  {websiteContent.contact?.phone2 && (
+                    <a
+                      href={`tel:${websiteContent.contact.phone2.replace(/\s+/g, '')}`}
+                      className="hover:text-white transition-colors text-slate-400 block"
+                    >
+                      {websiteContent.contact.phone2}
+                    </a>
+                  )}
+                  {websiteContent.contact?.phone3 && (
+                    <a
+                      href={`tel:${websiteContent.contact.phone3.replace(/\s+/g, '')}`}
+                      className="hover:text-white transition-colors text-slate-400 block"
+                    >
+                      {websiteContent.contact.phone3}
+                    </a>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-slate-500 shrink-0" />
                 <a
-                  href={`mailto:${websiteContent.contact.email}`}
+                  href={`mailto:${websiteContent.contact?.email || 'onlinewithsudip@gmail.com'}`}
                   className="hover:text-white transition-colors"
                 >
-                  {websiteContent.contact.email}
+                  {websiteContent.contact?.email || 'onlinewithsudip@gmail.com'}
                 </a>
               </div>
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-                <span>{websiteContent.contact.workingHours}</span>
+                <span>{websiteContent.contact?.workingHours || 'Monday - Saturday: 9:30 AM - 7:00 PM IST'}</span>
               </div>
             </div>
 
@@ -330,9 +334,9 @@ export const Footer: React.FC = () => {
       {/* Bottom Disclaimer & Copyright */}
       <div className="border-t border-slate-900 bg-slate-950/80 py-6 px-4 sm:px-6 lg:px-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>{websiteContent.footer.copyrightText}</p>
+          <p>{websiteContent.footer?.copyrightText || '© 2025 ART Medical Equipment & Technologies. All rights reserved.'}</p>
           <p className="text-center md:text-right text-[11px] text-slate-500 max-w-xl">
-            {websiteContent.footer.disclaimer}
+            {websiteContent.footer?.disclaimer || 'Medical equipment and laboratory supplies are intended for use by trained embryologists, clinicians, and accredited ART fertility clinics.'}
           </p>
         </div>
       </div>
