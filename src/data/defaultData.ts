@@ -1,4 +1,4 @@
-import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../types';
+import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../types/index';
 import { artProducts, DEFAULT_EQUIPMENT_CATEGORIES } from './artProducts';
 
 export const heroImg = '/images/assets/fertility_hero_lab_1790663824905.jpg';

@@ -1,5 +1,5 @@
 // Generated ART Medical authentic clinical products portfolio & equipment
-import { Product } from '../types';
+import { Product } from '../types/index';
 
 const mediaVialsImg = '/images/assets/art_media_vials_1790759397048.jpg';
 const catheterImg = '/images/assets/art_catheters_cannula_1790759417050.jpg';

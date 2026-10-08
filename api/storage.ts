@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../src/types';
+import { Product, GalleryItem, WebsiteContent, ThemeSettings, Inquiry } from '../src/types/index';
 import {
   defaultWebsiteContent,
   defaultThemeSettings,
@@ -30,114 +30,29 @@ export interface SiteDatabase {
   version: number;
 }
 
-// Global in-memory cache to share across invocations
+// Global in-memory database cache
 let memoryDb: SiteDatabase | null = null;
 let isLoaded = false;
 
-// Resolve storage file path (works in Node.js server and Vercel serverless /tmp fallback)
+// Check if running on Vercel serverless environment
+export const isVercelEnvironment = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+// Resolve storage file path safely
 function getStorageFilePath(): string {
+  // On Vercel serverless functions, the root filesystem is read-only; use /tmp for temporary caching
+  if (isVercelEnvironment) {
+    return path.join('/tmp', 'art_medical_site_storage.json');
+  }
+
+  // On local Node.js / Docker server, use ./data/site_storage.json
   try {
     const localDataDir = path.join(process.cwd(), 'data');
-    if (fs.existsSync(localDataDir) || !process.env.VERCEL) {
-      if (!fs.existsSync(localDataDir)) {
-        fs.mkdirSync(localDataDir, { recursive: true });
-      }
-      return path.join(localDataDir, 'site_storage.json');
+    if (!fs.existsSync(localDataDir)) {
+      fs.mkdirSync(localDataDir, { recursive: true });
     }
+    return path.join(localDataDir, 'site_storage.json');
   } catch {
-    // fallback to /tmp on serverless environments
-  }
-  return path.join('/tmp', 'art_medical_site_storage.json');
-}
-
-// Check for Cloud KV / Upstash Redis configuration
-function getKvConfig() {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (
-    url &&
-    token &&
-    !url.includes('your-kv-db.upstash.io') &&
-    !url.includes('example.com') &&
-    token !== 'your-kv-token'
-  ) {
-    return { url: url.replace(/\/$/, ''), token };
-  }
-  return null;
-}
-
-// Fetch from KV store
-async function fetchFromKv(): Promise<SiteDatabase | null> {
-  const kv = getKvConfig();
-  if (!kv) return null;
-  try {
-    const res = await fetch(`${kv.url}/get/art_medical_site_db`, {
-      headers: { Authorization: `Bearer ${kv.token}` },
-      signal: AbortSignal.timeout(2000),
-    });
-    if (res.ok) {
-      const data: any = await res.json();
-      if (data && data.result !== undefined && data.result !== null) {
-        let parsed = data.result;
-        if (typeof parsed === 'string') {
-          try { parsed = JSON.parse(parsed); } catch {}
-        }
-        if (typeof parsed === 'string') {
-          try { parsed = JSON.parse(parsed); } catch {}
-        }
-        if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
-          return parsed as SiteDatabase;
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('[STORAGE] KV read failed:', err);
-  }
-  return null;
-}
-
-// Save to KV store
-async function saveToKv(db: SiteDatabase): Promise<boolean> {
-  const kv = getKvConfig();
-  if (!kv) return false;
-  try {
-    // Strip large base64 payload to ensure Redis payload stays under provider limits
-    const kvDb = { ...db };
-    if (kvDb.media) {
-      const sanitizedMedia: typeof kvDb.media = {};
-      for (const [k, v] of Object.entries(kvDb.media)) {
-        sanitizedMedia[k] = { ...v, data: undefined };
-      }
-      kvDb.media = sanitizedMedia;
-    }
-    const rawJson = JSON.stringify(kvDb);
-
-    // 1. Try standard Upstash / Vercel KV REST command payload
-    const res = await fetch(`${kv.url}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${kv.token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(['SET', 'art_medical_site_db', rawJson]),
-      signal: AbortSignal.timeout(5000),
-    });
-    if (res.ok) return true;
-
-    // 2. Fallback to /set endpoint
-    const fallbackRes = await fetch(`${kv.url}/set/art_medical_site_db`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${kv.token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(rawJson),
-      signal: AbortSignal.timeout(5000),
-    });
-    return fallbackRes.ok;
-  } catch (err) {
-    console.warn('[STORAGE] KV write non-fatal warning:', err);
-    return false;
+    return path.join('/tmp', 'art_medical_site_storage.json');
   }
 }
 
@@ -157,7 +72,7 @@ export function createInitialDatabase(): SiteDatabase {
 }
 
 // Helper to guarantee all content sections and fields exist
-function normalizeContent(raw: any): WebsiteContent {
+export function normalizeContent(raw: any): WebsiteContent {
   const base = JSON.parse(JSON.stringify(defaultWebsiteContent));
   if (!raw || typeof raw !== 'object') return base;
   return {
@@ -171,7 +86,7 @@ function normalizeContent(raw: any): WebsiteContent {
   };
 }
 
-// Load database from KV or file or defaults
+// Load database from file or initial seed
 export async function getDatabase(): Promise<SiteDatabase> {
   if (memoryDb && isLoaded) {
     if (!memoryDb.media) memoryDb.media = {};
@@ -182,100 +97,87 @@ export async function getDatabase(): Promise<SiteDatabase> {
     return memoryDb;
   }
 
-  // 1. Try Cloud KV
-  const kvData = await fetchFromKv();
-  if (kvData) {
-    if (!kvData.media) kvData.media = {};
-    if (!kvData.categories) kvData.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
-    if (!kvData.gallery) kvData.gallery = [];
-    if (!kvData.inquiries) kvData.inquiries = [];
-    kvData.content = normalizeContent(kvData.content);
-    memoryDb = kvData;
-    isLoaded = true;
-    return memoryDb;
-  }
+  // 1. Try reading from seed file or saved file
+  const candidatePaths = [
+    getStorageFilePath(),
+    path.join(process.cwd(), 'data', 'site_storage.json'),
+    path.join('/tmp', 'art_medical_site_storage.json')
+  ];
 
-  // 2. Try Local File Storage
-  const filePath = getStorageFilePath();
-  try {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf8');
-      const parsed = JSON.parse(content);
-      if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
-        if (!parsed.media) parsed.media = {};
-        if (!parsed.categories) parsed.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
-        if (!parsed.gallery) parsed.gallery = [];
-        if (!parsed.inquiries) parsed.inquiries = [];
-        parsed.content = normalizeContent(parsed.content);
-        memoryDb = parsed as SiteDatabase;
-        isLoaded = true;
-        return memoryDb;
+  for (const p of candidatePaths) {
+    try {
+      if (fs.existsSync(p)) {
+        const fileContent = fs.readFileSync(p, 'utf8');
+        const parsed = JSON.parse(fileContent);
+        if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+          if (!parsed.media) parsed.media = {};
+          if (!parsed.categories) parsed.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
+          if (!parsed.gallery) parsed.gallery = [];
+          if (!parsed.inquiries) parsed.inquiries = [];
+          parsed.content = normalizeContent(parsed.content);
+          memoryDb = parsed as SiteDatabase;
+          isLoaded = true;
+          return memoryDb;
+        }
       }
+    } catch (err) {
+      // Continue to next candidate
     }
-  } catch (err) {
-    console.warn('[STORAGE] File read error:', err);
   }
 
-  // 3. Fallback to initial defaults
+  // 2. Fallback to initial defaults
   memoryDb = createInitialDatabase();
   isLoaded = true;
 
-  // Persist the initial state asynchronously
+  // Persist asynchronously if file system is writable
   try {
     await saveDatabase(memoryDb);
   } catch {
-    // ignore initial save error
+    // Ignore initial save error
   }
 
   return memoryDb;
 }
 
-// Sequential write queue to guarantee atomic persistence without concurrency collisions
-let writeQueue: Promise<void> = Promise.resolve();
-
-// Save database to all available stores safely
+// Save database safely without throwing unhandled errors
 export async function saveDatabase(db: SiteDatabase): Promise<void> {
-  return new Promise<void>((resolve) => {
-    writeQueue = writeQueue
-      .catch((prevErr) => {
-        console.warn('[STORAGE] Recovering write queue from prior error:', prevErr);
-      })
-      .then(async () => {
-        db.lastUpdated = new Date().toISOString();
-        db.version = (db.version || 0) + 1;
-        if (!db.media) db.media = {};
-        memoryDb = db;
-        isLoaded = true;
+  try {
+    db.lastUpdated = new Date().toISOString();
+    db.version = (db.version || 0) + 1;
+    if (!db.media) db.media = {};
+    if (!db.categories) db.categories = [...DEFAULT_EQUIPMENT_CATEGORIES];
+    if (!db.gallery) db.gallery = [];
+    if (!db.inquiries) db.inquiries = [];
+    db.content = normalizeContent(db.content);
 
-        // 1. Save to local disk file atomically
-        try {
-          const filePath = getStorageFilePath();
-          const dir = path.dirname(filePath);
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-          }
-          const uniqueSuffix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-          const tempPath = `${filePath}.tmp.${uniqueSuffix}`;
-          fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf8');
-          fs.renameSync(tempPath, filePath);
-        } catch (fileErr) {
-          console.warn('[STORAGE] Local file write error:', fileErr);
-        }
+    // Update in-memory database immediately
+    memoryDb = db;
+    isLoaded = true;
 
-        // 2. Save to Cloud KV asynchronously (non-fatal, safe timeout)
-        try {
-          await saveToKv(db);
-        } catch (kvErr) {
-          console.warn('[STORAGE] KV save non-fatal error:', kvErr);
-        }
-      })
-      .then(resolve)
-      .catch((err) => {
-        console.error('[STORAGE] Unexpected error in saveDatabase queue:', err);
-        memoryDb = db;
-        resolve();
-      });
-  });
+    // Try saving to disk if writable
+    try {
+      const filePath = getStorageFilePath();
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(filePath, JSON.stringify(db, null, 2), 'utf8');
+    } catch (fileErr) {
+      // If root is read-only (e.g. Vercel), try saving to /tmp cache
+      if (!isVercelEnvironment) {
+        console.warn('[STORAGE] Local file write note:', fileErr);
+      }
+      try {
+        const tmpPath = path.join('/tmp', 'art_medical_site_storage.json');
+        fs.writeFileSync(tmpPath, JSON.stringify(db, null, 2), 'utf8');
+      } catch {
+        // In-memory cache remains valid
+      }
+    }
+  } catch (err) {
+    console.error('[STORAGE] Unexpected error in saveDatabase:', err);
+    memoryDb = db;
+  }
 }
 
 // Helpers for CORS and Cache-Control
@@ -307,7 +209,7 @@ export async function updateWebsiteContent<K extends keyof WebsiteContent>(
 
 export async function replaceEntireContent(content: WebsiteContent): Promise<WebsiteContent> {
   const db = await getDatabase();
-  db.content = content;
+  db.content = normalizeContent(content);
   await saveDatabase(db);
   return db.content;
 }
@@ -430,7 +332,7 @@ export async function saveMediaFile(fileInfo: {
   const diskFilename = `${id}${cleanExt}`;
   let publicUrl = `/api/media?id=${id}`;
 
-  // Try writing to public/uploads on Node.js / Docker
+  // Try writing to public/uploads on Node.js / Docker if writable
   try {
     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     if (!fs.existsSync(uploadDir)) {
@@ -445,7 +347,7 @@ export async function saveMediaFile(fileInfo: {
       publicUrl = `/uploads/${diskFilename}`;
     }
   } catch (err) {
-    console.warn('[STORAGE] Could not write to public/uploads, using API media URL:', err);
+    // If not writable, publicUrl remains /api/media?id=${id}
   }
 
   // Register in database media index
@@ -454,15 +356,15 @@ export async function saveMediaFile(fileInfo: {
     id,
     filename: fileInfo.filename,
     contentType: fileInfo.contentType || 'image/jpeg',
-    url: publicUrl,
-    data: fileInfo.base64Data, // Fallback persistence inside db
+    url: fileInfo.base64Data ? fileInfo.base64Data : publicUrl,
+    data: fileInfo.base64Data,
     size: fileInfo.size || 0,
     createdAt: new Date().toISOString()
   };
 
   await saveDatabase(db);
 
-  return { id, url: publicUrl, filename: fileInfo.filename };
+  return { id, url: db.media[id].url, filename: fileInfo.filename };
 }
 
 export async function getMediaById(id: string) {
@@ -472,15 +374,14 @@ export async function getMediaById(id: string) {
 
 // Status & diagnostics
 export function getDbStatus() {
-  const kv = getKvConfig();
   return {
-    provider: kv ? 'Vercel KV / Upstash Redis' : (process.env.VERCEL ? 'Vercel Serverless Store' : 'Persistent File Store'),
+    provider: isVercelEnvironment ? 'Production Serverless Store' : 'Local Persistent Store',
     connected: true,
-    isVercel: !!process.env.VERCEL,
-    hasKvConfig: !!kv,
-    lastUpdated: memoryDb?.lastUpdated || null,
+    isVercel: isVercelEnvironment,
+    lastUpdated: memoryDb?.lastUpdated || new Date().toISOString(),
     productsCount: memoryDb?.products?.length || 0,
     galleryCount: memoryDb?.gallery?.length || 0,
+    categoriesCount: memoryDb?.categories?.length || 0,
     version: memoryDb?.version || 1
   };
 }

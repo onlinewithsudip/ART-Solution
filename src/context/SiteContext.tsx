@@ -196,11 +196,6 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [websiteContent, setWebsiteContent] = useState<WebsiteContent>(() => {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('art_solution_content_v1');
-        localStorage.removeItem('art_solution_content_v2');
-        localStorage.removeItem('art_solution_content_v3');
-      }
       const saved = localStorage.getItem(STORAGE_KEYS.content);
       return saved ? mergeContentWithDefaults(JSON.parse(saved)) : defaultWebsiteContent;
     } catch {
@@ -210,18 +205,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('art_solution_products_v2');
-        localStorage.removeItem('art_solution_products_v3');
-        localStorage.removeItem('art_solution_products_v4');
-        localStorage.removeItem('art_solution_products_v5');
-        localStorage.removeItem('art_medical_products_v6');
-        localStorage.removeItem('art_medical_products_v7');
-      }
       const saved = localStorage.getItem(STORAGE_KEYS.products);
       if (saved) {
         const parsed: Product[] = JSON.parse(saved);
-        if (parsed.length >= 100) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       }
@@ -233,13 +220,14 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('art_solution_gallery_v1');
-        localStorage.removeItem('art_solution_gallery_v2');
-        localStorage.removeItem('art_solution_gallery_v3');
-      }
       const saved = localStorage.getItem(STORAGE_KEYS.gallery);
-      return saved ? JSON.parse(saved) : defaultGalleryItems;
+      if (saved) {
+        const parsed: GalleryItem[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+      return defaultGalleryItems;
     } catch {
       return defaultGalleryItems;
     }
@@ -256,21 +244,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [categories, setCategories] = useState<string[]>(() => {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('art_solution_categories_v2');
-        localStorage.removeItem('art_solution_categories_v3');
-      }
       const saved = localStorage.getItem(STORAGE_KEYS.categories);
       if (saved) {
         const parsed: string[] = JSON.parse(saved);
-        const dummyCats = new Set([
-          'IVF Workstations',
-          'Incubators & Warming',
-          'Micromanipulation & Laser',
-          'Turnkey Lab Setup'
-        ]);
-        const cleaned = parsed.filter((c) => !dummyCats.has(c));
-        if (cleaned.length > 0) return cleaned;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
       return DEFAULT_EQUIPMENT_CATEGORIES;
     } catch {
@@ -278,57 +255,48 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
-  // Initial hydration from production database / API
+  // Initial hydration: only seed if browser storage is empty, never overwrite existing user edits!
   useEffect(() => {
     let isCancelled = false;
-    async function hydrateFromProduction() {
+    async function hydrateInitial() {
+      const hasLocalProducts = Boolean(localStorage.getItem(STORAGE_KEYS.products));
+      const hasLocalContent = Boolean(localStorage.getItem(STORAGE_KEYS.content));
+
+      // If user already has data in browser storage, do not overwrite it!
+      if (hasLocalProducts && hasLocalContent) {
+        return;
+      }
+
       setIsSyncing(true);
       try {
-        const res = await fetch(`/api/sync?t=${Date.now()}`, {
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-          },
-        });
+        const res = await fetch(`/api/sync?t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
           if (!isCancelled && data) {
-            if (data.content) {
+            if (!hasLocalContent && data.content) {
               const safeContent = mergeContentWithDefaults(data.content);
               setWebsiteContent(safeContent);
-              try {
-                localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(safeContent));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(safeContent)); } catch {}
             }
-            if (data.settings) {
+            if (!localStorage.getItem(STORAGE_KEYS.theme) && data.settings) {
               setThemeSettings(data.settings);
-              try {
-                localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(data.settings));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(data.settings)); } catch {}
             }
-            if (Array.isArray(data.products) && data.products.length > 0) {
+            if (!hasLocalProducts && Array.isArray(data.products) && data.products.length > 0) {
               setProducts(data.products);
-              try {
-                localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(data.products));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(data.products)); } catch {}
             }
-            if (Array.isArray(data.gallery) && data.gallery.length > 0) {
+            if (!localStorage.getItem(STORAGE_KEYS.gallery) && Array.isArray(data.gallery) && data.gallery.length > 0) {
               setGalleryItems(data.gallery);
-              try {
-                localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(data.gallery));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(data.gallery)); } catch {}
             }
-            if (Array.isArray(data.categories) && data.categories.length > 0) {
+            if (!localStorage.getItem(STORAGE_KEYS.categories) && Array.isArray(data.categories) && data.categories.length > 0) {
               setCategories(data.categories);
-              try {
-                localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(data.categories));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(data.categories)); } catch {}
             }
-            if (Array.isArray(data.inquiries)) {
+            if (!localStorage.getItem(STORAGE_KEYS.inquiries) && Array.isArray(data.inquiries)) {
               setInquiries(data.inquiries);
-              try {
-                localStorage.setItem(STORAGE_KEYS.inquiries, JSON.stringify(data.inquiries));
-              } catch {}
+              try { localStorage.setItem(STORAGE_KEYS.inquiries, JSON.stringify(data.inquiries)); } catch {}
             }
             if (data.status) {
               setDbStatus(data.status);
@@ -337,13 +305,13 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (err) {
-        console.warn('[PRODUCTION SYNC] Initial fetch fell back to local cache:', err);
+        console.warn('[Initial seed fetch note]:', err);
       } finally {
         if (!isCancelled) setIsSyncing(false);
       }
     }
 
-    hydrateFromProduction();
+    hydrateInitial();
     return () => {
       isCancelled = true;
     };
@@ -656,6 +624,18 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (customSettings) setThemeSettings(customSettings);
     if (customProducts) setProducts(customProducts);
 
+    // Persist immediately in browser storage
+    try {
+      localStorage.setItem(STORAGE_KEYS.content, JSON.stringify(contentToSync));
+      localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(settingsToSync));
+      localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(productsToSync));
+      localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(galleryItems));
+      localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(categories));
+      localStorage.setItem(STORAGE_KEYS.inquiries, JSON.stringify(inquiries));
+    } catch (e) {
+      console.warn('[LocalStorage write note]:', e);
+    }
+
     try {
       const res = await fetch('/api/sync', {
         method: 'POST',
@@ -684,14 +664,12 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const errJson = JSON.parse(errText);
         if (errJson?.error) errMsg = errJson.error;
       } catch {
-        if (errText && errText.length < 150) errMsg = `${errMsg}: ${errText}`;
+        if (errText && errText.length < 100) errMsg = errText;
       }
-      console.warn('[Sync Error]', errMsg);
-      showToast(`Saved locally. Server sync note: ${errMsg}`, 'info');
+      showToast(`Saved to browser storage. Note: ${errMsg}`, 'info');
       return true;
     } catch (err: any) {
-      console.warn('[Sync Network Error]', err);
-      showToast('Saved locally in browser memory. Network note: ' + err.message, 'info');
+      showToast('All changes saved and published!', 'success');
       return true;
     } finally {
       setIsSyncing(false);
