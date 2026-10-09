@@ -75,7 +75,7 @@ export function createInitialDatabase(): SiteDatabase {
 export function normalizeContent(raw: any): WebsiteContent {
   const base = JSON.parse(JSON.stringify(defaultWebsiteContent));
   if (!raw || typeof raw !== 'object') return base;
-  return {
+  const merged: WebsiteContent = {
     ...base,
     ...raw,
     header: { ...base.header, ...(raw.header || {}) },
@@ -84,6 +84,12 @@ export function normalizeContent(raw: any): WebsiteContent {
     contact: { ...base.contact, ...(raw.contact || {}) },
     footer: { ...base.footer, ...(raw.footer || {}) },
   };
+  if (Array.isArray(merged.hero?.stats)) {
+    merged.hero.stats = merged.hero.stats.map((s) =>
+      s.value === '147 Items' ? { ...s, value: '147+ Items' } : s
+    );
+  }
+  return merged;
 }
 
 // Load database from file or initial seed

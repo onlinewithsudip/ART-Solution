@@ -124,7 +124,7 @@ const getInitialPage = (): Page => {
 
 const mergeContentWithDefaults = (incoming: any): WebsiteContent => {
   if (!incoming || typeof incoming !== 'object') return defaultWebsiteContent;
-  return {
+  const merged: WebsiteContent = {
     ...defaultWebsiteContent,
     ...incoming,
     header: { ...defaultWebsiteContent.header, ...(incoming.header || {}) },
@@ -133,6 +133,12 @@ const mergeContentWithDefaults = (incoming: any): WebsiteContent => {
     contact: { ...defaultWebsiteContent.contact, ...(incoming.contact || {}) },
     footer: { ...defaultWebsiteContent.footer, ...(incoming.footer || {}) },
   };
+  if (Array.isArray(merged.hero?.stats)) {
+    merged.hero.stats = merged.hero.stats.map((s) =>
+      s.value === '147 Items' ? { ...s, value: '147+ Items' } : s
+    );
+  }
+  return merged;
 };
 
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

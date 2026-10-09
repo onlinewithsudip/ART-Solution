@@ -48,7 +48,7 @@ export const defaultWebsiteContent: WebsiteContent = {
     secondaryCtaText: 'Contact Specialist on WhatsApp',
     highlightBadge: 'Offering Full Solution | GST Registered & Validated',
     stats: [
-      { label: 'Clinical Products', value: '147 Items', detail: 'Authentic media, kits & devices' },
+      { label: 'Clinical Products', value: '147+ Items', detail: 'Authentic media, kits & devices' },
       { label: 'Delivery Turnaround', value: 'Within 24h', detail: 'Rapid dispatch protocol' },
       { label: 'Direct Helpline', value: '+91 98754 06943', detail: 'Kolkata & Pan-India support' },
       { label: 'GST Certified', value: '19ACLFA5383R1ZF', detail: '100% Tax compliant billing' }
